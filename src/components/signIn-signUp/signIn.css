@@ -1,0 +1,72 @@
+.btn {
+  width: 134px;
+  height: 60px;
+  flex-shrink: 0;
+  border: 1px solid #005d63;
+}
+.btn p {
+  color: var(--Shapes-Color-Green, #005d63);
+  text-align: center;
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 166.667%;
+}
+.signin {
+  color: var(--Text-Color-Dark, #131717);
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 166.667%;
+}
+#input-field {
+  border-bottom: 1px solid #c4d1d0 !important;
+  flex-shrink: 0;
+}
+form div label {
+  color: var(--Text-Color-Light, #566363);
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 175%;
+}
+.forgot {
+  color: var(--Text-Color-Light, #566363);
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 175%;
+}
+div button {
+  color: var(--Text-Color-White, #fff);
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 166.667%;
+}
+
+.or {
+  color: var(--Text-Color-White, #566363);
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 166.667%;
+}
+.btn-signin p {
+  color: var(--Text-Color-Light, #566363);
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 175%;
+}
+.btn-signin {
+  border: 1px solid #566363;
+  margin-top: 16px;
+}
