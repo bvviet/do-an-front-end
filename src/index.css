@@ -18,7 +18,8 @@ html {
 
 body {
     font-size: 1.6rem;
-    font-family: Lato, sans-serif;
+    font-family: Manrope, sans-serif;
+    font-weight: 400;
     /* // color: var(--text-color);
     // background: #000; */
 }
@@ -47,7 +48,6 @@ select {
     font-family: inherit;
     color: inherit;
     outline: none;
-    border: none;
 }
 
 input,
