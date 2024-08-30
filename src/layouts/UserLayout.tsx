@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
-import Button from "../components/Button";
+import Header from "../components/user/Header";
+import Footer from "../components/user/Footer";
 const UserLayout = () => {
     return (
         <div>
-            <Button />
+            <Header />
             <Outlet />
+            <Footer />
         </div>
     );
 };
