@@ -1,17 +1,19 @@
-import { Link } from "react-router-dom";
+import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
 import "./signIn.css";
+import SignUp from "./signUp";
 export default function SignIn() {
+    const { openPopup } = useModalContext();
     return (
         <>
             <div className="bg-white mx-auto max-sm:mx-0 w-[470px] h-full max-sm:w-full border-2 border-black">
                 <div className="mx-[30px] max-sm:mx-[2.7rem] pt-[30px]">
                     <div className="flex items-center justify-between">
                         <p className="signin">Sign In</p>
-                        <Link className="" to={"/signup"}>
+                        <div onClick={() => openPopup(<SignUp />)}>
                             <button className="btn">
                                 <p>Sign Up</p>
                             </button>
-                        </Link>
+                        </div>
                     </div>
                     <form>
                         <div className="mt-[3rem]">
@@ -65,6 +67,7 @@ export default function SignIn() {
                             className="flex items-center w-[255px] h-[50px] mx-auto btn-signin pl-[13px]"
                         >
                             <img src="/src/images/image805.png" alt="" />
+
                             <p className="ml-[13px]">Continue with Apple</p>
                         </button>
                     </div>

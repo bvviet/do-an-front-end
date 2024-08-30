@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
+import SignIn from "./signIn";
 import "./signIn.css";
 export default function SignUp() {
-    const navigate = useNavigate();
-    const handleBack = () => {
-        navigate(-1);
-    };
+    const { openPopup } = useModalContext();
     return (
         <>
             <div className="bg-custom-white mx-auto w-[470px] h-full max-sm:w-full border-2 border-black">
@@ -55,11 +53,9 @@ export default function SignUp() {
                     <div className="w-full bg-[#005D63] h-[3.125em] flex items-center justify-center mt-[3rem]">
                         <button>Sign Up</button>
                     </div>
-                    <button className="flex items-center mt-6 " onClick={handleBack}>
+                    <button className="flex items-center mt-6" onClick={() => openPopup(<SignIn />)}>
                         <i className="fas fa-arrow-left text-[#566363] hover:text-[#a9c5c5]"></i>
-                        <span className="ml-3 text-[#566363] text-[16px] hover:text-[#a9c5c5]">
-                            Quay lại trang Login
-                        </span>
+                        <span className="ml-3 text-[#566363] text-[16px]">Quay lại trang Login</span>
                     </button>
                     <div className="flex items-center w-full mt-[3.5rem] pb-[0.25rem]">
                         <hr className="flex-grow border-t border-[#C4D1D0]" />
