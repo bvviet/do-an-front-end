@@ -6,9 +6,13 @@ import Navbar from "./Navbar";
 import Search from "./Search";
 import menu from "../../assets/icons/menu.svg";
 import { useState } from "react";
+import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
+import SignIn from "../signIn-signUp/signIn";
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
+
+    const { openPopup } = useModalContext();
 
     return (
         <header className="bg-[#005D63] text-white py-[20px] sm:py-[28px]">
@@ -32,6 +36,7 @@ const Header = () => {
                             <img src={cartIcon} alt="Cart" />
                             <span>(0)</span>
                         </div>
+                        <div onClick={() => openPopup(<SignIn />)}>Login</div>
                     </div>
                 </div>
 
@@ -44,21 +49,13 @@ const Header = () => {
                 <div className="relative flex items-center justify-between lg:hidden mt-[20px]">
                     {/* Icon menu */}
                     <div className="flex items-center gap-[5px]">
-                        <img 
-                            src={menu} 
-                            alt="Menu" 
-                            className="cursor-pointer" 
-                            onClick={() => setShowMenu(!showMenu)} 
-                        />
+                        <img src={menu} alt="Menu" className="cursor-pointer" onClick={() => setShowMenu(!showMenu)} />
                         <span className="text-[1.4rem]">Menu</span>
                     </div>
-                    
+
                     {/* Overlay */}
                     {showMenu && (
-                        <div 
-                            className="fixed inset-0 bg-black opacity-50 z-10"
-                            onClick={() => setShowMenu(false)}
-                        />
+                        <div className="fixed inset-0 bg-black opacity-50 z-10" onClick={() => setShowMenu(false)} />
                     )}
 
                     {/* Menu */}
