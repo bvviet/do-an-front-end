@@ -4,6 +4,15 @@
   flex-shrink: 0;
   border: 1px solid #005d63;
 }
+@media (max-width: 480px) {
+  .btn {
+    width: 90px;
+    height: 40px;
+  }
+  .btn p {
+    font-size: 14px !important;
+  }
+}
 .btn p {
   color: var(--Shapes-Color-Green, #005d63);
   text-align: center;
@@ -21,7 +30,10 @@
   font-weight: 600;
   line-height: 166.667%;
 }
-#input-field {
+#email,
+#password,
+#name,
+#confirmpw {
   border-bottom: 1px solid #c4d1d0 !important;
   flex-shrink: 0;
 }
