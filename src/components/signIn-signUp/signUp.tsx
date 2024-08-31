@@ -13,12 +13,7 @@ export default function SignUp() {
                             <label htmlFor="email" className="max-sm:text-2xl">
                                 Email
                             </label>
-                            <input
-                                id="email"
-                                className="w-full"
-                                type="email"
-                                placeholder=" "
-                            />
+                            <input id="email" className="w-full" type="email" placeholder=" " />
                         </div>
                         <div className="mt-[3rem]">
                             <label htmlFor="name" className="max-sm:text-2xl">
@@ -30,23 +25,13 @@ export default function SignUp() {
                             <label htmlFor="password" className="max-sm:text-2xl">
                                 Password
                             </label>
-                            <input
-                                id="password"
-                                className="w-full"
-                                type="password"
-                                placeholder=" "
-                            />
+                            <input id="password" className="w-full" type="password" placeholder=" " />
                         </div>
                         <div className="mt-[3rem]">
                             <label htmlFor="confirmpw" className="max-sm:text-2xl">
                                 Confirm password
                             </label>
-                            <input
-                                id="confirmpw"
-                                className="w-full"
-                                type="password"
-                                placeholder=" "
-                            />
+                            <input id="confirmpw" className="w-full" type="password" placeholder=" " />
                         </div>
                     </form>
                     {/* Button Sign Up */}

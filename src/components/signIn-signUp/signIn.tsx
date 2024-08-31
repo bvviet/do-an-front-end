@@ -17,18 +17,24 @@ export default function SignIn() {
                     </div>
                     <form>
                         <div className="mt-[3rem]">
-                            <label htmlFor="email" className="max-sm:text-2xl">Email</label>
+                            <label htmlFor="email" className="max-sm:text-2xl">
+                                Email
+                            </label>
                             <input id="email" className="w-full" type="text" placeholder=" " />
                         </div>
                         <div className="mt-[3rem]">
-                            <label htmlFor="password" className="max-sm:text-2xl">Password</label>
+                            <label htmlFor="password" className="max-sm:text-2xl">
+                                Password
+                            </label>
                             <input id="password" className="w-full " type="text" placeholder=" " />
                         </div>
                         {/* Check box */}
                         <div className="flex mt-[3rem] justify-between items-center">
                             <div className="flex items-center">
                                 <input type="checkbox" name="" id="checkbox" />
-                                <label htmlFor="checkbox" className="pl-[0.5rem] max-sm:text-2xl">Remember me</label>
+                                <label htmlFor="checkbox" className="pl-[0.5rem] max-sm:text-2xl">
+                                    Remember me
+                                </label>
                             </div>
                             <p className="forgot max-sm:text-2xl">Forgot password?</p>
                         </div>

@@ -3,17 +3,28 @@ import StickerAddFavorite from "./StickerAddFavorite";
 import heartWhite from "../../../assets/icons/heartWhite.svg";
 // import heartRed from "../../../assets/icons/heartRed.png";
 import star from "../../../assets/icons/start.png";
-import { useState } from "react";
-
-const ProductItem = () => {
+import { FC, useState } from "react";
+interface ProductItemProps {
+    bestSeller?: boolean;
+    newProduct?: boolean;
+}
+const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
     const [showSticker, setShowSticker] = useState<boolean>(false);
 
     return (
-        <article className="relative w-[370px]">
+        <article className="relative max-w-[370px]">
             {/* Best Seller */}
-            <div className="absolute top-[22px] left-[26px] rounded-[5px] bg-black px-[10px] py-[6px] w-fit text-white text-[1.4rem] leading-[171.429%]">
-                Best Seller
-            </div>
+            {bestSeller && (
+                <div className="absolute z-10 top-[22px] left-[26px] rounded-[5px] bg-black px-[10px] py-[6px] w-fit text-white text-[1.4rem] leading-[171.429%]">
+                    Best Seller
+                </div>
+            )}
+
+            {newProduct && (
+                <div className="absolute z-10 top-[22px] left-[26px] rounded-[5px] bg-black px-[10px] py-[6px] w-fit text-white text-[1.4rem] leading-[171.429%]">
+                    New Product
+                </div>
+            )}
 
             {/* Product Image */}
             <div className="relative">
