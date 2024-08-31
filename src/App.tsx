@@ -3,7 +3,8 @@ import "./app.scss";
 import UserLayout from "./layouts/UserLayout";
 import HomePage from "./pages/user/Home/HomePage";
 import NotFoundPage from "./components/404/404";
-import Contacts from "./components/contacts/contact";
+import Blog from "./pages/user/Blog";
+import ContactUser from "./pages/user/Contact";
 
 function App() {
     const router = createBrowserRouter([
@@ -11,7 +12,8 @@ function App() {
             element: <UserLayout />,
             children: [
                 { path: "/", element: <HomePage /> },
-                { path: "/contacts", element: <Contacts /> },
+                { path: "/contacts", element: <ContactUser /> },
+                { path: "/blog", element: <Blog /> },
                 { path: "*", element: <NotFoundPage /> },
             ],
         },
