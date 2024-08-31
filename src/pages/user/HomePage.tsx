@@ -6,7 +6,7 @@ const HomePage = () => {
     const { openPopup } = useModalContext();
     return (
         <div className="container">
-            <p onClick={() => openPopup(<Confirm />)}>Xac nhan</p>
+            <p onClick={() => openPopup(<Confirm handleDelete={() => alert("xoa")} />)}>Xac nhan</p>
             <ProductItem />
         </div>
     );
