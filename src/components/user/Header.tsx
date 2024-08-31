@@ -6,8 +6,8 @@ import Navbar from "./Navbar";
 import Search from "./Search";
 import menu from "../../assets/icons/menu.svg";
 import { useState } from "react";
-import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
 import SignIn from "../signIn-signUp/signIn";
+import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
