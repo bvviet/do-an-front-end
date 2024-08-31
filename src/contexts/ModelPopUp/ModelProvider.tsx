@@ -27,7 +27,7 @@ const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const closePopup = () => {
         setIsShowing(false);
-        setContent(null);
+        // setContent(null);
     };
 
     return (
