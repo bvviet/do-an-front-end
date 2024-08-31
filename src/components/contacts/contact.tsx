@@ -50,7 +50,9 @@ export default function Contacts() {
 
     return (
         <>
-            <BannerContact />
+            <BannerContact
+                title="Contact Us"
+                subtitle="Let’s talk about how we can help your startup scale" />
             <div className="isolate bg-white w-[1440px] max-xl:w-full max-xl:mx-auto mx-auto my-24 ">
                 <ToastContainer />
                 <div className=" mx-auto max-sm:mx-4 text-center w-[642px] max-md:w-auto">
