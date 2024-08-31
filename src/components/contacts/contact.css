@@ -1,0 +1,6 @@
+@media (max-width: 380px) {
+  form {
+    width: 290px !important;
+    margin: 16px auto !important;
+  }
+}
