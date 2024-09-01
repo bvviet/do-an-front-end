@@ -3,8 +3,9 @@ import "./app.scss";
 import UserLayout from "./layouts/UserLayout";
 import HomePage from "./pages/user/Home/HomePage";
 import NotFoundPage from "./components/404/404";
-import Blog from "./pages/user/Blog";
 import ContactUser from "./pages/user/Contact";
+import Blog from "./pages/user/Blog/Blog";
+import BlogDetail from "./pages/user/Blog/BlogDetail";
 
 function App() {
     const router = createBrowserRouter([
@@ -14,6 +15,7 @@ function App() {
                 { path: "/", element: <HomePage /> },
                 { path: "/contacts", element: <ContactUser /> },
                 { path: "/blog", element: <Blog /> },
+                { path: "/blogDetail", element: <BlogDetail /> },
                 { path: "*", element: <NotFoundPage /> },
             ],
         },
