@@ -4,6 +4,7 @@ import heartWhite from "../../../assets/icons/heartWhite.svg";
 // import heartRed from "../../../assets/icons/heartRed.png";
 import star from "../../../assets/icons/start.png";
 import { FC, useState } from "react";
+import { Link } from "react-router-dom";
 interface ProductItemProps {
     bestSeller?: boolean;
     newProduct?: boolean;
@@ -28,13 +29,13 @@ const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
 
             {/* Product Image */}
             <div className="relative">
-                <a href="#!">
+                <Link to="/detail">
                     <img
                         src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt=""
                         className="w-full h-[310px] object-cover rounded-[10px]"
                     />
-                </a>
+                </Link>
                 {/* StickerAddFavorite positioned at the bottom */}
                 {showSticker && (
                     <div className="absolute bottom-0 left-0 right-0">

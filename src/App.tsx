@@ -6,6 +6,7 @@ import NotFoundPage from "./components/404/404";
 import ContactUser from "./pages/user/Contact";
 import Blog from "./pages/user/Blog/Blog";
 import BlogDetail from "./pages/user/Blog/BlogDetail";
+import ProductDetail from "./pages/user/ProductDetail";
 
 function App() {
     const router = createBrowserRouter([
@@ -13,6 +14,7 @@ function App() {
             element: <UserLayout />,
             children: [
                 { path: "/", element: <HomePage /> },
+                { path: "/detail", element: <ProductDetail /> },
                 { path: "/contacts", element: <ContactUser /> },
                 { path: "/blog", element: <Blog /> },
                 { path: "/blogDetail", element: <BlogDetail /> },
