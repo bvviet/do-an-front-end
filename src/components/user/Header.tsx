@@ -8,6 +8,7 @@ import menu from "../../assets/icons/menu.svg";
 import { useState } from "react";
 import SignIn from "../signIn-signUp/signIn";
 import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
@@ -64,6 +65,9 @@ const Header = () => {
                             showMenu ? "translate-x-0" : "-translate-x-full"
                         } z-20`}
                     >
+                        <div onClick={() => setShowMenu(!showMenu)} className="absolute z-10 right-[33px] top-[36px]">
+                            <ClearIcon fontSize="large" />
+                        </div>
                         <Navbar />
                     </div>
 
