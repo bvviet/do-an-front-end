@@ -5,7 +5,7 @@ export default function Map() {
                 <div className="flex flex-col">
                     <p className="pb-4 font-manrope font-bold">Hà Nội</p>
                     <img
-                        className="max-md:block max-md:mx-auto max-md:w-[350px] max-md:h-[240px] w-[560px] h-[383px]"
+                        className="max-md:block max-md:mx-auto max-md:w-[350px] max-md:h-[240px] w-[560px] h-[383px] object-cover"
                         src="src/images/map.png"
                         alt=""
                     />
@@ -13,7 +13,7 @@ export default function Map() {
                 <div className="flex flex-col">
                     <p className="pb-4 font-manrope font-bold">Hà Nội</p>
                     <img
-                        className="max-md:block max-md:mx-auto max-md:w-[350px] max-md:h-[240px] w-[560px] h-[383px]"
+                        className="max-md:block max-md:mx-auto max-md:w-[350px] max-md:h-[240px] w-[560px] h-[383px] object-cover"
                         src="src/images/map.png"
                         alt=""
                     />

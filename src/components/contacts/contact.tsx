@@ -53,7 +53,7 @@ export default function Contacts() {
             <BannerContact
                 title="Contact Us"
                 subtitle="Let’s talk about how we can help your startup scale" />
-            <div className="container isolate bg-white w-[1440px] max-xl:w-full max-xl:mx-auto mx-auto my-24 ">
+            <div className="container isolate bg-white w-[1440px] max-xl:w-full  mx-auto my-24 ">
                 <ToastContainer />
                 <div className=" mx-auto max-sm:mx-4 text-center w-[642px] max-md:w-auto">
                     <p className="mt-2 text-2xl font-manrope leading-8 text-[#566363]">
@@ -70,7 +70,7 @@ export default function Contacts() {
                         <form
                             onSubmit={handleSubmit}
                             method="POST"
-                            className="mx-auto mt-16 w-[706px] max-sm:w-[400px] max-md:mx-4 sm:mt-20"
+                            className="mx-auto mt-16 w-[706px] max-sm:w-[380px] max-md:mx-4 sm:mt-20"
                         >
                             <div className="grid grid-cols-1 gap-x-[42px] gap-y-12 sm:grid-cols-2 ">
                                 <Field name="ten">
