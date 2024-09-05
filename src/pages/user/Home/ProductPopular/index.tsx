@@ -3,7 +3,7 @@ import ProductItem from "../../../../components/user/Product";
 import BaseSection from "../BaseSection";
 
 const ProductPopular = () => {
-    const [visibleCount, setVisibleCount] = useState(3);
+    const [visibleCount, setVisibleCount] = useState(6);
     const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
     const arr = array.slice(0, visibleCount);
 

@@ -24,7 +24,7 @@ const BaseSection: FC<BaseSectionProps> = ({ children, title, description, typeP
                 </p>
             )}
             <div
-                className={`grid grid-cols-1 lg:grid-cols-2 ${
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 ${
                     typeProduct ? "xl:grid-cols-3" : "xl:grid-cols-4"
                 }  gap-[20px] lg:gap-[30px] ${
                     typeProduct ? "" : "px-[55px]"
