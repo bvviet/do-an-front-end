@@ -21,7 +21,7 @@ export default {
         extend: {
             fontFamily: {
                 slab: ['"Roboto Slab"', "serif"],
-                manrope: ['"Manrope", sans-serif']
+                manrope: ['"Manrope", sans-serif'],
             },
             colors: {
                 "custom-white": "#ffffff",
