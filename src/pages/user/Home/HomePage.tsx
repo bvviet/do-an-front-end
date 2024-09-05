@@ -1,12 +1,14 @@
 // import ProductItem from "../../components/user/Product";
 
 import BestSellers from "./BestSellers/BestSellers";
+import BlogHomePage from "./BlogHomePage.tsx";
 import BrandsPopular from "./BrandsPopular";
 import Category from "./Category";
 import ProductNew from "./ProductNew/ProductNew";
 import ProductOffers from "./ProductOffer";
 import ProductPopular from "./ProductPopular";
 import ShopFeatures from "./ShopFeatures";
+import Subscribe from "./Subscribe.tsx";
 
 const HomePage = () => {
     return (
@@ -16,10 +18,14 @@ const HomePage = () => {
                 <ProductPopular />
                 <ProductNew />
                 <BestSellers />
-                <ProductOffers />
+            </div>
+            <ProductOffers />
+            <div className="container">
                 <BrandsPopular />
             </div>
             <ShopFeatures />
+            <BlogHomePage />
+            <Subscribe />
         </>
     );
 };

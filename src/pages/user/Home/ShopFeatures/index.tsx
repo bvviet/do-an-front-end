@@ -7,7 +7,7 @@ const ShopFeatures = () => {
     return (
         <div className="bg-[#FFD44D]">
             <div className="container">
-                <div className="grid grid-cols-1 gap-[30px] lg:grid-cols-2 xl:grid-cols-4 py-[100px]">
+                <div className="grid grid-cols-1 gap-[30px] sm:grid-cols-2 xl:grid-cols-4 py-[100px]">
                     <ShopFeaturesItem
                         imgUrl={oto}
                         title="Same Day Delivery"
