@@ -9,6 +9,7 @@ import BlogDetail from "./pages/user/Blog/BlogDetail";
 import ProductDetail from "./pages/user/ProductDetail";
 import About from "./pages/user/About";
 import Profile from "./pages/user/Profile";
+import FAQs from "./pages/user/FAQ/FAQ";
 
 function App() {
     const router = createBrowserRouter([
@@ -22,6 +23,7 @@ function App() {
                 { path: "/blogDetail", element: <BlogDetail /> },
                 { path: "/about", element: <About /> },
                 { path: "/profile", element: <Profile /> },
+                { path: "/faq", element: <FAQs /> },
                 { path: "*", element: <NotFoundPage /> },
             ],
         },
