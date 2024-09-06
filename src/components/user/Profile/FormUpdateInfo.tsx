@@ -8,12 +8,13 @@ const FormUpdateInfo = () => {
             <form action="" className="col-span-12">
                 {/* Form row 1 */}
                 <div className=" gap-[20px]">
+                    {/* Full name */}
                     <div className="w-full lg:w-auto mt-[10px]">
-                        <label htmlFor="" className="text-[2.2rem] font-medium">
+                        <label htmlFor="fullName" className="text-[2.2rem] font-medium">
                             Full name
                         </label>
                         <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[48px] rounded-xl">
-                            <input type="text" placeholder="Full name" className="w-full" />
+                            <input id="fullName" type="text" placeholder="Full name" className="w-full" />
                         </div>
                         <img
                             className="hidden"
@@ -57,6 +58,36 @@ const FormUpdateInfo = () => {
                         </label>
                         <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[48px] rounded-xl">
                             <input type="text" placeholder="•••••••••" className="w-full" />
+                        </div>
+                        <img
+                            className="hidden"
+                            src="https://sondnpt00343.github.io/f8-project-08/assets/icons/form-error.svg"
+                            alt=""
+                        />
+                    </div>
+                </div>
+                {/* Social */}
+                <div className=" gap-[20px]">
+                    {/* Personal websites */}
+                    <div className="w-full lg:w-auto mt-[10px]">
+                        <label htmlFor="" className="text-[2.2rem] font-medium">
+                            Facebook
+                        </label>
+                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[48px] rounded-xl">
+                            <input type="text" placeholder="https://facebook.com/username." className="w-full" />
+                        </div>
+                        <img
+                            className="hidden"
+                            src="https://sondnpt00343.github.io/f8-project-08/assets/icons/form-error.svg"
+                            alt=""
+                        />
+                    </div>
+                    <div className="w-full lg:w-auto mt-[20px]">
+                        <label htmlFor="" className="text-[2.2rem] font-medium">
+                            TikTok
+                        </label>
+                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[48px] rounded-xl">
+                            <input type="text" placeholder="https://tiktok.com/@username" className="w-full" />
                         </div>
                         <img
                             className="hidden"

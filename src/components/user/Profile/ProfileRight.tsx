@@ -1,4 +1,5 @@
 import add from "../../../assets/icons/add.svg";
+import FormUpdateInfo from "./FormUpdateInfo";
 import flight from "../../../assets/icons/IconProfiles/flight.svg";
 import flightSmall from "../../../assets/icons/IconProfiles/flightSmall.svg";
 import oval from "../../../assets/icons/IconProfiles/Oval.svg";
@@ -8,7 +9,6 @@ import messages from "@/assets/icons/message.svg";
 import phone from "@/assets/icons/IconProfiles/phone.svg";
 import location from "@/assets/icons/location.svg";
 import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
-import FormUpdateInfo from "./FormUpdateInfo";
 
 const ProfileRight = () => {
     const { openPopup } = useModalContext();
@@ -89,7 +89,7 @@ const ProfileRight = () => {
             {/* Account info */}
             <div className="grid grid-cols-12 gap-5">
                 <div className="col-span-12">
-                    <h2 className="text-[24px] font-bold leading-tight">Account info</h2>
+                    <h2 className="text-[24px] font-bold leading-tight">Basic information</h2>
                     <p className="text-[15px]">Addresses, contact information and password</p>
                 </div>
                 <div className="col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-6 mt-[16px]">
@@ -126,6 +126,40 @@ const ProfileRight = () => {
                             <div>
                                 <h3 className="text-[1.5rem] font-medium text-[#1A162E]">Add an address</h3>
                                 <p>Bangladesh Embassy, Washington, DC 20008</p>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            </div>
+
+            {/* Account info */}
+            <div className="grid grid-cols-12 gap-5">
+                <div className="col-span-12">
+                    <h2 className="text-[24px] font-bold leading-tight">Social network information</h2>
+                    <p className="text-[15px]">Manage links to your social media sites.</p>
+                </div>
+                <div className="col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-6 mt-[16px]">
+                    {/* item 1 */}
+                    <a href="#!" onClick={() => openPopup(<FormUpdateInfo />)}>
+                        <article className="flex items-center gap-[10px] p-[10px] bg-[#f1f1f1] rounded-[10px]">
+                            <div className="p-[15px] flex justify-center flex-shrink-0 rounded-lg bg-white">
+                                <img src={location} alt="" />
+                            </div>
+                            <div>
+                                <h3 className="text-[1.5rem] font-medium text-[#1A162E]">Facebook</h3>
+                                <p>Not updated yet</p>
+                            </div>
+                        </article>
+                    </a>
+                    {/* item 2 */}
+                    <a href="#!" onClick={() => openPopup(<FormUpdateInfo />)}>
+                        <article className="flex items-center gap-[10px] p-[10px] bg-[#f1f1f1] rounded-[10px]">
+                            <div className="p-[15px] flex justify-center flex-shrink-0 rounded-lg bg-white">
+                                <img src={location} alt="" />
+                            </div>
+                            <div>
+                                <h3 className="text-[1.5rem] font-medium text-[#1A162E]">TikTok</h3>
+                                <p>Not updated yet</p>
                             </div>
                         </article>
                     </a>
