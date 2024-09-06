@@ -30,6 +30,9 @@ export default {
                 "custom-gray": "#000", // màu xám sáng
                 "custom-dark-gray": "#374151", // màu xám tối
             },
+            boxShadow: {
+                "custom-shadow": "0 0 5px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.1)",
+            },
         },
     },
     plugins: [],

@@ -10,6 +10,7 @@ import ProductDetail from "./pages/user/ProductDetail";
 import About from "./pages/user/About";
 import Profile from "./pages/user/Profile";
 import FAQs from "./pages/user/FAQ/FAQ";
+import Account from "./pages/user/Account";
 
 function App() {
     const router = createBrowserRouter([
@@ -18,6 +19,7 @@ function App() {
             children: [
                 { path: "/", element: <HomePage /> },
                 { path: "/detail", element: <ProductDetail /> },
+                { path: "/account", element: <Account /> },
                 { path: "/contacts", element: <ContactUser /> },
                 { path: "/blog", element: <Blog /> },
                 { path: "/blogDetail", element: <BlogDetail /> },
