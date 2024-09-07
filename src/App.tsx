@@ -11,6 +11,8 @@ import About from "./pages/user/About";
 import Profile from "./pages/user/Profile";
 import FAQs from "./pages/user/FAQ/FAQ";
 import Account from "./pages/user/Account";
+import ProfileRight from "./components/user/Profile/ProfileRight";
+import FormUpdateAddress from "./components/user/Profile/FormUpdateAddress";
 
 function App() {
     const router = createBrowserRouter([
@@ -24,9 +26,16 @@ function App() {
                 { path: "/blog", element: <Blog /> },
                 { path: "/blogDetail", element: <BlogDetail /> },
                 { path: "/about", element: <About /> },
-                { path: "/profile", element: <Profile /> },
                 { path: "/faq", element: <FAQs /> },
                 { path: "*", element: <NotFoundPage /> },
+                {
+                    path: "/profile",
+                    element: <Profile />,
+                    children: [
+                        { index: true, element: <ProfileRight /> },
+                        { path: "addresses", element: <FormUpdateAddress /> },
+                    ],
+                },
             ],
         },
     ]);

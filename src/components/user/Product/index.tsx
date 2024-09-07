@@ -1,16 +1,32 @@
 import StickerAddFavorite from "./StickerAddFavorite";
-
 import heartWhite from "../../../assets/icons/heartWhite.svg";
-// import heartRed from "../../../assets/icons/heartRed.png";
 import star from "../../../assets/icons/start.png";
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
+import { Tooltip } from "@mui/material";
+
 interface ProductItemProps {
     bestSeller?: boolean;
     newProduct?: boolean;
 }
+
 const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
     const [showSticker, setShowSticker] = useState<boolean>(false);
+    const [hoverImg, setHoverImg] = useState<string>(
+        "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    );
+
+    const handleMouseEnter = () => {
+        setHoverImg(
+            "https://images.unsplash.com/photo-1564859228273-274232fdb516?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        );
+    };
+
+    const handleMouseLeave = () => {
+        setHoverImg(
+            "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        );
+    };
 
     return (
         <article className="relative max-w-[370px]">
@@ -29,12 +45,8 @@ const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
 
             {/* Product Image */}
             <div className="relative">
-                <Link to="/detail">
-                    <img
-                        src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt=""
-                        className="w-full h-[310px] object-cover rounded-[10px]"
-                    />
+                <Link to="/detail" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <img src={hoverImg} alt="" className="w-full h-[310px] object-cover rounded-[10px]" />
                 </Link>
                 {/* StickerAddFavorite positioned at the bottom */}
                 {showSticker && (
@@ -47,9 +59,11 @@ const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
             {/* Category Name */}
             <div className="flex items-center justify-between mt-[20px] mb-[4px] text-[1.4rem] text-[#566363] leading-[171.429%]">
                 <p>Men-Cloths</p>
-                <button onClick={() => setShowSticker(true)}>
-                    <img src={heartWhite} alt="Heart Icon" />
-                </button>
+                <Tooltip title="Thêm vào yêu thích" arrow>
+                    <button onClick={() => setShowSticker(true)}>
+                        <img src={heartWhite} alt="Heart Icon" />
+                    </button>
+                </Tooltip>
             </div>
 
             {/* Title */}
@@ -65,7 +79,7 @@ const ProductItem: FC<ProductItemProps> = ({ bestSeller, newProduct }) => {
             </div>
 
             {/* Button Add to Cart */}
-            <button className="w-full border-[1px] border-[#005D63] text-[#005D63] border-solid hover:bg-[#005D63] hover:text-white py-[13px] rounded-[5px] text-[1.8rem] font-semibold leading-[166.667%] transition-colors duration-500 ease-in-out">
+            <button className="w-full border-[1px] border-[#005D63] text-[#005D63] border-solid hover:bg-gradient-to-r from-blue-400  to-teal-700 hover:text-white py-[13px] rounded-[5px] text-[1.8rem] font-semibold leading-[166.667%] transition duration-500 ease-in-out">
                 Add to Cart
             </button>
         </article>

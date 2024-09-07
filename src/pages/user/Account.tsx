@@ -6,6 +6,7 @@ import fb from "../../assets/icons/account/fb.svg";
 import youtube from "../../assets/icons/account/youtube.svg";
 import tiktok from "../../assets/icons/account/tiktok.svg";
 import BlogItem from "../../components/blog/blogItem";
+import AvatarComponent from "../../components/Avatar";
 
 const Account = () => {
     return (
@@ -18,13 +19,11 @@ const Account = () => {
                 >
                     {/* Profile Image and Name */}
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-start absolute bottom-[-122px] lg:bottom-[-70px] lg:left-0 lg:ml-[35px] left-1/2 transform -translate-x-1/2 lg:transform-none">
-                        <div className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] mb-2 lg:mb-0 lg:w-[150px] lg:h-[150px]">
-                            <img
-                                src="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                alt="Profile"
-                                className="w-full h-full rounded-full object-cover"
-                            />
-                        </div>
+                        <AvatarComponent
+                            width="130"
+                            height="130"
+                            urlImage="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        />
                         <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center lg:text-left lg:ml-4 mt-auto mb-[16px] flex items-center gap-2">
                             Bàn Văn Việt
                             <CheckCircleIcon sx={{ fontSize: 22, color: "#00f" }} />
@@ -105,11 +104,11 @@ const Account = () => {
                             <div className="mt-5">
                                 <p>There have been no recent activities</p>
                                 <article className="flex gap-5 mb-2 mt-6">
-                                    <div className="w-[45px] h-[45px] flex-shrink-0">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            alt="Profile"
-                                            className="w-full h-full rounded-full object-cover"
+                                    <div className="flex-shrink-0">
+                                        <AvatarComponent
+                                            width="40"
+                                            height="40"
+                                            urlImage="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                         />
                                     </div>
                                     <div className="border-b border-solid border-[#d0d7de] p-[12px]">
@@ -126,10 +125,10 @@ const Account = () => {
                                 </article>
                                 <article className="flex gap-5 mb-2 mt-6">
                                     <div className="w-[45px] h-[45px] flex-shrink-0">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            alt="Profile"
-                                            className="w-full h-full rounded-full object-cover"
+                                        <AvatarComponent
+                                            width="40"
+                                            height="40"
+                                            urlImage="https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                         />
                                     </div>
                                     <div className="border-b border-solid border-[#d0d7de] p-[12px]">

@@ -1,5 +1,5 @@
+import { Outlet } from "react-router-dom";
 import ProfileLeft from "../../components/user/Profile/ProfileLeft";
-import ProfileRight from "../../components/user/Profile/ProfileRight";
 
 const Profile = () => {
     return (
@@ -10,7 +10,7 @@ const Profile = () => {
                     <ProfileLeft />
                 </div>
                 <div className="col-span-12 md:col-span-8 lg:col-span-7 xl:col-span-9 p-6 bg-gray-200 rounded-xl">
-                    <ProfileRight />
+                    <Outlet />
                 </div>
             </div>
         </div>
