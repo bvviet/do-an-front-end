@@ -50,8 +50,8 @@ const ProductOffers = () => {
                     <ProductItem />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-[30px] mt-[30px]">
-                    {arr.map(() => (
-                        <ProductItem />
+                    {arr.map((index) => (
+                        <ProductItem key={index} />
                     ))}
                 </div>
                 <div className="flex items-center justify-center mt-[60px] lg:mt-[75px]">
