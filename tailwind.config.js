@@ -33,6 +33,15 @@ export default {
             boxShadow: {
                 "custom-shadow": "0 0 5px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.1)",
             },
+            animation: {
+                spin: "spin 1s linear infinite", // Define the custom spin animation
+            },
+            keyframes: {
+                spin: {
+                    "0%": { transform: "rotate(0deg)" },
+                    "100%": { transform: "rotate(360deg)" },
+                },
+            },
         },
     },
     plugins: [],
