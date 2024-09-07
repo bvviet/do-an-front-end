@@ -9,8 +9,8 @@ import menu from "../../assets/icons/menu.svg";
 import SignIn from "../signIn-signUp/signIn";
 import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
 import { useOverlayContext } from "../../contexts/Overlay";
-import { Avatar } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import AvatarComponent from "../Avatar";
 
 const Header = () => {
     const { openPopup } = useModalContext();
@@ -75,10 +75,10 @@ const Header = () => {
                             }}
                             className="cursor-pointer"
                         >
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                sx={{ width: 35, height: 35 }}
+                            <AvatarComponent
+                                width="33"
+                                height="33"
+                                urlImage="https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             />
                         </div>
                         {showProfile && (
@@ -89,10 +89,10 @@ const Header = () => {
                                 <ul className="w-[230px] py-[8px] px-[24px] shadow-[0_-4px_32px_rgba(0,0,0,0.3)] transition duration-700 ease-in-out bg-white text-[#666] rounded-[10px]">
                                     <a href="#!" className="flex items-center gap-[20px]">
                                         <div className="my-[8px]">
-                                            <Avatar
-                                                alt="Remy Sharp"
-                                                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                sx={{ width: 50, height: 50 }}
+                                            <AvatarComponent
+                                                width="50"
+                                                height="50"
+                                                urlImage="https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                             />
                                         </div>
                                         <div>

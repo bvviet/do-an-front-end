@@ -1,16 +1,17 @@
 import { Tooltip } from "@mui/material";
 import start from "../../../../assets/icons/start.png";
 import { Link } from "react-router-dom";
+import AvatarComponent from "../../../Avatar";
 
 const ReviewItem = () => {
     return (
         <div className="border border-[#C4D1D0] border-solid rounded-md p-[28px]">
             <Link to="/account" className="w-[54px] h-[54px] block">
                 <Tooltip title="See personal page" arrow>
-                    <img
-                        className="w-full h-full rounded-[50%]"
-                        src="https://s3-alpha-sig.figma.com/img/2bba/3cd7/c54d80dfcb23e20175dc5def577edb88?Expires=1726444800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=hgaCGJ5PiMFLXHf5MTixVm99wzgUzTWJ7SVUiX1HZcAzDPFJN1x~2drhnXHWXN-z1kAmTOUqpRFGCGwyhMjp4ltJo53o1LPIRIPAoAHrvpv1j7eTulsODt~OkGdR1AjugVi6ePa8HdPYaJnj0IFl1cyDiTjgJtrIwO82ih4oV-Xr6ZITvieS7KBIGJXmJbnbjCPPap4kXE6CeC9Ig0nesxbDzykO86YVsYvPCEJfLRvAu4L0kn82iKfsFPLX3NXKuadENJLP-WsEnTpsU1kZgRpYnhLuKRU9ruIMdc-8cIYMm866IHEQF5Z~vG333Iqnd1goL6TxUm8oK6m51LDKog__"
-                        alt=""
+                    <AvatarComponent
+                        width="50"
+                        height="50"
+                        urlImage="https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     />
                 </Tooltip>
             </Link>

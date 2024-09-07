@@ -7,16 +7,18 @@ import grif from "../../../assets/icons/gift.svg";
 import shield from "../../../assets/icons/shield.svg";
 import square from "../../../assets/icons/square.svg";
 import danger from "../../../assets/icons/danger.svg";
+import { Link } from "react-router-dom";
+import AvatarComponent from "../../Avatar";
 
 const ProfileLeft = () => {
     return (
         <aside>
             {/* User */}
             <div className="rounded-t-lg flex flex-col items-center w-full bg-cover bg-center bg-[url('https://sondnpt00343.github.io/f8-project-08/assets/img/profile/cover.png')] bg-no-repeat p-4 text-white px-[20px] pt-[40px] pb-[20px]">
-                <img
-                    alt="Remy Sharp"
-                    src="https://images.unsplash.com/photo-1706885093476-b1e54f3b7496?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    className="w-[112px] h-[112px] rounded-full border-[5px] border-slate-500 object-cover"
+                <AvatarComponent
+                    width="110"
+                    height="110"
+                    urlImage="https://plus.unsplash.com/premium_photo-1658527049634-15142565537a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 />
                 <h1 className="mt-[20px] text-[1.8rem] font-bold">Imran Khan</h1>
                 <p className="text-[1.5rem] font-medium">Registered: 17th May 2022</p>
@@ -29,11 +31,11 @@ const ProfileLeft = () => {
                     <ul>
                         <li className="flex items-center gap-[10px] py-[5px] leading-[146.667%] hover:opacity-55 transition-bg duration-500 ease-in-out">
                             <img src={profile} alt="" />
-                            <a href="#!">Personal info</a>
+                            <Link to="/profile">Personal info</Link>
                         </li>
                         <li className="flex items-center gap-[10px] py-[5px] leading-[146.667%] hover:opacity-55 transition-bg duration-500 ease-in-out">
                             <img src={location} alt="" />
-                            <a href="#!">Addresses</a>
+                            <Link to="/profile/addresses">Addresses</Link>
                         </li>
                         <li className="flex items-center gap-[10px] py-[5px] leading-[146.667%] hover:opacity-55 transition-bg duration-500 ease-in-out">
                             <img src={message} alt="" />
