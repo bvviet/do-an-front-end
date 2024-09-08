@@ -12,7 +12,9 @@ import Profile from "./pages/user/Profile";
 import FAQs from "./pages/user/FAQ/FAQ";
 import Account from "./pages/user/Account";
 import ProfileRight from "./components/user/Profile/ProfileRight";
-import FormUpdateAddress from "./components/user/Profile/FormUpdateAddress";
+// import FormUpdateAddress from "./components/user/Profile/ProfileRight/FormUpdateAddress";
+import Address from "./components/user/Profile/ProfileRight/Address";
+import FormUpdateAddress from "./components/user/Profile/ProfileRight/FormUpdateAddress";
 
 function App() {
     const router = createBrowserRouter([
@@ -33,7 +35,9 @@ function App() {
                     element: <Profile />,
                     children: [
                         { index: true, element: <ProfileRight /> },
-                        { path: "addresses", element: <FormUpdateAddress /> },
+                        { path: "addresses", element: <Address /> },
+                        { path: "addresses/add", element: <FormUpdateAddress /> },
+                        // { path: "addresses/add", element: <FormUpdateAddress /> },
                     ],
                 },
             ],
