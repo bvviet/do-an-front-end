@@ -33,13 +33,16 @@ const FormUpdateAddress = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<OptionType | null>(null);
     const [selectedCommune, setSelectedCommune] = useState<OptionType | null>(null);
     console.log("Tinh", selectedProvince?.label, "Huyen", selectedDistrict?.label, "Xa", selectedCommune?.label);
+    console.log(import.meta.env.VITE_GEONAMES_USERNAME);
 
     // Fetch danh sách tỉnh
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
                 const response = await axios.get(
-                    `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=bvv1234`
+                    `https://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
+                        import.meta.env.VITE_GEONAMES_USERNAME
+                    }`
                 );
                 const data = response.data;
                 const mappedProvinces = data.geonames.map((province: ProvinceType) => ({
@@ -59,7 +62,9 @@ const FormUpdateAddress = () => {
     const fetchDistricts = async (provinceId: string) => {
         try {
             const response = await axios.get(
-                `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=bvv1234`
+                `https://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
+                    import.meta.env.VITE_GEONAMES_USERNAME
+                }`
             );
             const data = response.data;
             const mappedDistricts = data.geonames.map((district: DistrictType) => ({
@@ -76,7 +81,9 @@ const FormUpdateAddress = () => {
     const fetchCommunes = async (districtId: string) => {
         try {
             const response = await axios.get(
-                `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=bvv1234`
+                `https://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
+                    import.meta.env.VITE_GEONAMES_USERNAME
+                }`
             );
             const data = response.data;
             const mappedCommunes = data.geonames.map((commune: CommuneType) => ({
