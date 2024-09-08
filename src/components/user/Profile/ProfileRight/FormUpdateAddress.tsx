@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
 import Select from "react-select";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
 
 interface OptionType {
     value: string;
@@ -32,7 +32,6 @@ const FormUpdateAddress = () => {
     const [selectedProvince, setSelectedProvince] = useState<OptionType | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<OptionType | null>(null);
     const [selectedCommune, setSelectedCommune] = useState<OptionType | null>(null);
-    console.log("Tinh", selectedProvince?.label, "Huyen", selectedDistrict?.label, "Xa", selectedCommune?.label);
     console.log(import.meta.env.VITE_GEONAMES_USERNAME);
 
     // Fetch danh sách tỉnh
@@ -118,7 +117,7 @@ const FormUpdateAddress = () => {
     };
 
     return (
-        <div className="gap-3 bg-[#FAFAFD] p-6 h-full rounded-lg">
+        <div className="gap-3 p-6 h-full rounded-lg">
             <h2 className="col-span-12 text-[2rem] lg:text-[2.2rem] font-medium leading-[145.455%]">
                 Cập nhật địa chỉ
             </h2>
@@ -129,7 +128,7 @@ const FormUpdateAddress = () => {
                         <label htmlFor="province" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
                             Quốc Gia
                         </label>
-                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3">
+                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3 bg-white">
                             <p>Việt Nam</p>
                         </div>
                     </div>
@@ -189,7 +188,7 @@ const FormUpdateAddress = () => {
                         <label htmlFor="province" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
                             Địa chỉ cụ thể: số nhà, tên đường
                         </label>
-                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3">
+                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3 bg-white">
                             <input
                                 id="fullName"
                                 type="text"
@@ -201,7 +200,11 @@ const FormUpdateAddress = () => {
                 </div>
 
                 <div className="col-span-12 gap-[30px] flex items-center justify-end w-full mt-[20px] lg:mt-[40px]">
-                    <Link to={"/profile"} className="text-black cursor-pointer hover:opacity-65" onClick={closePopup}>
+                    <Link
+                        to={"/profile/addresses"}
+                        className="text-black cursor-pointer hover:opacity-65"
+                        onClick={closePopup}
+                    >
                         Cancel
                     </Link>
                     <button className="text-black bg-[#FFB700] px-[20px] py-[6px] rounded-[30px] hover:opacity-65">

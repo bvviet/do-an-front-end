@@ -1,4 +1,5 @@
-import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
+import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
+
 
 const FormUpdateInfo = () => {
     const { closePopup } = useModalContext();
