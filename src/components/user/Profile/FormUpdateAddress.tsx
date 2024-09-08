@@ -40,7 +40,7 @@ const FormUpdateAddress = () => {
         const fetchProvinces = async () => {
             try {
                 const response = await axios.get(
-                    `https://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
+                    `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
                         import.meta.env.VITE_GEONAMES_USERNAME
                     }`
                 );
@@ -62,7 +62,7 @@ const FormUpdateAddress = () => {
     const fetchDistricts = async (provinceId: string) => {
         try {
             const response = await axios.get(
-                `https://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
+                `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
                     import.meta.env.VITE_GEONAMES_USERNAME
                 }`
             );
@@ -81,7 +81,7 @@ const FormUpdateAddress = () => {
     const fetchCommunes = async (districtId: string) => {
         try {
             const response = await axios.get(
-                `https://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
+                `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
                     import.meta.env.VITE_GEONAMES_USERNAME
                 }`
             );
