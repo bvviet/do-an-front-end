@@ -15,36 +15,38 @@ import ProfileRight from "./components/user/Profile/ProfileRight";
 // import FormUpdateAddress from "./components/user/Profile/ProfileRight/FormUpdateAddress";
 import Address from "./components/user/Profile/ProfileRight/Address";
 import FormUpdateAddress from "./components/user/Profile/ProfileRight/FormUpdateAddress";
+import CheckOut from "./pages/user/CheckOut/CheckOut";
 
 function App() {
-    const router = createBrowserRouter([
+  const router = createBrowserRouter([
+    {
+      element: <UserLayout />,
+      children: [
+        { path: "/", element: <HomePage /> },
+        { path: "/detail", element: <ProductDetail /> },
+        { path: "/account", element: <Account /> },
+        { path: "/contacts", element: <ContactUser /> },
+        { path: "/blog", element: <Blog /> },
+        { path: "/blogDetail", element: <BlogDetail /> },
+        { path: "/about", element: <About /> },
+        { path: "/faq", element: <FAQs /> },
+        { path: "/checkout", element: <CheckOut /> },
+        { path: "*", element: <NotFoundPage /> },
         {
-            element: <UserLayout />,
-            children: [
-                { path: "/", element: <HomePage /> },
-                { path: "/detail", element: <ProductDetail /> },
-                { path: "/account", element: <Account /> },
-                { path: "/contacts", element: <ContactUser /> },
-                { path: "/blog", element: <Blog /> },
-                { path: "/blogDetail", element: <BlogDetail /> },
-                { path: "/about", element: <About /> },
-                { path: "/faq", element: <FAQs /> },
-                { path: "*", element: <NotFoundPage /> },
-                {
-                    path: "/profile",
-                    element: <Profile />,
-                    children: [
-                        { index: true, element: <ProfileRight /> },
-                        { path: "addresses", element: <Address /> },
-                        { path: "addresses/add", element: <FormUpdateAddress /> },
-                        // { path: "addresses/add", element: <FormUpdateAddress /> },
-                    ],
-                },
-            ],
+          path: "/profile",
+          element: <Profile />,
+          children: [
+            { index: true, element: <ProfileRight /> },
+            { path: "addresses", element: <Address /> },
+            { path: "addresses/add", element: <FormUpdateAddress /> },
+            // { path: "addresses/add", element: <FormUpdateAddress /> },
+          ],
         },
-    ]);
+      ],
+    },
+  ]);
 
-    return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;
 }
 
 export default App;
