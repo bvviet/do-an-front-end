@@ -46,7 +46,7 @@ const Header = () => {
     }, [location]);
 
     return (
-        <header className="bg-[#005D63] text-white py-[20px] sm:py-[28px]">
+        <header className="bg-[#005D63] text-white py-[20px] sm:py-[28px] sticky top-0 z-50">
             <div className="container">
                 {/* Desktop */}
                 <div className="flex items-center justify-between relative">
