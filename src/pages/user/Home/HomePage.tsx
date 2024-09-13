@@ -1,5 +1,6 @@
 // import ProductItem from "../../components/user/Product";
 
+import SliceShow from "../../../components/user/SliceShow.tsx";
 import BestSellers from "./BestSellers/BestSellers";
 import BlogHomePage from "./BlogHomePage.tsx";
 import BrandsPopular from "./BrandsPopular";
@@ -11,22 +12,23 @@ import ShopFeatures from "./ShopFeatures";
 import Subscribe from "./Subscribe.tsx";
 
 const HomePage = () => {
-    return (
-        <>
-            <div className="container">
-                <Category />
-                <ProductPopular />
-                <ProductNew />
-                <BestSellers />
-            </div>
-            <ProductOffers />
-            <div className="container">
-                <BrandsPopular />
-            </div>
-            <ShopFeatures />
-            <BlogHomePage />
-            <Subscribe />
-        </>
-    );
+  return (
+    <>
+      <SliceShow />
+      <div className="container">
+        <Category />
+        <ProductPopular />
+        <ProductNew />
+        <BestSellers />
+      </div>
+      <ProductOffers />
+      <div className="container">
+        <BrandsPopular />
+      </div>
+      <ShopFeatures />
+      <BlogHomePage />
+      <Subscribe />
+    </>
+  );
 };
 export default HomePage;

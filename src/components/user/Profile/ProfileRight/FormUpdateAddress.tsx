@@ -5,215 +5,236 @@ import { Link } from "react-router-dom";
 import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
 
 interface OptionType {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 }
 
 interface ProvinceType {
-    geonameId: string;
-    toponymName: string;
+  geonameId: string;
+  toponymName: string;
 }
 
 interface DistrictType {
-    geonameId: string;
-    toponymName: string;
+  geonameId: string;
+  toponymName: string;
 }
 
 interface CommuneType {
-    geonameId: string;
-    toponymName: string;
+  geonameId: string;
+  toponymName: string;
 }
 
 const FormUpdateAddress = () => {
-    const { closePopup } = useModalContext();
-    const [provinces, setProvinces] = useState<OptionType[]>([]);
-    const [districts, setDistricts] = useState<OptionType[]>([]);
-    const [communes, setCommunes] = useState<OptionType[]>([]);
-    const [selectedProvince, setSelectedProvince] = useState<OptionType | null>(null);
-    const [selectedDistrict, setSelectedDistrict] = useState<OptionType | null>(null);
-    const [selectedCommune, setSelectedCommune] = useState<OptionType | null>(null);
-    console.log(import.meta.env.VITE_GEONAMES_USERNAME);
+  const { closePopup } = useModalContext();
+  const [provinces, setProvinces] = useState<OptionType[]>([]);
+  const [districts, setDistricts] = useState<OptionType[]>([]);
+  const [communes, setCommunes] = useState<OptionType[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<OptionType | null>(
+    null,
+  );
+  const [selectedDistrict, setSelectedDistrict] = useState<OptionType | null>(
+    null,
+  );
+  const [selectedCommune, setSelectedCommune] = useState<OptionType | null>(
+    null,
+  );
+  console.log(import.meta.env.VITE_GEONAMES_USERNAME);
 
-    // Fetch danh sách tỉnh
-    useEffect(() => {
-        const fetchProvinces = async () => {
-            try {
-                const response = await axios.get(
-                    `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
-                        import.meta.env.VITE_GEONAMES_USERNAME
-                    }`
-                );
-                const data = response.data;
-                const mappedProvinces = data.geonames.map((province: ProvinceType) => ({
-                    value: province.geonameId,
-                    label: province.toponymName,
-                }));
-                setProvinces(mappedProvinces);
-            } catch (error) {
-                console.error("Error fetching provinces:", error);
-            }
-        };
-
-        fetchProvinces();
-    }, []);
-
-    // Fetch danh sách huyện khi chọn tỉnh
-    const fetchDistricts = async (provinceId: string) => {
-        try {
-            const response = await axios.get(
-                `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
-                    import.meta.env.VITE_GEONAMES_USERNAME
-                }`
-            );
-            const data = response.data;
-            const mappedDistricts = data.geonames.map((district: DistrictType) => ({
-                value: district.geonameId,
-                label: district.toponymName,
-            }));
-            setDistricts(mappedDistricts);
-        } catch (error) {
-            console.error("Error fetching districts:", error);
-        }
+  // Fetch danh sách tỉnh
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await axios.get(
+          `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
+            import.meta.env.VITE_GEONAMES_USERNAME
+          }`,
+        );
+        const data = response.data;
+        const mappedProvinces = data.geonames.map((province: ProvinceType) => ({
+          value: province.geonameId,
+          label: province.toponymName,
+        }));
+        setProvinces(mappedProvinces);
+      } catch (error) {
+        console.error("Error fetching provinces:", error);
+      }
     };
 
-    // Fetch danh sách xã khi chọn huyện
-    const fetchCommunes = async (districtId: string) => {
-        try {
-            const response = await axios.get(
-                `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
-                    import.meta.env.VITE_GEONAMES_USERNAME
-                }`
-            );
-            const data = response.data;
-            const mappedCommunes = data.geonames.map((commune: CommuneType) => ({
-                value: commune.geonameId,
-                label: commune.toponymName,
-            }));
-            setCommunes(mappedCommunes);
-        } catch (error) {
-            console.error("Error fetching communes:", error);
-        }
-    };
+    fetchProvinces();
+  }, []);
 
-    const handleProvinceChange = (selectedOption: OptionType | null) => {
-        setSelectedProvince(selectedOption);
-        setSelectedDistrict(null); // Reset huyện khi chọn tỉnh
-        setSelectedCommune(null); // Reset xã khi chọn tỉnh
-        if (selectedOption) {
-            fetchDistricts(selectedOption.value); // Gọi API để lấy huyện
-        }
-    };
+  // Fetch danh sách huyện khi chọn tỉnh
+  const fetchDistricts = async (provinceId: string) => {
+    try {
+      const response = await axios.get(
+        `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
+          import.meta.env.VITE_GEONAMES_USERNAME
+        }`,
+      );
+      const data = response.data;
+      const mappedDistricts = data.geonames.map((district: DistrictType) => ({
+        value: district.geonameId,
+        label: district.toponymName,
+      }));
+      setDistricts(mappedDistricts);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
 
-    const handleDistrictChange = (selectedOption: OptionType | null) => {
-        setSelectedDistrict(selectedOption);
-        setSelectedCommune(null); // Reset xã khi chọn huyện
-        if (selectedOption) {
-            fetchCommunes(selectedOption.value); // Gọi API để lấy xã
-        }
-    };
+  // Fetch danh sách xã khi chọn huyện
+  const fetchCommunes = async (districtId: string) => {
+    try {
+      const response = await axios.get(
+        `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
+          import.meta.env.VITE_GEONAMES_USERNAME
+        }`,
+      );
+      const data = response.data;
+      const mappedCommunes = data.geonames.map((commune: CommuneType) => ({
+        value: commune.geonameId,
+        label: commune.toponymName,
+      }));
+      setCommunes(mappedCommunes);
+    } catch (error) {
+      console.error("Error fetching communes:", error);
+    }
+  };
 
-    const handleCommuneChange = (selectedOption: OptionType | null) => {
-        setSelectedCommune(selectedOption);
-    };
+  const handleProvinceChange = (selectedOption: OptionType | null) => {
+    setSelectedProvince(selectedOption);
+    setSelectedDistrict(null); // Reset huyện khi chọn tỉnh
+    setSelectedCommune(null); // Reset xã khi chọn tỉnh
+    if (selectedOption) {
+      fetchDistricts(selectedOption.value); // Gọi API để lấy huyện
+    }
+  };
 
-    return (
-        <div className="gap-3 p-6 h-full rounded-lg">
-            <h2 className="col-span-12 text-[2rem] lg:text-[2.2rem] font-medium leading-[145.455%]">
-                Cập nhật địa chỉ
-            </h2>
-            <form action="" className="gap-8 items-end">
-                <div className="grid grid-cols-12 gap-[10px] lg:gap-[20px] items-center">
-                    {/* Country */}
-                    <div className="col-span-12 md:col-span-6 w-full lg:w-auto mt-[10px]">
-                        <label htmlFor="province" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
-                            Quốc Gia
-                        </label>
-                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3 bg-white">
-                            <p>Việt Nam</p>
-                        </div>
-                    </div>
+  const handleDistrictChange = (selectedOption: OptionType | null) => {
+    setSelectedDistrict(selectedOption);
+    setSelectedCommune(null); // Reset xã khi chọn huyện
+    if (selectedOption) {
+      fetchCommunes(selectedOption.value); // Gọi API để lấy xã
+    }
+  };
 
-                    {/* Select Province */}
-                    <div className="col-span-12 md:col-span-6 w-full lg:w-auto mt-[10px]">
-                        <label htmlFor="province" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
-                            Tỉnh / Thành phố
-                        </label>
+  const handleCommuneChange = (selectedOption: OptionType | null) => {
+    setSelectedCommune(selectedOption);
+  };
 
-                        <Select
-                            options={provinces}
-                            value={selectedProvince}
-                            onChange={handleProvinceChange}
-                            className="w-full mt-3"
-                            getOptionLabel={(option: OptionType) => option.label}
-                            getOptionValue={(option: OptionType) => option.value}
-                        />
-                    </div>
+  return (
+    <div className="h-full gap-3 rounded-lg p-6">
+      <h2 className="col-span-12 text-[2rem] font-medium leading-[145.455%] lg:text-[2.2rem]">
+        Cập nhật địa chỉ
+      </h2>
+      <form action="" className="items-end gap-8">
+        <div className="grid grid-cols-12 items-center gap-[10px] lg:gap-[20px]">
+          {/* Country */}
+          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+            <label
+              htmlFor="province"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Quốc Gia
+            </label>
+            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
+              <p>Việt Nam</p>
+            </div>
+          </div>
 
-                    {/* Select District */}
+          {/* Select Province */}
+          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+            <label
+              htmlFor="province"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Tỉnh / Thành phố
+            </label>
 
-                    <div className="col-span-12 md:col-span-6 w-full lg:w-auto mt-[10px]">
-                        <label htmlFor="district" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
-                            Quận / Huyện
-                        </label>
+            <Select
+              options={provinces}
+              value={selectedProvince}
+              onChange={handleProvinceChange}
+              className="mt-3 w-full"
+              getOptionLabel={(option: OptionType) => option.label}
+              getOptionValue={(option: OptionType) => option.value}
+            />
+          </div>
 
-                        <Select
-                            options={districts}
-                            value={selectedDistrict}
-                            onChange={handleDistrictChange}
-                            className="w-full mt-3"
-                            getOptionLabel={(option: OptionType) => option.label}
-                            getOptionValue={(option: OptionType) => option.value}
-                        />
-                    </div>
+          {/* Select District */}
 
-                    {/* Select Commune */}
+          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+            <label
+              htmlFor="district"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Quận / Huyện
+            </label>
 
-                    <div className="col-span-12 md:col-span-6 w-full lg:w-auto mt-[10px]">
-                        <label htmlFor="commune" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
-                            Xã / Phường
-                        </label>
+            <Select
+              options={districts}
+              value={selectedDistrict}
+              onChange={handleDistrictChange}
+              className="mt-3 w-full"
+              getOptionLabel={(option: OptionType) => option.label}
+              getOptionValue={(option: OptionType) => option.value}
+            />
+          </div>
 
-                        <Select
-                            options={communes}
-                            value={selectedCommune}
-                            onChange={handleCommuneChange}
-                            className="w-full mt-3"
-                            getOptionLabel={(option: OptionType) => option.label}
-                            getOptionValue={(option: OptionType) => option.value}
-                        />
-                    </div>
+          {/* Select Commune */}
 
-                    {/* Country */}
-                    <div className="col-span-12 lg:w-auto mt-[10px]">
-                        <label htmlFor="province" className="text-[1.8rem] lg:text-[2.2rem] font-medium">
-                            Địa chỉ cụ thể: số nhà, tên đường
-                        </label>
-                        <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3 bg-white">
-                            <input
-                                id="fullName"
-                                type="text"
-                                placeholder="24a, ngõ 123, Xuân Phương"
-                                className="w-full"
-                            />
-                        </div>
-                    </div>
-                </div>
+          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+            <label
+              htmlFor="commune"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Xã / Phường
+            </label>
 
-                <div className="col-span-12 gap-[30px] flex items-center justify-end w-full mt-[20px] lg:mt-[40px]">
-                    <Link
-                        to={"/profile/addresses"}
-                        className="text-black cursor-pointer hover:opacity-65"
-                        onClick={closePopup}
-                    >
-                        Cancel
-                    </Link>
-                    <button className="text-black bg-[#FFB700] px-[20px] py-[6px] rounded-[30px] hover:opacity-65">
-                        Save
-                    </button>
-                </div>
-            </form>
+            <Select
+              options={communes}
+              value={selectedCommune}
+              onChange={handleCommuneChange}
+              className="mt-3 w-full"
+              getOptionLabel={(option: OptionType) => option.label}
+              getOptionValue={(option: OptionType) => option.value}
+            />
+          </div>
+
+          {/* Country */}
+          <div className="col-span-12 mt-[10px] lg:w-auto">
+            <label
+              htmlFor="province"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Địa chỉ cụ thể: số nhà, tên đường
+            </label>
+            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
+              <input
+                id="fullName"
+                type="text"
+                placeholder="24a, ngõ 123, Xuân Phương"
+                className="w-full"
+              />
+            </div>
+          </div>
         </div>
-    );
+
+        <div className="col-span-12 mt-[20px] flex w-full items-center justify-end gap-[30px] lg:mt-[40px]">
+          <Link
+            to={"/profile/addresses"}
+            className="cursor-pointer text-black hover:opacity-65"
+            onClick={closePopup}
+          >
+            Cancel
+          </Link>
+          <button className="rounded-[30px] bg-[#FFB700] px-[20px] py-[6px] text-black hover:opacity-65">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default FormUpdateAddress;
