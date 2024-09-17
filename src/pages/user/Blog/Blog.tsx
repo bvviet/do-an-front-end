@@ -1,7 +1,7 @@
-import BlogCompoment from "../../../components/blog/blog";
-import Featured from "../../../components/blog/feartured";
+import BlogCompoment from "@/components/blog/blog";
+import Featured from "@/components/blog/feartured";
+import BannerContact from "@/components/contacts/banner";
 
-import BannerContact from "../../../components/contacts/banner";
 
 
 export default function Blog() {

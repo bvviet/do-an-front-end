@@ -26,7 +26,7 @@ const SimpleDialog: React.FC<SimpleDialogProps> = ({ open, onClose, selectedValu
                         aria-label="close"
                         style={{ position: "absolute", right: 0, top: 0 }}
                     >
-                        <CloseIcon fontSize="large"/>
+                        <CloseIcon fontSize="medium"/>
                     </IconButton>
                     {/* Nội dung */}
                     {content}

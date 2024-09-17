@@ -1,14 +1,13 @@
-import add from "../../../../assets/icons/add.svg";
-
-import flight from "../../../../assets/icons/IconProfiles/flight.svg";
-import flightSmall from "../../../../assets/icons/IconProfiles/flightSmall.svg";
-import oval from "../../../../assets/icons/IconProfiles/Oval.svg";
-import la from "../../../../assets/icons/IconProfiles/la.svg";
-import laBig from "../../../../assets/icons/IconProfiles/laBig.svg";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import add from "@/assets/icons/add.svg";
+import flight from "@/assets/icons/IconProfiles/flight.svg";
+import flightSmall from "@/assets/icons/IconProfiles/flightSmall.svg";
+import oval from "@/assets/icons/IconProfiles/Oval.svg";
+import la from "@/assets/icons/IconProfiles/la.svg";
+import laBig from "@/assets/icons/IconProfiles/laBig.svg";
 import messages from "@/assets/icons/message.svg";
 import phone from "@/assets/icons/IconProfiles/phone.svg";
 import location from "@/assets/icons/location.svg";
-import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
 import FormUpdateInfo from "./FormUpdateInfo";
 
 

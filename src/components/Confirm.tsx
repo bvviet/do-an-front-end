@@ -1,5 +1,5 @@
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { Button } from "@mui/material";
-import { useModalContext } from "../contexts/ModelPopUp/ModelProvider";
 
 // Định nghĩa kiểu cho các props
 interface ConfirmProps {
