@@ -1,4 +1,4 @@
-import social from "../../assets/icons/Social.svg";
+import social from "@/assets/icons/Social.svg";
 export default function DetailBlog() {
     return (
         <>

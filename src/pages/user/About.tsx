@@ -1,4 +1,4 @@
-import ItemAbout from "../../components/About/Items";
+import ItemAbout from "@/components/About/Items";
 
 export default function About() {
     return <>

@@ -1,6 +1,4 @@
-// import ProductItem from "../../components/user/Product";
-
-import SliceShow from "../../../components/user/SliceShow.tsx";
+import SliceShow from "@/components/user/SliceShow.tsx";
 import BestSellers from "./BestSellers/BestSellers";
 import BlogHomePage from "./BlogHomePage.tsx";
 import BrandsPopular from "./BrandsPopular";

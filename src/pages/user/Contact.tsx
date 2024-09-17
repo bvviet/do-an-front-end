@@ -1,7 +1,9 @@
-import Contacts from "../../components/contacts/contact";
+import Contacts from "@/components/contacts/contact";
 
 export default function ContactUser() {
-    return <>
-        <Contacts />
+  return (
+    <>
+      <Contacts />
     </>
+  );
 }

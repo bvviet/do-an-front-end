@@ -6,10 +6,11 @@ import Comment from "./Comment";
 import Reviews from "./ReviewList";
 import SimilarProductDetail from "./SimilarProductDetail";
 import AboutProduct from "./AboutProduct";
+import ao1 from '../../../../public/images/ao1.png'
 
 const ProductDetailInfo = () => {
     const [image, setImage] = useState<string>(
-        "https://s3-alpha-sig.figma.com/img/4460/9b9b/93c74dea7c16d7a286628354e79cd4cb?Expires=1726444800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=D5l~D~JT4L0Nvgfj8uxwao8t2nNW9K98ABkx7Suh5UDVsELGw0-bbSKcvaECIXRYuf-G4DsFm3gy8YJmh2wsHZcBap60-Z1OBcOgA8anyfEmAnN20GIu1fVPz6VnexjJZ5QGMRKAoX1UsGNgstodpdnbOrExJ0FE60YHLcQlxTvesRU~26ruHfXkD2PqZlHO~OZSdf9DVsc6Q1FIA3EAevw9Vdy600gmIzIPyx1dsm~nJmd-cPmYi8ezMXsp613UA9o8SpeXKbaPbFapfS1g-80ocXmY-rK2vQZ6ztSdf0LahlGi-nqOSfVb3Q9iWwrJiDLVacpGXpxUEkdsPADdYA__"
+        ao1
     );
 
     return (
@@ -20,7 +21,7 @@ const ProductDetailInfo = () => {
                     <div className="">
                         {/* Image */}
                         <div className="w-full h-[300px] lg:h-[570px] bg-[#FEFFE9] mb-[18px] flex items-center justify-center">
-                            <img className="w-[55%] h-[89%] object-cover flex rounded-md" src={`${image}`} alt="" />
+                            <img className="w-[80%] h-[89%] object-cover flex rounded-md" src={`${image}`} alt="" />
                         </div>
                         {/* Images */}
                         <Carousel SetImage={setImage} />

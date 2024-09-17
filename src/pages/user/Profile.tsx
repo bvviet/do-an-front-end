@@ -1,5 +1,5 @@
+import ProfileLeft from "@/components/user/Profile/ProfileLeft";
 import { Outlet } from "react-router-dom";
-import ProfileLeft from "../../components/user/Profile/ProfileLeft";
 
 const Profile = () => {
     return (

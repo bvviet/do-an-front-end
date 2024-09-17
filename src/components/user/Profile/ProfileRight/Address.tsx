@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import addIco from "../../../../assets/icons/add.svg";
-import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
+import addIco from "@/assets/icons/add.svg";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import Confirm from "../../../Confirm";
 
 const Address = () => {

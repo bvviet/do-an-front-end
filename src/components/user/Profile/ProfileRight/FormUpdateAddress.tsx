@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 
 interface OptionType {
   value: string;

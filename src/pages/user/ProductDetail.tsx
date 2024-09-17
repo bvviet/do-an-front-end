@@ -1,12 +1,10 @@
-// import ButtonComponent from "../../components/ButtonComponent";
-
-import ProductDetailInfo from "../../components/user/ProductDetailInfor.tsx/index.tsx";
+import ProductDetailInfo from "@/components/user/ProductDetailInfor.tsx";
 
 const ProductDetail = () => {
-    return (
-        <div className="mt-[100px] mb-[150px] container">
-            <ProductDetailInfo />
-        </div>
-    );
+  return (
+    <div className="container mb-[150px] mt-[100px]">
+      <ProductDetailInfo />
+    </div>
+  );
 };
 export default ProductDetail;
