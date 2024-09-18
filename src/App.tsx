@@ -15,6 +15,11 @@ import FormUpdateAddress from "@/components/user/Profile/ProfileRight/FormUpdate
 import CheckOut from "@/pages/user/CheckOut/CheckOut";
 import HomePage from "@/pages/user/Home/HomePage";
 import ProfileRight from "@/components/user/Profile/ProfileRight";
+import Login from "./pages/SignIn-Login/Login";
+import SignUp from "./pages/SignIn-Login/SignUp";
+import ForgotPassword from "./pages/SignIn-Login/Forgot";
+import Verify from "./pages/SignIn-Login/Verify";
+import SetPassword from "./components/signIn-signUp/SetPassword";
 
 function App() {
   const router = createBrowserRouter([
@@ -30,6 +35,11 @@ function App() {
         { path: "/about", element: <About /> },
         { path: "/faq", element: <FAQs /> },
         { path: "/checkout", element: <CheckOut /> },
+        { path: "/login", element: <Login /> },
+        { path: "/signup", element: <SignUp /> },
+        { path: "/forgot", element: <ForgotPassword /> },
+        { path: "/otp", element: <Verify /> },
+        { path: "/setpassword", element: <SetPassword /> },
         { path: "*", element: <NotFoundPage /> },
         {
           path: "/profile",

@@ -22,7 +22,7 @@
   font-weight: 600;
   line-height: 166.667%;
 }
-.signin {
+.login {
   color: var(--Text-Color-Dark, #131717);
   font-family: "Manrope", sans-serif;
   font-size: 18px;

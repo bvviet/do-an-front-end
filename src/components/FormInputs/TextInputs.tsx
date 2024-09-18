@@ -11,7 +11,7 @@ interface TextFieldProps {
 
 const TextInputs: React.FC<TextFieldProps> = ({
   onChange,
-  value='',
+  value = "",
   name,
   type = "text",
   placeholder,
