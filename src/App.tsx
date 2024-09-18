@@ -15,6 +15,8 @@ import FormUpdateAddress from "@/components/user/Profile/ProfileRight/FormUpdate
 import CheckOut from "@/pages/user/CheckOut/CheckOut";
 import HomePage from "@/pages/user/Home/HomePage";
 import ProfileRight from "@/components/user/Profile/ProfileRight";
+import AdminLayout from "./layouts/AdminLayout";
+import ListAuth from "./pages/admin/Auth/ListAuth";
 
 function App() {
   const router = createBrowserRouter([
@@ -41,6 +43,20 @@ function App() {
             // { path: "addresses/add", element: <FormUpdateAddress /> },
           ],
         },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        // Admin routes here
+        { path: "lists", element: <ListAuth /> },
+        // { path: "/admin/products", element: <Products /> },
+        // { path: "/admin/orders", element: <Orders /> },
+        // { path: "/admin/users", element: <Users /> },
+        // { path: "/admin/categories", element: <Categories /> },
+        // { path: "/admin/settings", element: <Settings /> },
+        // { path: "*", element: <NotFoundPage /> },
       ],
     },
   ]);
