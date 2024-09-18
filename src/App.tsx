@@ -15,7 +15,6 @@ import FormUpdateAddress from "@/components/user/Profile/ProfileRight/FormUpdate
 import CheckOut from "@/pages/user/CheckOut/CheckOut";
 import HomePage from "@/pages/user/Home/HomePage";
 import ProfileRight from "@/components/user/Profile/ProfileRight";
-import CheckOut from "./pages/user/CheckOut/CheckOut";
 
 function App() {
   const router = createBrowserRouter([
