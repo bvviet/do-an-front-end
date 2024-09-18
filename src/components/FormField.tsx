@@ -31,7 +31,10 @@ const FormField = <T extends FieldValues>({
         name={name}
         control={control}
         rules={rules}
-        render={({ field: { onChange, value, name }, fieldState: { error } }) => (
+        render={({
+          field: { onChange, value, name },
+          fieldState: { error: fieldError },
+        }) => (
           <div>
             <Component
               onChange={onChange}
@@ -40,10 +43,10 @@ const FormField = <T extends FieldValues>({
               type={type}
               placeholder={placeholder}
             />
-            {error && (
-              <div className="flex items-center gap-2 text-[1.6rem] text-red-600 mt-2">
+            {(fieldError || message) && (
+              <div className="mt-2 flex items-center gap-2 text-[1.6rem] text-red-600">
                 <ErrorOutlineIcon />
-                <p>{message || error.message}</p>
+                <p>{message || fieldError?.message}</p>
               </div>
             )}
           </div>

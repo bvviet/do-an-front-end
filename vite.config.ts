@@ -63,6 +63,14 @@ export default defineConfig({
         find: "@utils",
         replacement: path.resolve(__dirname, "src/utils"),
       },
+      {
+        find: "@redux",
+        replacement: path.resolve(__dirname, "src/redux"),
+      },
+      {
+        find: "@services",
+        replacement: path.resolve(__dirname, "src/services"),
+      },
     ],
   },
 });
