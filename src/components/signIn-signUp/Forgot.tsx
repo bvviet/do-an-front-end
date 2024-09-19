@@ -1,36 +1,16 @@
 import FormField from "../FormField";
 import "./signIn.css";
-import ButtonComponent from "../ButtonComponent";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
-import { useLoginMutation } from "@/services/authApi";
-// import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { toast } from "react-toastify";
 import loginType from "@/types/SignIn";
-import { Checkbox } from "@mui/material";
 import { Link } from "react-router-dom";
 
 // interface ErrorResponse {
 //   message: string;
 // }
 
-export default function SignInComponent() {
-  const { control, handleSubmit } = useForm<loginType>();
-  const [login, { isLoading }] = useLoginMutation();
-
-  const onSubmit: SubmitHandler<loginType> = async (formData) => {
-    try {
-      const response = await login(formData).unwrap();
-      toast.success("Đăng nhập thành công!");
-      console.log("Đăng nhập thành công:", response);
-    } catch (err) {
-      toast.error(
-        (err as { data?: { message?: string } }).data?.message ||
-          "Đã xảy ra lỗi không xác định.",
-      );
-      console.error("Đăng ký thất bại:", err);
-    }
-  };
+export default function Forgot() {
+  const { control } = useForm<loginType>();
 
   return (
     <>
@@ -38,9 +18,13 @@ export default function SignInComponent() {
         <div className="flex h-full w-[470px] flex-col justify-center border-2 border-black bg-custom-white max-sm:w-full">
           <div className="">
             <p className="login font-manrope text-[40px] font-semibold">
-              Login
+              Forgot your password?
             </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <p className="text-gray-500">
+              Don’t worry, happens to all of us. Enter your email below to
+              recover your password
+            </p>
+            <form>
               <div className="mt-[3rem]">
                 <FormField<loginType>
                   label="Email"
@@ -59,43 +43,12 @@ export default function SignInComponent() {
                 />
               </div>
               <div className="mt-[3rem]">
-                <FormField<loginType>
-                  label="Password"
-                  name="password"
-                  placeholder=""
-                  type="password"
-                  Component={TextInputs}
-                  control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
-                />
-              </div>
-              <div className="ml-[-12px] mt-[1rem] flex items-center justify-between">
-                <div className="flex items-center">
-                  <Checkbox />
-                  <p className="text-[14px] font-semibold">Remember me</p>
-                </div>
-                <div>
-                  <Link
-                    to={"#"}
-                    className="text-[14px] font-semibold text-[#FF8682] hover:text-red-500 hover:underline"
-                  >
-                    Forgot Password
-                  </Link>
-                </div>
-              </div>
-              <div className="mt-[3rem]">
-                <ButtonComponent
-                  title="Đăng nhập"
-                  width="100%"
-                  onClick={handleSubmit(onSubmit)}
-                  loading={isLoading}
-                />
+                <button
+                  type="submit"
+                  className="block w-full rounded-md bg-[#005D63] py-6 text-center text-2xl text-white shadow-sm hover:bg-[#528a8f]"
+                >
+                  Submit
+                </button>
               </div>
               <div className="mt-4 flex items-center justify-center text-center">
                 <p className="text-[14px] font-semibold">
@@ -151,7 +104,7 @@ export default function SignInComponent() {
           </div>
         </div>
         <div>
-          <img src="../src/images/Wavy_Tech-28_Single-10.jpg" alt="" />
+          <img src="../src/images/Rectangle 20 (1).png" alt="" />
         </div>
       </div>
     </>
