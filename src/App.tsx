@@ -20,6 +20,8 @@ import SignUp from "./pages/SignIn-Login/SignUp";
 import ForgotPassword from "./pages/SignIn-Login/Forgot";
 import Verify from "./pages/SignIn-Login/Verify";
 import SetPassword from "./components/signIn-signUp/SetPassword";
+import AdminLayout from "./layouts/AdminLayout";
+import ListAuth from "./pages/admin/Auth/ListAuth";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,6 +53,20 @@ function App() {
             // { path: "addresses/add", element: <FormUpdateAddress /> },
           ],
         },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        // Admin routes here
+        { path: "lists", element: <ListAuth /> },
+        // { path: "/admin/products", element: <Products /> },
+        // { path: "/admin/orders", element: <Orders /> },
+        // { path: "/admin/users", element: <Users /> },
+        // { path: "/admin/categories", element: <Categories /> },
+        // { path: "/admin/settings", element: <Settings /> },
+        // { path: "*", element: <NotFoundPage /> },
       ],
     },
   ]);
