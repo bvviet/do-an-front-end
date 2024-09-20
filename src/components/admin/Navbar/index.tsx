@@ -39,7 +39,7 @@ const NavbarAdmin = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col rounded-r-lg bg-main p-7 text-white">
+    <div className="flex h-screen flex-col rounded-r-lg bg-main p-7 text-white ">
       {/* Logo */}
       <div>
         <Logo />

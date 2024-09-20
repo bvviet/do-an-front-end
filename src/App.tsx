@@ -22,6 +22,7 @@ import Verify from "./pages/SignIn-Login/Verify";
 import SetPassword from "./components/signIn-signUp/SetPassword";
 import AdminLayout from "./layouts/AdminLayout";
 import ListAuth from "./pages/admin/Auth/ListAuth";
+import ListPrd from "./pages/admin/CRUD/ListProduct";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,7 +62,7 @@ function App() {
       children: [
         // Admin routes here
         { path: "lists", element: <ListAuth /> },
-        // { path: "/admin/products", element: <Products /> },
+        { path: "/admin/products", element: <ListPrd /> },
         // { path: "/admin/orders", element: <Orders /> },
         // { path: "/admin/users", element: <Users /> },
         // { path: "/admin/categories", element: <Categories /> },
