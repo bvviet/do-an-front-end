@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
+import { NavLink } from "react-router-dom"; // Import NavLink từ react-router-dom
 
 const HeaderCrud = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [underlineStyle, setUnderlineStyle] = useState({});
-  const menuRefs = useRef<HTMLDivElement[]>([]);
 
-  const menuItems = ["List Product", "Add Product", "Update Products"];
+  // Thay đổi kiểu từ HTMLDivElement[] thành HTMLAnchorElement[]
+  const menuRefs = useRef<HTMLAnchorElement[]>([]);
+
+  // Các mục menu cùng với các đường dẫn tương ứng
+  const menuItems = [
+    { name: "List Product", path: "/admin/products/list" },
+    { name: "Add Product", path: "/admin/products/add" },
+  ];
 
   // Cập nhật vị trí và kích thước của đường border-bottom
   const updateUnderline = (index: number) => {
@@ -25,21 +32,22 @@ const HeaderCrud = () => {
   }, [activeIndex]);
 
   return (
-    <div className="relative rounded-3xl mb-10 py-8 mt-6 bg-white">
+    <div className="relative mb-10 mt-6 rounded-3xl bg-white py-8">
       <div className="flex space-x-12 text-lg font-medium">
         {menuItems.map((item, index) => (
-          <div
+          <NavLink
+            to={item.path} // Điều hướng tới đường dẫn tương ứng
             key={index}
             ref={(el) => (menuRefs.current[index] = el!)}
             onClick={() => setActiveIndex(index)}
-            className={`cursor-pointer ml-4 px-6 font-manrope text-[20px] font-semibold ${activeIndex === index ? "text-blue-500" : ""}`}
+            className={`ml-4 cursor-pointer px-6 font-manrope text-[20px] font-semibold ${activeIndex === index ? "text-blue-500" : ""}`}
           >
-            {item}
-          </div>
+            {item.name}
+          </NavLink>
         ))}
       </div>
       <div
-        className="absolute  top-0 h-[2px] bg-blue-500 transition-all duration-300"
+        className="absolute top-0 h-[2px] bg-blue-500 transition-all duration-300"
         style={underlineStyle}
       />
     </div>

@@ -56,6 +56,15 @@ export default function ListProducts() {
       Price: "200.000.000",
       Weight: "1kg",
     },
+    {
+      Name: "Apple",
+      Color: "Black",
+      Category: "SmartPhone",
+      Accessories: "Yes",
+      Available: "Yes",
+      Price: "200.000.000",
+      Weight: "1kg",
+    },
   ];
   return (
     <>
@@ -168,12 +177,18 @@ export default function ListProducts() {
                 <td className="py-4 font-medium text-gray-900">
                   {item.Weight}
                 </td>
-                <td className="flex items-center py-4">
+                <td className="flex items-center gap-2">
                   <a
                     href="#"
                     className="rounded-full border border-solid border-red-500 bg-white px-8 py-3.5 text-[12px] font-medium text-red-500 shadow-lg hover:bg-red-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100"
                   >
                     Remove
+                  </a>
+                  <a
+                    href="#"
+                    className="rounded-full border border-solid border-green-500 bg-white px-8 py-3.5 text-[12px] font-medium text-green-500 shadow-lg hover:bg-green-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100"
+                  >
+                    Update
                   </a>
                 </td>
               </tr>
