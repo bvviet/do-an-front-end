@@ -3,37 +3,48 @@ import { Button } from "@mui/material";
 
 // Định nghĩa kiểu cho các props
 interface ConfirmProps {
-    title?: string;
-    description?: string;
-    handleDelete: () => void;
+  title?: string;
+  description?: string;
+  handleDelete: () => void;
 }
 
 const Confirm: React.FC<ConfirmProps> = ({
-    title = "Confirm deletion",
-    description = "Are you sure you want to delete this?",
-    handleDelete,
+  title = "Bạn chắc chắn",
+  description = "Bạn có chắc chắn muốn xóa mục này không? Hành động này sẽ không thể khôi phục.",
+  handleDelete,
 }) => {
-    const { closePopup } = useModalContext();
+  const { closePopup } = useModalContext();
 
-    const handleDeleteClick = () => {
-        handleDelete();
-        closePopup();
-    };
+  const handleDeleteClick = () => {
+    handleDelete();
+    closePopup();
+  };
 
-    return (
-        <section className="p-1 w-[220px] sm:w-[350px]">
-            <p className="text-[1.6vw] font-bold w-fit">{title}📢</p>
-            <p className="w-fit text-[1vw] text-slate-500 font-medium mt-4 mb-4 pr-5">{description}</p>
-            <div className="flex items-center justify-end gap-6">
-                <Button onClick={closePopup} color="success" variant="outlined">
-                    Cancel
-                </Button>
-                <Button onClick={handleDeleteClick} sx={{ background: "red", color: "white" }} variant="contained">
-                    Delete
-                </Button>
-            </div>
-        </section>
-    );
+  return (
+    <section className="w-fit rounded-lg py-8">
+      <div className="mx-auto sm:max-w-[86%] text-center">
+        <p className="mb-2 text-center text-[2rem] font-semibold">{title}?</p>
+        <p className="mx-auto mb-10 text-[1.5rem] text-gray-600 font-medium">{description}</p>
+      </div>
+      <div className="flex justify-end gap-[6%]">
+        <Button
+          onClick={closePopup}
+          color="primary"
+          variant="outlined"
+          sx={{ borderColor: "gray", color: "gray" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleDeleteClick}
+          sx={{ backgroundColor: "red", color: "white" }}
+          variant="contained"
+        >
+          Delete
+        </Button>
+      </div>
+    </section>
+  );
 };
 
 export default Confirm;
