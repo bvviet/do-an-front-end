@@ -8,9 +8,9 @@ import { OverlayProvider } from "@/contexts/Overlay.tsx";
 import { ThemeProvider } from "@mui/material";
 import theme from "./configs/muiConfigs.ts";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { store } from "@/redux/store.ts";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>

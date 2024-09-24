@@ -17,7 +17,8 @@ import { toast } from "react-toastify";
 export default function SignUp() {
   const { openPopup } = useModalContext();
   const { control, handleSubmit } = useForm<signType>();
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading, data, error }] = useRegisterMutation();
+  console.log(data, error);
 
   const onSubmit: SubmitHandler<signType> = async (formData) => {
     try {
@@ -26,7 +27,7 @@ export default function SignUp() {
       console.log("Đăng ký thành công:", response);
     } catch (err) {
       toast.error(
-          (err as { data?: { message?: string } }).data?.message ||
+        (err as { data?: { message?: string } }).data?.message ||
           "Đã xảy ra lỗi không xác định.",
       );
       console.error("Đăng ký thất bại:", err);

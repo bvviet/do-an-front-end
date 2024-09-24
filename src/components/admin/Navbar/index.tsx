@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Link } from "react-router-dom";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const arrayNav = [
@@ -18,13 +19,13 @@ const arrayNav = [
     id: 1,
     name: "Người dùng",
     icon: AccountBoxIcon,
-    link: "/admin/user",
+    link: "/admin/lists",
   },
   {
     id: 2,
     name: "Sản phẩm",
     icon: AccountBoxIcon,
-    link: "/admin/user",
+    link: "/admin",
   },
 ];
 
@@ -50,22 +51,24 @@ const NavbarAdmin = () => {
         <span className="mt-9 font-bold text-slate-400">Menu</span>
         <ul className="mt-[20px] flex flex-col gap-[20px] p-6">
           {arrayNav.map((nav) => (
-            <li
-              className=""
-              key={nav.id}
-              onClick={() => setActiveNavbar(nav.id)}
-            >
-              <div
-                className={`${
-                  activeNavbar === nav.id
-                    ? "rounded-[10px] bg-white text-main"
-                    : ""
-                } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px] hover:opacity-70`}
+            <Link to={nav.link}>
+              <li
+                className=""
+                key={nav.id}
+                onClick={() => setActiveNavbar(nav.id)}
               >
-                <nav.icon />
-                <span>{nav.name}</span>
-              </div>
-            </li>
+                <div
+                  className={`${
+                    activeNavbar === nav.id
+                      ? "rounded-[10px] bg-white text-main"
+                      : "hover:opacity-70"
+                  } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
+                >
+                  <nav.icon />
+                  <span>{nav.name}</span>
+                </div>
+              </li>
+            </Link>
           ))}
         </ul>
       </div>
