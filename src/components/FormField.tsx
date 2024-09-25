@@ -1,5 +1,10 @@
 import { Controller, Control, FieldValues, Path } from "react-hook-form";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { FormHelperText } from "@mui/material";
+
+interface Option {
+  value: string;
+  label: string;
+}
 
 interface FormFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -10,8 +15,9 @@ interface FormFieldProps<T extends FieldValues> {
   type?: string;
   placeholder?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rules?: Record<string, any>; // Để truyền các quy tắc validation
-  message?: string; // Thông báo lỗi tùy chỉnh
+  rules?: Record<string, any>;
+  error?: { message?: string };
+  options?: Option[];
 }
 
 const FormField = <T extends FieldValues>({
@@ -22,7 +28,8 @@ const FormField = <T extends FieldValues>({
   type,
   placeholder,
   rules,
-  message,
+  error,
+  options,
 }: FormFieldProps<T>) => {
   return (
     <div>
@@ -31,25 +38,25 @@ const FormField = <T extends FieldValues>({
         name={name}
         control={control}
         rules={rules}
-        render={({
-          field: { onChange, value, name },
-          fieldState: { error: fieldError },
-        }) => (
-          <div>
+        render={({ field: { onChange, value, name } }) => (
+          <>
             <Component
               onChange={onChange}
               value={value}
               name={name}
               type={type}
               placeholder={placeholder}
+              error={error}
+              options={options}
             />
-            {(fieldError || message) && (
+            {error?.message && (
               <div className="mt-2 flex items-center gap-2 text-[1.6rem] text-red-600">
-                <ErrorOutlineIcon />
-                <p>{message || fieldError?.message}</p>
+                <FormHelperText error={true} sx={{ fontSize: "1.65rem" }}>
+                  {error.message}
+                </FormHelperText>
               </div>
             )}
-          </div>
+          </>
         )}
       />
     </div>

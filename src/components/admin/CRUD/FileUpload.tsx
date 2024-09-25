@@ -4,6 +4,9 @@ const FileUploadPreview: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
+  console.log({ selectedFiles });
+  console.log({ previewUrls });
+
   // Xử lý khi người dùng chọn file
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;

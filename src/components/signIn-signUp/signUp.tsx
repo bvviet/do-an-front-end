@@ -7,29 +7,53 @@ import ButtonComponent from "../ButtonComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
 import { useRegisterMutation } from "@/services/authApi";
-// import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { toast } from "react-toastify";
-
-// interface ErrorResponse {
-//   message: string;
-// }
-
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert } from "@mui/material";
+import SelectInput from "../FormInputs/SelectIput";
+const phoneOptions = [
+  { value: "1234567890", label: "123-456-7890" },
+  { value: "0987654321", label: "098-765-4321" },
+];
 export default function SignUp() {
   const { openPopup } = useModalContext();
-  const { control, handleSubmit } = useForm<signType>();
-  const [register, { isLoading, data, error }] = useRegisterMutation();
-  console.log(data, error);
+  const [register, { isLoading, isError, error }] = useRegisterMutation();
+  // Validate
+  const formSchema = yup.object().shape({
+    name: yup.string().required("Tên không được bỏ trống"),
+    phone: yup.string().required(),
+    email: yup
+      .string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Email không đúng định dạng",
+      )
+      .required("Email không được bỏ trống"),
+    password: yup
+      .string()
+      .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
+      .required("Mật khẩu không được bỏ trống"),
+    cfpassword: yup.string().required("Vui lòng xác nhận mật khẩu"),
+    category: yup.string().required("Vui lòng chọn danh mục"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signType>({
+    resolver: yupResolver(formSchema),
+  });
 
   const onSubmit: SubmitHandler<signType> = async (formData) => {
+    console.log(formData);
+    
     try {
       const response = await register(formData).unwrap();
       toast.success("Đăng ký thành công!");
       console.log("Đăng ký thành công:", response);
     } catch (err) {
-      toast.error(
-        (err as { data?: { message?: string } }).data?.message ||
-          "Đã xảy ra lỗi không xác định.",
-      );
       console.error("Đăng ký thất bại:", err);
     }
   };
@@ -47,13 +71,7 @@ export default function SignUp() {
                 placeholder="username..."
                 Component={TextInputs}
                 control={control}
-                rules={{
-                  required: "Không được bỏ trống",
-                  minLength: {
-                    value: 3,
-                    message: "Không được ít hơn 3 kí tự.",
-                  },
-                }}
+                error={errors["name"]}
               />
             </div>
             <div className="mt-[3rem]">
@@ -63,13 +81,7 @@ export default function SignUp() {
                 placeholder="email..."
                 Component={TextInputs}
                 control={control}
-                rules={{
-                  required: "Không được bỏ trống",
-                  minLength: {
-                    value: 3,
-                    message: "Không được ít hơn 3 kí tự.",
-                  },
-                }}
+                error={errors["email"]}
               />
             </div>
             <div className="mt-[3rem]">
@@ -80,16 +92,45 @@ export default function SignUp() {
                 type="password"
                 Component={TextInputs}
                 control={control}
-                rules={{
-                  required: "Không được bỏ trống",
-                  minLength: {
-                    value: 3,
-                    message: "Không được ít hơn 3 kí tự.",
-                  },
-                }}
+                error={errors["password"]}
               />
             </div>
             <div className="mt-[3rem]">
+              <FormField<signType>
+                label="Phone"
+                name="phone"
+                placeholder="phone..."
+                type="text"
+                Component={TextInputs}
+                control={control}
+                error={errors["phone"]}
+              />
+            </div>
+            <div className="mt-[3rem]">
+              <FormField<signType>
+                label="Confirm password"
+                name="cfpassword"
+                placeholder="Confirm password..."
+                type="password"
+                Component={TextInputs}
+                control={control}
+                error={errors["cfpassword"]}
+              />
+            </div>
+
+            <div className="mt-[3rem]">
+              <FormField<signType>
+                label="Category"
+                name="category"
+                placeholder="Chọn danh mục..."
+                Component={SelectInput}
+                control={control}
+                error={errors["category"]}
+                options={phoneOptions}
+              />
+            </div>
+
+            <div className="my-[2rem]">
               <ButtonComponent
                 title="Đăng ký"
                 width="100%"
@@ -97,14 +138,12 @@ export default function SignUp() {
                 loading={isLoading}
               />
             </div>
-            {/* {error && (
-              <p className="mt-4 text-red-500">
-                {"data" in error
-                  ? ((error as FetchBaseQueryError).data as ErrorResponse)
-                      ?.message
-                  : "Đã xảy ra lỗi không xác định."}
-              </p>
-            )} */}
+            {isError && (
+              <Alert severity="error">
+                {(error as { data?: { message?: string } }).data?.message ||
+                  "Đã xảy ra lỗi không xác định."}
+              </Alert>
+            )}
           </form>
           <button
             className="mt-6 flex items-center"
