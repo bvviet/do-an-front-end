@@ -40,7 +40,7 @@ const NavbarAdmin = () => {
   };
 
   return (
-    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white ">
+    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white">
       {/* Logo */}
       <div>
         <Logo />
@@ -51,7 +51,7 @@ const NavbarAdmin = () => {
         <span className="mt-9 font-bold text-slate-400">Menu</span>
         <ul className="mt-[20px] flex flex-col gap-[20px] p-6">
           {arrayNav.map((nav) => (
-            <Link to={nav.link}>
+            <Link to={nav.link} key={nav.id}>
               <li
                 className=""
                 key={nav.id}

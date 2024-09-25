@@ -26,6 +26,7 @@ import ListAuth from "./pages/admin/Auth/ListAuth";
 import CrudLayout from "./layouts/CrudProduct";
 import ListProducts from "./components/admin/CRUD/List";
 import AddProducts from "./components/admin/CRUD/AddProduct";
+import Register from "./components/signIn-signUp/Register";
 
 function App() {
   const router = createBrowserRouter([
@@ -42,7 +43,8 @@ function App() {
         { path: "/faq", element: <FAQs /> },
         { path: "/checkout", element: <CheckOut /> },
         { path: "/login", element: <Login /> },
-        { path: "/signup", element: <SignUp /> },
+        { path: "/signup", element: <Register /> },
+        { path: "/dangky", element: <SignUp /> },
         { path: "/forgot", element: <ForgotPassword /> },
         { path: "/otp", element: <Verify /> },
         { path: "/setpassword", element: <SetPassword /> },
@@ -74,11 +76,6 @@ function App() {
             { path: "edit", element: <AddProducts /> },
           ],
         },
-        // { path: "/admin/orders", element: <Orders /> },
-        // { path: "/admin/users", element: <Users /> },
-        // { path: "/admin/categories", element: <Categories /> },
-        // { path: "/admin/settings", element: <Settings /> },
-        // { path: "*", element: <NotFoundPage /> },
       ],
     },
   ]);

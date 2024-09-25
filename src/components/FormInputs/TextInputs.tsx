@@ -7,6 +7,7 @@ interface TextFieldProps {
   name: string;
   type?: string;
   placeholder?: string;
+  error: boolean;
 }
 
 const TextInputs: React.FC<TextFieldProps> = ({
@@ -15,18 +16,21 @@ const TextInputs: React.FC<TextFieldProps> = ({
   name,
   type = "text",
   placeholder,
+  error,
 }) => {
   return (
     <TextField
       fullWidth
-      inputProps={{
-        className: "py-[15px] pl-[15px] pr-[20%]",
+      slotProps={{
+        input: { className: "h-[40px] px-3 py-2" },
+        htmlInput: { className: "!p-0" },
       }}
       name={name}
       onChange={onChange}
       value={value}
       type={type}
       placeholder={placeholder}
+      error={error}
     />
   );
 };

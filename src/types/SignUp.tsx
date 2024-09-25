@@ -4,6 +4,7 @@ interface signType {
   phone: string;
   cfpassword: string;
   password: string;
+  category: string
 }
 
 export default signType;
