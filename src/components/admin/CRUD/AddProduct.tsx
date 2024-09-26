@@ -1,6 +1,15 @@
+import FormField from "@/components/FormField";
 import FileUploadPreview from "./FileUpload";
-
+import TextInputs from "@/components/FormInputs/TextInputs";
+import { useForm } from "react-hook-form";
+import loginType from "@/types/SignIn";
+import SelectInput from "@/components/FormInputs/SelectIput";
+const phoneOptions = [
+  { value: "1234567890", label: "123-456-7890" },
+  { value: "0987654321", label: "098-765-4321" },
+];
 export default function AddProducts() {
+  const { control } = useForm<loginType>();
   return (
     <>
       <div className="h-auto rounded-xl bg-white px-2 pb-12">
@@ -13,54 +22,57 @@ export default function AddProducts() {
                     <div className="mt-10 px-7">
                       <div className="grid w-full grid-cols-1 gap-7">
                         <div>
-                          <p className="text-[16px] font-semibold leading-none text-gray-800">
-                            Tên sản phẩm
-                          </p>
-                          <input className="mt-4 w-full rounded-xl border border-gray-300 p-3 outline-none focus:bg-gray-50" />
+                          <FormField
+                            label="Tên sản phẩm"
+                            name="password"
+                            placeholder=""
+                            type="text"
+                            Component={TextInputs}
+                            control={control}
+                            rules={{
+                              required: "Không được bỏ trống",
+                              minLength: {
+                                value: 3,
+                                message: "Không được ít hơn 3 kí tự.",
+                              },
+                            }}
+                          />
                         </div>
                         <div>
-                          <p className="text-[16px] font-semibold leading-none text-gray-800">
-                            Giá
-                          </p>
-                          <input className="mt-4 w-full rounded-xl border border-gray-300 p-3 outline-none focus:bg-gray-50" />
+                          <FormField
+                            label="Giá sản phẩm"
+                            name="password"
+                            placeholder=""
+                            type="number"
+                            Component={TextInputs}
+                            control={control}
+                            rules={{
+                              required: "Không được bỏ trống",
+                              minLength: {
+                                value: 3,
+                                message: "Không được ít hơn 3 kí tự.",
+                              },
+                            }} />
                         </div>
                         <div className="">
-                          <label
-                            htmlFor="countries"
-                            className="mb-2 block text-[16px] font-semibold text-gray-900 dark:text-white"
-                          >
-                            Select an option
-                          </label>
-                          <select
-                            defaultValue={"choose"}
-                            id="countries"
-                            className="block h-16 w-full rounded-xl border border-gray-300 bg-gray-50 p-2.5 text-2xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                          >
-                            <option value={"choose"}>Choose a country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                          </select>
+                          <FormField<loginType>
+                            label="Category"
+                            name="password"
+                            placeholder="Chọn danh mục..."
+                            Component={SelectInput}
+                            control={control}
+                            options={phoneOptions}
+                          />
                         </div>
                         <div className="">
-                          <label
-                            htmlFor="countries"
-                            className="mb-2 block text-[16px] font-semibold text-gray-900 dark:text-white"
-                          >
-                            Select an option
-                          </label>
-                          <select
-                            defaultValue={"choose"}
-                            id="countries"
-                            className="block h-16 w-full rounded-xl border border-gray-300 bg-gray-50 p-2.5 text-2xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                          >
-                            <option value={"choose"}>Choose a country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                          </select>
+                          <FormField<loginType>
+                            label="Category"
+                            name="password"
+                            placeholder="Chọn danh mục..."
+                            Component={SelectInput}
+                            control={control}
+                            options={phoneOptions}
+                          />
                         </div>
                       </div>
                     </div>

@@ -1,224 +1,223 @@
-import Search from "./Search";
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import { IconButton, Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Search from "./Components/Search";
+import LinkProducts from "./Components/Button";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import Confirm from "@/components/Confirm";
+
+interface Column {
+  id: "name" | "price" | "category" | "img" | "action" | "";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  format?: (value: number) => string;
+}
+
+const columns: Column[] = [
+  { id: "name", label: "Name", minWidth: 170 },
+  { id: "price", label: "Price", minWidth: 100 },
+  {
+    id: "category",
+    label: "Category",
+    minWidth: 170,
+    align: "right",
+    format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "img",
+    label: "Image",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "action",
+    label: "Action",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "", // Cột trống không có tiêu đề
+    label: "",
+    minWidth: 50,
+    align: "right",
+  },
+];
+
+interface Data {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  img: string;
+  action: string;
+}
+
+const rows: Data[] = [
+  {
+    id: "1", name: "iPhone 16 Promax", price: 120001, category: "Phones", img: "image1.jpg", action: "Some action",
+  },
+  {
+    id: "2", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "3", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "4", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "5", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "6", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "7", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "8", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "9", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "10", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "11", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "12", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  {
+    id: "13", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
+  },
+  // Các mục khác...
+];
 
 export default function ListProducts() {
-  const items = [
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-    {
-      Name: "Apple",
-      Color: "Black",
-      Category: "SmartPhone",
-      Accessories: "Yes",
-      Available: "Yes",
-      Price: "200.000.000",
-      Weight: "1kg",
-    },
-  ];
-  return (
-    <>
-      <div className="relative overflow-x-auto bg-white py-8 shadow-md sm:rounded-3xl">
-        <div className="mx-auto flex max-w-[98%] items-center rounded-3xl bg-[#F5F5F5]">
-          <div className="w-[900px] p-6">
-            <Search />
-          </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className="rounded-2xl border border-solid border-gray-400 bg-white px-8 py-3.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100"
-            >
-              <i className="fa-duotone fa-solid fa-filter pr-2"></i>
-              Apply
-            </button>
-            <button
-              type="button"
-              className="rounded-2xl border border-solid border-gray-400 bg-white px-8 py-3.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100"
-            >
-              <i className="fa-solid fa-file-export"></i>
-              Export
-            </button>
-            <button
-              type="button"
-              className="rounded-2xl border border-solid border-gray-400 bg-white px-8 py-3.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100"
-            >
-              <i className="fa-solid fa-print"></i>
-              Print
-            </button>
-          </div>
-        </div>
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const { openPopup } = useModalContext();
 
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-          <thead className="text-xs text-[#92929D] dark:bg-gray-700 dark:text-gray-400">
-            <tr className="text-[14px]">
-              <th scope="col" className="p-6">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                  />
-                  <label htmlFor="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              <th scope="col" className="">
-                Product name
-              </th>
-              <th scope="col" className="pb-8">
-                Color
-              </th>
-              <th scope="col" className="pb-8">
-                Category
-              </th>
-              <th scope="col" className="pb-8">
-                Accessories
-              </th>
-              <th scope="col" className="pb-8">
-                Available
-              </th>
-              <th scope="col" className="pb-8">
-                Price
-              </th>
-              <th scope="col" className="pb-8">
-                Weight
-              </th>
-              <th scope="col" className="pb-8">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr className="border-b bg-white text-[16px] hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-6">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <th
-                  scope="row"
-                  className="whitespace-nowrap px-6 py-8 font-medium text-gray-900 dark:text-white"
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const handleDelete = (id: string) => {
+    alert(`Deleted product with ID: ${id}`);
+    // Logic để xóa sản phẩm theo ID
+  };
+
+  const handleUpdate = (id: string) => {
+    console.log("Update product with ID:", id);
+    // Logic để cập nhật sản phẩm theo ID
+  };
+
+  return (
+    <Paper sx={{ width: "100%" }}>
+      <TableContainer className="max-h-[480px] max-xl:max-h-[430px] max-sm:max-h-[430px]">
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow style={{ top: 0 }}>
+              <TableCell align="center" colSpan={5}>
+                <Search />
+              </TableCell>
+              <TableCell align="center" colSpan={1}>
+                <LinkProducts />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ top: 57, minWidth: column.minWidth }}
                 >
-                  {item.Name}
-                </th>
-                <td className="py-4 font-medium text-gray-900">{item.Color}</td>
-                <td className="py-4 font-medium text-gray-900">
-                  {item.Category}
-                </td>
-                <td className="py-4 font-medium text-gray-900">
-                  {item.Accessories}
-                </td>
-                <td className="py-4 font-medium text-gray-900">
-                  {item.Available}
-                </td>
-                <td className="py-4 font-medium text-gray-900">{item.Price}</td>
-                <td className="py-4 font-medium text-gray-900">
-                  {item.Weight}
-                </td>
-                <td className="flex items-center gap-2">
-                  <a
-                    href="#"
-                    className="rounded-full border border-solid border-red-500 bg-white px-8 py-3.5 text-[12px] font-medium text-red-500 shadow-lg hover:bg-red-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100"
-                  >
-                    Remove
-                  </a>
-                  <a
-                    href="#"
-                    className="rounded-full border border-solid border-green-500 bg-white px-8 py-3.5 text-[12px] font-medium text-green-500 shadow-lg hover:bg-green-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100"
-                  >
-                    Update
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mx-auto flex h-16 max-w-[98%] items-center justify-between rounded-3xl bg-[#F5F5F5] p-6">
-          <div>
-            <span className="text-gray-400">
-              <strong className="text-black">1</strong> - 5 of 56
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <p className="text-[14px] text-gray-400">The page you’re on</p>
-            <div>
-              <button className="rounded-2xl border border-solid border-gray-400 bg-white px-6 py-2.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
-                <strong className="">1</strong>
-                <i className="fa-solid fa-chevron-down pl-2"></i>
-              </button>
-              <span className="mx-2 h-full border-l border-solid border-gray-400"></span>
-              <button className="rounded-2xl border border-solid border-gray-400 bg-white px-6 py-2.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
-                <i className="fa-solid fa-arrow-left"></i>
-              </button>
-              <button className="ml-2 rounded-2xl border border-solid border-gray-400 bg-white px-6 py-2.5 text-[12px] font-medium text-[#280559] shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
-                <i className="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                  {columns.map((column) => {
+                    if (column.id === "") {
+                      return (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Tooltip title="Delete product">
+                            <IconButton
+                              aria-label="delete"
+                              onClick={() =>
+                                openPopup(
+                                  <Confirm
+                                    title="Bạn chắc chứ?"
+                                    description="Bạn có thật sự muốn xoá sản phẩm này."
+                                    handleDelete={() => handleDelete(row.id)}
+                                  />,
+                                )
+                              }
+                            >
+                              <DeleteIcon color="error" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Edit product">
+                            <IconButton
+                              aria-label="edit"
+                              onClick={() => handleUpdate(row.id)}
+                            >
+                              <EditIcon color="primary" />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      );
+                    } else {
+                      const value = row[column.id as keyof Data];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {value}
+                        </TableCell>
+                      );
+                    }
+                  })}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 35]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
   );
 }
