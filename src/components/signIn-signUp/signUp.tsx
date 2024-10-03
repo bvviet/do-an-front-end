@@ -2,7 +2,6 @@ import { useModalContext } from "../../contexts/ModelPopUp/ModelProvider";
 import FormField from "../FormField";
 import SignIn from "./signIn";
 import "./signIn.css";
-import signType from "@/types/SignUp";
 import ButtonComponent from "../ButtonComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
@@ -12,6 +11,16 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert } from "@mui/material";
 import SelectInput from "../FormInputs/SelectIput";
+
+interface signInterface {
+  name: string;
+  email: string;
+  phone: string;
+  confirmPassword: string;
+  password: string;
+  category: string;
+}
+
 const phoneOptions = [
   { value: "1234567890", label: "123-456-7890" },
   { value: "0987654321", label: "098-765-4321" },
@@ -34,7 +43,7 @@ export default function SignUp() {
       .string()
       .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
       .required("Mật khẩu không được bỏ trống"),
-    cfpassword: yup.string().required("Vui lòng xác nhận mật khẩu"),
+    confirmPassword: yup.string().required("Vui lòng xác nhận mật khẩu"),
     category: yup.string().required("Vui lòng chọn danh mục"),
   });
 
@@ -42,13 +51,13 @@ export default function SignUp() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<signType>({
+  } = useForm<signInterface>({
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<signType> = async (formData) => {
+  const onSubmit: SubmitHandler<signInterface> = async (formData) => {
     console.log(formData);
-    
+
     try {
       const response = await register(formData).unwrap();
       toast.success("Đăng ký thành công!");
@@ -65,7 +74,7 @@ export default function SignUp() {
           <p className="signin">Create your account</p>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="User Name"
                 name="name"
                 placeholder="username..."
@@ -75,7 +84,7 @@ export default function SignUp() {
               />
             </div>
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="Email"
                 name="email"
                 placeholder="email..."
@@ -85,7 +94,7 @@ export default function SignUp() {
               />
             </div>
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="Password"
                 name="password"
                 placeholder="password..."
@@ -96,7 +105,7 @@ export default function SignUp() {
               />
             </div>
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="Phone"
                 name="phone"
                 placeholder="phone..."
@@ -107,19 +116,19 @@ export default function SignUp() {
               />
             </div>
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="Confirm password"
-                name="cfpassword"
+                name="confirmPassword"
                 placeholder="Confirm password..."
                 type="password"
                 Component={TextInputs}
                 control={control}
-                error={errors["cfpassword"]}
+                error={errors["confirmPassword"]}
               />
             </div>
 
             <div className="mt-[3rem]">
-              <FormField<signType>
+              <FormField<signInterface>
                 label="Category"
                 name="category"
                 placeholder="Chọn danh mục..."

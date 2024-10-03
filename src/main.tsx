@@ -10,19 +10,22 @@ import theme from "./configs/muiConfigs.ts";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { store } from "@/redux/store.ts";
+import { persistor, store } from "@/redux/store.ts";
+import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <StrictMode>
-        <ModalProvider>
-          <OverlayProvider>
-            <App />
-            <ToastContainer />
-          </OverlayProvider>
-        </ModalProvider>
-      </StrictMode>
-    </ThemeProvider>
+    <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
+      <ThemeProvider theme={theme}>
+        <StrictMode>
+          <ModalProvider>
+            <OverlayProvider>
+              <App />
+              <ToastContainer />
+            </OverlayProvider>
+          </ModalProvider>
+        </StrictMode>
+      </ThemeProvider>
+    </PersistGate>
   </Provider>,
 );
