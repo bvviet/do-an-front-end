@@ -1,5 +1,6 @@
 import { Controller, Control, FieldValues, Path } from "react-hook-form";
 import { FormHelperText } from "@mui/material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 interface Option {
   value: string;
@@ -52,7 +53,7 @@ const FormField = <T extends FieldValues>({
             {error?.message && (
               <div className="mt-2 flex items-center gap-2 text-[1.6rem] text-red-600">
                 <FormHelperText error={true} sx={{ fontSize: "1.65rem" }}>
-                  {error.message}
+                  <ErrorOutlineIcon /> {error.message}
                 </FormHelperText>
               </div>
             )}

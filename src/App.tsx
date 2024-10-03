@@ -15,18 +15,18 @@ import FormUpdateAddress from "@/components/user/Profile/ProfileRight/FormUpdate
 import CheckOut from "@/pages/user/CheckOut/CheckOut";
 import HomePage from "@/pages/user/Home/HomePage";
 import ProfileRight from "@/components/user/Profile/ProfileRight";
-import Login from "./pages/SignIn-Login/Login";
-import SignUp from "./pages/SignIn-Login/SignUp";
+import Login from "@/pages/SignIn-Login/Login";
+import SignUp from "@/pages/SignIn-Login/SignUp";
 import ForgotPassword from "./pages/SignIn-Login/Forgot";
-import Verify from "./pages/SignIn-Login/Verify";
-import SetPassword from "./components/signIn-signUp/SetPassword";
-import AdminLayout from "./layouts/AdminLayout";
-import ListAuth from "./pages/admin/Auth/ListAuth";
+import Verify from "@/pages/SignIn-Login/Verify";
+import SetPassword from "@/components/signIn-signUp/SetPassword";
+import AdminLayout from "@/layouts/AdminLayout";
+import ListAuth from "@/pages/admin/Auth/ListAuth";
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
-import CrudLayout from "./layouts/CrudProduct";
-import ListProducts from "./components/admin/CRUD/List";
-import AddProducts from "./components/admin/CRUD/AddProduct";
-import Register from "./components/signIn-signUp/Register";
+import CrudLayout from "@/layouts/CrudProduct";
+import ListProducts from "@/components/admin/CRUD/List";
+import AddProducts from "@/components/admin/CRUD/AddProduct";
+import Register from "@/components/signIn-signUp/Register";
 
 function App() {
   const router = createBrowserRouter([

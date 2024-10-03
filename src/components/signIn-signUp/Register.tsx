@@ -5,23 +5,52 @@ import ButtonComponent from "../ButtonComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
 import { useRegisterMutation } from "@/services/authApi";
-// import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-
-// interface ErrorResponse {
-//   message: string;
-// }
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 
 export default function Register() {
-  const { control, handleSubmit } = useForm<signType>();
+  const [messagesPassWord, setMessagesPassWord] = useState<string>("");
   const [register, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
+  // Validate
+  const formSchema = yup.object().shape({
+    name: yup.string().required("Tên không được bỏ trống"),
+    email: yup
+      .string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Email không đúng định dạng",
+      )
+      .required("Email không được bỏ trống"),
+    password: yup
+      .string()
+      .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+      .required("Mật khẩu không được bỏ trống"),
+    confirmPassword: yup.string().required("Vui lòng xác nhận mật khẩu"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signType>({
+    resolver: yupResolver(formSchema),
+  });
 
   const onSubmit: SubmitHandler<signType> = async (formData) => {
     try {
-      const response = await register(formData).unwrap();
+      if (formData.password !== formData.confirmPassword) {
+        setMessagesPassWord("Vui lòng nhập đúng mật khẩu");
+        return;
+      }
+      setMessagesPassWord("");
+
+      await register(formData).unwrap();
       toast.success("Đăng ký thành công!");
-      console.log("Đăng ký thành công:", response);
+      navigate("/login");
     } catch (err) {
       toast.error(
         (err as { data?: { message?: string } }).data?.message ||
@@ -51,46 +80,19 @@ export default function Register() {
                   type="text"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
+                  error={errors["name"]}
                 />
               </div>
-              <div className="flex gap-8">
-                <div className="mt-[3rem]">
-                  <FormField<signType>
-                    label="Email"
-                    name="email"
-                    placeholder=""
-                    type="email"
-                    Component={TextInputs}
-                    control={control}
-                    rules={{
-                      required: "Không được bỏ trống",
-                      minLength: {
-                        value: 3,
-                        message: "Không được ít hơn 3 kí tự.",
-                      },
-                    }}
-                  />
-                </div>
-                <div className="mt-[3rem]">
-                  <FormField<signType>
-                    label="Phone Number"
-                    name="phone"
-                    placeholder=""
-                    type="number"
-                    Component={TextInputs}
-                    control={control}
-                    rules={{
-                      required: "Không được bỏ trống",
-                    }}
-                  />
-                </div>
+              <div className="mt-[3rem]">
+                <FormField<signType>
+                  label="Email"
+                  name="email"
+                  placeholder=""
+                  type="email"
+                  Component={TextInputs}
+                  control={control}
+                  error={errors["email"]}
+                />
               </div>
               <div className="mt-[3rem]">
                 <FormField<signType>
@@ -100,36 +102,29 @@ export default function Register() {
                   type="password"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
+                  error={errors["password"]}
                 />
               </div>
               <div className="mt-[3rem]">
                 <FormField<signType>
                   label="Confirm Password"
-                  name="cfpassword"
+                  name="confirmPassword"
                   placeholder=""
                   type="password"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
+                  error={errors["confirmPassword"]}
                 />
+                {messagesPassWord && (
+                  <div className="text-[14px] font-semibold text-red-500">
+                    {messagesPassWord}
+                  </div>
+                )}
               </div>
 
               <div className="mt-[3rem]">
                 <ButtonComponent
-                  title="Đăng nhập"
+                  title="Đăng Ký"
                   width="100%"
                   onClick={handleSubmit(onSubmit)}
                   loading={isLoading}
