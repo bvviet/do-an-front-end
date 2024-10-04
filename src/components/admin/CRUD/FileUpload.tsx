@@ -1,3 +1,5 @@
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from "@mui/material";
 import React, { useState } from "react";
 
 const FileUploadPreview: React.FC = () => {
@@ -67,21 +69,18 @@ const FileUploadPreview: React.FC = () => {
       </div>
 
       {/* Hiển thị ảnh xem trước và nút xóa cho từng ảnh */}
-      <div className="mt-4 grid grid-cols-3 gap-4 pl-7">
+      <div className="my-4 grid grid-cols-3 gap-4 pl-7">
         {previewUrls.map((url, index) => (
-          <div key={index} className="flex items-center">
+          <div key={index} className="flex ">
             <img
               src={url}
               alt={`Preview ${index + 1}`}
-              className="mr-4 h-32 w-32 object-cover"
+              className="mr-1 h-32 w-32 object-scale-down "
             />
-            <div className="">
-              <button
-                onClick={() => handleRemoveImage(index)}
-                className="rounded-xl bg-red-600 p-4 text-lg"
-              >
-                Xoá ảnh
-              </button>
+            <div className="flex items-end">
+              <IconButton onClick={() => handleRemoveImage(index)} aria-label="delete">
+                <DeleteIcon fontSize='small' />
+              </IconButton>
             </div>
           </div>
         ))}
