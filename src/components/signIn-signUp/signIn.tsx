@@ -11,7 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
-import { login } from "@/redux/slices/authSlice";
+import { login, saveUserInfo } from "@/redux/slices/authSlice";
+import { useEffect } from "react";
 
 interface LoginResponse {
   access_token: string;
@@ -21,14 +22,9 @@ interface LoginResponse {
 }
 
 export default function SignInComponent() {
-  const [logIn, { isLoading }] = useLoginMutation();
+  const [logIn, { isLoading, isSuccess }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: users, error } = useGetUsersQuery();
-  console.log({users});
-  if (error) {
-    console.log({error});
-  }
 
   // Validate
   const formSchema = yup.object().shape({
@@ -65,7 +61,6 @@ export default function SignInComponent() {
           refresh_token: response.refresh_token,
         }),
       );
-      navigate("/");
     } catch (err) {
       toast.error(
         (err as { data?: { message?: string } }).data?.message ||
@@ -74,6 +69,16 @@ export default function SignInComponent() {
       console.error("Đăng ký thất bại:", err);
     }
   };
+
+  // Gọi query người dùng chỉ khi đăng nhập thành công
+  const { data: users } = useGetUsersQuery(undefined, { skip: !isSuccess });
+
+  useEffect(() => {
+    if (isSuccess && users) {
+      dispatch(saveUserInfo(users));
+      navigate("/");
+    }
+  }, [dispatch, isSuccess, users, navigate]);
 
   return (
     <>

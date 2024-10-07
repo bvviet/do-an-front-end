@@ -123,7 +123,7 @@ const FormUpdateAddress = () => {
   };
 
   return (
-    <div className="h-full gap-3 rounded-lg p-6">
+    <div className="h-full gap-3 rounded-lg">
       <h2 className="col-span-12 text-[2rem] font-medium leading-[145.455%] lg:text-[2.2rem]">
         Cập nhật địa chỉ
       </h2>

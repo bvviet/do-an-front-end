@@ -29,6 +29,8 @@ import CrudLayout from "@/layouts/CrudProduct";
 import ListProducts from "@/components/admin/CRUD/List";
 import AddProducts from "@/components/admin/CRUD/AddProduct";
 import Register from "@/components/signIn-signUp/Register";
+import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
+import ProtectedLayout from "./layouts/ProtectedLayout";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,20 +47,25 @@ function App() {
         { path: "/faq", element: <FAQs /> },
         { path: "/checkout", element: <CheckOut /> },
         { path: "/login", element: <Login /> },
-        { path: "/signup", element: <Register /> },
+        { path: "/sign-up", element: <Register /> },
         { path: "/dangky", element: <SignUp /> },
         { path: "/forgot", element: <ForgotPassword /> },
         { path: "/otp", element: <Verify /> },
-        { path: "/setpassword", element: <SetPassword /> },
+        { path: "/set-password", element: <SetPassword /> },
         { path: "*", element: <NotFoundPage /> },
         {
-          path: "/profile",
-          element: <Profile />,
+          element: <ProtectedLayout />,
           children: [
-            { index: true, element: <ProfileRight /> },
-            { path: "addresses", element: <Address /> },
-            { path: "addresses/add", element: <FormUpdateAddress /> },
-            // { path: "addresses/add", element: <FormUpdateAddress /> },
+            {
+              path: "/profile",
+              element: <Profile />,
+              children: [
+                { index: true, element: <ProfileRight /> },
+                { path: "update", element: <FormUpdateInfo /> },
+                { path: "addresses", element: <Address /> },
+                { path: "addresses/add", element: <FormUpdateAddress /> },
+              ],
+            },
           ],
         },
       ],
@@ -67,7 +74,6 @@ function App() {
       path: "/admin",
       element: <AdminLayout />,
       children: [
-        // Admin routes here
         { path: "lists", element: <ListAuth /> },
         { path: "product", element: <LabTabs /> },
         { path: "genre", element: <GenreTabs /> },
