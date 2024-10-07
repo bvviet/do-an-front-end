@@ -23,6 +23,8 @@ import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
+import LabTabs from "./components/admin/Tab";
+import GenreTabs from "./components/admin/TabGenre";
 import CrudLayout from "@/layouts/CrudProduct";
 import ListProducts from "@/components/admin/CRUD/List";
 import AddProducts from "@/components/admin/CRUD/AddProduct";
@@ -67,15 +69,9 @@ function App() {
       children: [
         // Admin routes here
         { path: "lists", element: <ListAuth /> },
-        {
-          path: "products",
-          element: <CrudLayout />,
-          children: [
-            { path: "list", element: <ListProducts /> },
-            { path: "add", element: <AddProducts /> },
-            { path: "edit", element: <AddProducts /> },
-          ],
-        },
+        { path: "product", element: <LabTabs /> },
+        { path: "genre", element: <GenreTabs /> },
+
       ],
     },
   ]);

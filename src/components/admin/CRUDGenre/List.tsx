@@ -105,7 +105,7 @@ const rows: Data[] = [
   // Các mục khác...
 ];
 
-export default function ListProducts() {
+export default function ListCategory() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { openPopup } = useModalContext();
@@ -132,11 +132,11 @@ export default function ListProducts() {
   };
 
   return (
-    <Paper sx={{ width: "100%",borderRadius:"10px" }}>
-      <TableContainer className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]" style={{borderRadius:"10px"}}>
+    <Paper sx={{ width: "100%", borderRadius: "10px" }}>
+      <TableContainer className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]" style={{ borderRadius: "10px" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead >
-            <TableRow style={{ top: 0 }}> 
+            <TableRow style={{ top: 0 }}>
               <TableCell align="center" colSpan={5}>
                 <Search />
               </TableCell>
