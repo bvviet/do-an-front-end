@@ -7,7 +7,7 @@ const AdminLayout = () => {
         <div className="w-1/6 max-sm:hidden">
           <NavbarAdmin />
         </div>
-        <div className="content w-5/6  bg-[#E8E9EB] p-7 max-sm:w-full">
+        <div className="content w-5/6 h-fit bg-[#E8E9EB] p-7 max-sm:w-full">
           <Outlet />
         </div>
       </div>
