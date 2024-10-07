@@ -1,5 +1,6 @@
 export interface addressType {
   id: number;
+  phone: string;
   user_id: number;
   address_name: string;
   city: string;

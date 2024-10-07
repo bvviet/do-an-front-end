@@ -1,9 +1,6 @@
-export interface ProfileType {
-  fullName: string;
-  email: string;
-  password: string;
-  phone: string;
-  avatar: string;
-  facebook: string;
-  tiktok: string;
-}
+export type ProfileType = {
+  name: string;
+  avatar?: File;
+  link_fb?: string;
+  link_tt?: string;
+};

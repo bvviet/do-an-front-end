@@ -6,7 +6,7 @@ import Confirm from "../../../Confirm";
 const Address = () => {
   const { openPopup } = useModalContext();
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex justify-between">
         <p className="text-[1.9rem] font-bold">Địa chỉ của tôi</p>
         <Link

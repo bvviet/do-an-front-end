@@ -13,6 +13,7 @@ import {
   PERSIST,
   PURGE,
 } from "redux-persist";
+import { loOutMiddleware } from "./middleware";
 
 // Cấu hình persist
 const persistConfig = {
@@ -40,7 +41,7 @@ export const store = configureStore({
         // Thay đổi đây để truyền vào action types như là một array
         ignoredActions: [FLUSH, REGISTER, REHYDRATE, PAUSE, PERSIST, PURGE],
       },
-    }).concat(authApi.middleware);
+    }).concat(loOutMiddleware, authApi.middleware);
   },
 });
 
