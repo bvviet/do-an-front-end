@@ -8,11 +8,11 @@ const phoneOptions = [
   { value: "1234567890", label: "123-456-7890" },
   { value: "0987654321", label: "098-765-4321" },
 ];
-export default function AddProducts() {
+export default function AddCategory() {
   const { control } = useForm<loginType>();
   return (
     <>
-      <div className="h-[600px] rounded-xl bg-white px-2 pb-12">
+      <div className="h-auto rounded-xl bg-white px-2 pb-12">
         <div className="flex-no-wrap flex items-start">
           <div className="w-full">
             <div className="px-2">
