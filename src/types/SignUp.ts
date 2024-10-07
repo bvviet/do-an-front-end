@@ -1,10 +1,8 @@
 interface signType {
   name: string;
   email: string;
-  phone: string;
-  cfpassword: string;
+  confirmPassword: string;
   password: string;
-  category: string
 }
 
 export default signType;

@@ -3,26 +3,69 @@ import "./signIn.css";
 import ButtonComponent from "../ButtonComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
-import { useLoginMutation } from "@/services/authApi";
-// import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useGetUsersQuery, useLoginMutation } from "@/services/authApi";
 import { toast } from "react-toastify";
 import loginType from "@/types/SignIn";
 import { Checkbox } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/authSlice";
 
-// interface ErrorResponse {
-//   message: string;
-// }
+interface LoginResponse {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  token_type: string;
+}
 
 export default function SignInComponent() {
-  const { control, handleSubmit } = useForm<loginType>();
-  const [login, { isLoading }] = useLoginMutation();
+  const [logIn, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { data: users, error } = useGetUsersQuery();
+  console.log({users});
+  if (error) {
+    console.log({error});
+  }
+
+  // Validate
+  const formSchema = yup.object().shape({
+    email: yup
+      .string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Email không đúng định dạng",
+      )
+      .required("Email không được bỏ trống"),
+    password: yup
+      .string()
+      .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+      .required("Mật khẩu không được bỏ trống"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginType>({
+    resolver: yupResolver(formSchema),
+  });
 
   const onSubmit: SubmitHandler<loginType> = async (formData) => {
     try {
-      const response = await login(formData).unwrap();
+      const response = (await logIn(
+        formData,
+      ).unwrap()) as unknown as LoginResponse;
       toast.success("Đăng nhập thành công!");
-      console.log("Đăng nhập thành công:", response);
+      dispatch(
+        login({
+          access_token: response.access_token,
+          refresh_token: response.refresh_token,
+        }),
+      );
+      navigate("/");
     } catch (err) {
       toast.error(
         (err as { data?: { message?: string } }).data?.message ||
@@ -49,13 +92,7 @@ export default function SignInComponent() {
                   type="email"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
+                  error={errors["email"]}
                 />
               </div>
               <div className="mt-[3rem]">
@@ -66,13 +103,7 @@ export default function SignInComponent() {
                   type="password"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
+                  error={errors["password"]}
                 />
               </div>
               <div className="ml-[-12px] mt-[1rem] flex items-center justify-between">
