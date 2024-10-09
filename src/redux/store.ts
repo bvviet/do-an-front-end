@@ -13,17 +13,17 @@ import {
   PERSIST,
   PURGE,
 } from "redux-persist";
-import { loOutMiddleware } from "./middleware";
+import { logOutMiddleware } from "./middleware";
 
-// Cấu hình persist
+// Cấu hình cho redux-persist
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: [authApi.reducerPath],
+  blacklist: [authApi.reducerPath], // Không persist dữ liệu từ authApi
 };
 
-// Kết hợp các reducer
+// Kết hợp các reducer lại với nhau
 const rootReducer = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
@@ -38,15 +38,16 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: {
-        // Thay đổi đây để truyền vào action types như là một array
+        // Bỏ qua các action không thể serialize
         ignoredActions: [FLUSH, REGISTER, REHYDRATE, PAUSE, PERSIST, PURGE],
       },
-    }).concat(loOutMiddleware, authApi.middleware);
+    }).concat(logOutMiddleware, authApi.middleware); // Thêm middleware tùy chỉnh và middleware của authApi
   },
 });
 
 // Tạo persistStore
 export const persistor = persistStore(store);
+
 // Xác định kiểu RootState và AppDispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

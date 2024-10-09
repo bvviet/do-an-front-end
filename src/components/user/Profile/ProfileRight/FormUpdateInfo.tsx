@@ -5,12 +5,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ProfileType } from "@/types/profile";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useUpdateProfileMutation } from "@/services/authApi";
-import { useState } from "react";
+import { useGetUsersQuery, useUpdateProfileMutation } from "@/services/authApi";
+import { useEffect, useState } from "react";
+import { saveUserInfo } from "@/redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useUserInfor } from "@/hooks/useUserInfor";
 
 const FormUpdateInfo = () => {
   const { closePopup } = useModalContext();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Validate schema
   const formSchema = yup.object().shape({
@@ -24,12 +30,25 @@ const FormUpdateInfo = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ProfileType>({
     resolver: yupResolver(formSchema),
   });
+  const getUseUserInfor = useUserInfor();
+  const [update, { isSuccess, error, isError }] = useUpdateProfileMutation();
+  const { data: users } = useGetUsersQuery(undefined, { skip: !isSuccess });
+  console.log({ getUseUserInfor });
 
-  const [update] = useUpdateProfileMutation();
-
+  useEffect(() => {
+    if (getUseUserInfor) {
+      reset({
+        name: getUseUserInfor?.name,
+        link_fb: getUseUserInfor?.link_fb,
+        link_tt: getUseUserInfor?.link_tt,
+        // avatar: users.avatar || null,
+      });
+    }
+  }, [getUseUserInfor, reset]);
   const onSubmit: SubmitHandler<ProfileType> = async (formData) => {
     const completeFormData = new FormData();
     completeFormData.append("name", formData.name || "");
@@ -56,6 +75,19 @@ const FormUpdateInfo = () => {
       setSelectedFile(file);
     }
   };
+
+  useEffect(() => {
+    if (isSuccess && users) {
+      dispatch(saveUserInfo(users));
+      navigate("/profile");
+    }
+  }, [dispatch, isSuccess, users, navigate]);
+
+  useEffect(() => {
+    if (isError) {
+      console.error("Error occurred:", error); // Kiểm tra chi tiết lỗi
+    }
+  }, [isError, error]);
 
   return (
     <div className="grid grid-cols-12 gap-3">

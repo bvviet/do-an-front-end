@@ -1,20 +1,18 @@
 import { RootState } from "@/redux/store";
-import {
-  BaseQueryApi,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import signUpType from "@/types/SignUp";
 import loginType from "@/types/SignIn";
 import { userType } from "@/types/user";
-import { logout } from "@/redux/slices/authSlice";
+import { AddressResponse, addressType } from "@/types/address";
 
+// Định nghĩa kiểu dữ liệu cho phản hồi đăng ký
 interface RegisterResponse {
   id: number;
   name: string;
   email: string;
 }
+
+// Định nghĩa kiểu dữ liệu cho phản hồi đăng nhập
 interface LoginResponse {
   access_token: string;
   refresh_token: string;
@@ -22,50 +20,58 @@ interface LoginResponse {
   expires_in: number;
 }
 
-interface updateProfileResponse {
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at: string;
-    avatar: string;
-    link_fb: string;
-    link_tt: string;
-    role: string;
-    created_at: string;
-    updated_at: string;
+// Định nghĩa kiểu dữ liệu cho phản hồi cập nhật hồ sơ
+interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      email_verified_at: string;
+      avatar: string;
+      created_at: string;
+      link_fb: string;
+      link_tt: string;
+      role: string;
+      updated_at: string;
+    };
+    avatar_url: string;
   };
-  avatar_url: string;
 }
 
+// Định nghĩa kiểu dữ liệu cho phản hồi tạo địa chỉ
+interface CreateAddressResponse {
+  id: number;
+  user_id: number;
+  address_name: string;
+  phone_number: string;
+  city: string;
+  district: string;
+  ward: string;
+  detail_address: string;
+  is_default: boolean;
+}
+
+// Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_URL,
-  prepareHeaders: (header, { getState }) => {
+  prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
-    const token = state?.auth?.access_token;
+    const token = state?.auth?.access_token; // Lấy token từ state
     if (token) {
-      header.set("Authorization", `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
-    return header;
+    headers.set("Accept", "application/json");
+    return headers;
   },
 });
 
-const baseQueryWithForceLogout = async (
-  args: string | FetchArgs,
-  api: BaseQueryApi,
-  extraOptions: object,
-) => {
-  const result = await baseQuery(args, api, extraOptions);
-  if (result?.error?.status === 401) {
-    api.dispatch(logout());
-    throw new Error("Token expired");
-  }
-  return result;
-};
-
+// Tạo API với createApi
 export const authApi = createApi({
   reducerPath: "api",
-  baseQuery: baseQueryWithForceLogout,
+  baseQuery: baseQuery,
   endpoints: (builder) => ({
     register: builder.mutation<RegisterResponse, signUpType>({
       query: ({ name, email, password }) => ({
@@ -74,6 +80,7 @@ export const authApi = createApi({
         body: { name, email, password },
       }),
     }),
+
     login: builder.mutation<LoginResponse, loginType>({
       query: ({ email, password }) => ({
         url: "/auth/login",
@@ -81,22 +88,61 @@ export const authApi = createApi({
         body: { email, password },
       }),
     }),
+
     getUsers: builder.query<userType, void>({
       query: () => "/auth/profile",
     }),
-    updateProfile: builder.mutation<updateProfileResponse, FormData>({
+
+    updateProfile: builder.mutation<UpdateProfileResponse, FormData>({
       query: (formData) => ({
         url: "/auth/profile/update/6",
         method: "POST",
         body: formData,
       }),
     }),
+
+    getAddress: builder.query<AddressResponse, void>({
+      query: () => "/addresses",
+    }),
+
+    deleteAddress: builder.mutation<AddressResponse, number>({
+      query: (id) => ({
+        url: `/addresses/${id}`,
+        method: "DELETE",
+      }),
+    }),
+
+    createAddress: builder.mutation<CreateAddressResponse, addressType>({
+      query: ({
+        city,
+        district,
+        ward,
+        detail_address,
+        phone_number,
+        address_name,
+      }) => ({
+        url: "/addresses",
+        method: "POST",
+        body: {
+          city,
+          district,
+          ward,
+          detail_address,
+          phone_number,
+          address_name,
+        },
+      }),
+    }),
   }),
 });
 
+// Xuất các hooks để sử dụng trong các component
 export const {
   useRegisterMutation,
   useLoginMutation,
   useGetUsersQuery,
   useUpdateProfileMutation,
+  useCreateAddressMutation,
+  useGetAddressQuery,
+  useDeleteAddressMutation,
 } = authApi;
