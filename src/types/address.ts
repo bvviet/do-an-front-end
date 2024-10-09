@@ -1,11 +1,28 @@
 export interface addressType {
+  phone_number?: string;
+  address_name?: string;
+  city?: string;
+  district?: string;
+  ward?: string;
+  detail_address?: string;
+}
+
+export interface AddressType {
   id: number;
-  phone: string;
   user_id: number;
-  address_name: string;
+  address_name: string | null;
+  phone_number: number;
   city: string;
   district: string;
-  ward: string;
+  Ward: string;
   detail_address: string;
-  is_default: true;
+  is_default: boolean | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AddressResponse {
+  message: string;
+  success: boolean;
+  addresses: AddressType[];
 }
