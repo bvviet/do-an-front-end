@@ -1,7 +1,7 @@
 interface signType {
   name: string;
   email: string;
-  // confirmPassword: string;
+  confirmPassword: string;
   password: string;
 }
 

@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addressType } from "@/types/address";
 import { useCreateAddressMutation, useGetUsersQuery } from "@/services/authApi";
 import { saveUserInfo } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { toast } from "react-toastify";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 interface OptionType {
   value: string;
@@ -33,6 +37,7 @@ interface CommuneType {
 const FormUpdateAddress = () => {
   const { closePopup } = useModalContext();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [provinces, setProvinces] = useState<OptionType[]>([]);
   const [districts, setDistricts] = useState<OptionType[]>([]);
   const [communes, setCommunes] = useState<OptionType[]>([]);
@@ -128,66 +133,58 @@ const FormUpdateAddress = () => {
     setSelectedCommune(selectedOption);
   };
 
-  const [createAddress, { isSuccess, error }] = useCreateAddressMutation();
+  const formSchema = yup.object().shape({
+    phone_number: yup
+      .string()
+      .max(10, "Số điện thoại không nhiều hơn 10 số")
+      .required("Số điện thoại là bắt buộc"),
+    address_name: yup.string().required("Loại địa chỉ không được bỏ trống"),
+    ward: yup.string(),
+    city: yup.string(),
+    detail_address: yup
+      .string()
+      .required("Địa chỉ chi tiết không được bỏ trống"),
+    district: yup.string(),
+  });
 
-  const { register, handleSubmit } = useForm<addressType>();
-  // const token = useSelector((state: RootState) => state.auth.access_token);
+  const [createAddress, { isSuccess, isLoading }] = useCreateAddressMutation();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<addressType>({
+    resolver: yupResolver(formSchema),
+  });
+
   const onSubmit: SubmitHandler<addressType> = async (data) => {
-    try {
-      // Gọi hàm createAddress và đợi kết quả
-     await createAddress({
-        address_name: data.address_name,
-        detail_address: data.detail_address,
-        ward: selectedCommune?.label,
-        district: selectedDistrict?.label,
-        city: selectedProvince?.label,
-        phone_number: data.phone_number,
-      });
-      // const res = await axios.post(
-      //   "http://127.0.0.1:8000/api/addresses",
-      //   {
-      //     address_name: data.address_name,
-      //     detail_address: data.detail_address,
-      //     ward: selectedCommune?.label,
-      //     district: selectedDistrict?.label,
-      //     city: selectedProvince?.label,
-      //     phone_number: data.phone_number,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`, // Gắn Bearer token vào header
-      //     },
-      //   },
-      // );
-      // // Log kết quả trả về từ createAddress
-      // console.log({ res });
-
-      // Thực hiện các hành động cần thiết sau khi tạo địa chỉ thành công
-      // Ví dụ, thông báo cho người dùng hoặc điều hướng đến trang khác
-    } catch (error) {
-      // Xử lý lỗi
-      toast.error(
-        (error as { data?: { message?: string } }).data?.message ||
-          "Đã xảy ra lỗi không xác định.",
-      );
-      console.error("Error creating address:", error);
-
-      // Bạn có thể hiển thị thông báo lỗi cho người dùng
-      // Hoặc xử lý lỗi theo cách phù hợp với ứng dụng của bạn
-      alert("Có lỗi xảy ra trong quá trình tạo địa chỉ. Vui lòng thử lại.");
-    }
+    await createAddress({
+      address_name: data.address_name,
+      detail_address: data.detail_address,
+      ward: selectedCommune?.label ?? "",
+      district: selectedDistrict?.label ?? "",
+      city: selectedProvince?.label ?? "",
+      phone_number: data.phone_number,
+    }).unwrap();
+    toast.success("Thêm mới địa chỉ thành công");
   };
 
-  console.log({ error });
-
-  // Gọi query người dùng chỉ khi đăng nhập thành công
-  const { data: users } = useGetUsersQuery(undefined, { skip: !isSuccess });
+  const { data: users, refetch } = useGetUsersQuery(undefined, {
+    skip: !isSuccess,
+  });
 
   useEffect(() => {
+    dispatch(setLoading(isLoading));
+
+    // Sau khi thêm thành công refetch lại người dùng và lưu vào store
     if (isSuccess && users) {
+      refetch();
       dispatch(saveUserInfo(users));
+      setTimeout(() => {
+        navigate("/profile/addresses");
+      }, 2000);
     }
-  }, [dispatch, isSuccess, users]);
+  }, [dispatch, isSuccess, isLoading, users, refetch, navigate]);
 
   return (
     <div className="h-full gap-3 rounded-lg">
@@ -196,8 +193,8 @@ const FormUpdateAddress = () => {
       </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="items-end gap-8">
         <div className="grid grid-cols-12 items-center gap-[10px] lg:gap-[20px]">
-          {/* Country */}
-          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+          {/* Quốc gia */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
             <label
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
@@ -209,8 +206,8 @@ const FormUpdateAddress = () => {
             </div>
           </div>
 
-          {/* Select Province */}
-          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+          {/* Tỉnh */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
             <label
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
@@ -226,11 +223,16 @@ const FormUpdateAddress = () => {
               getOptionLabel={(option: OptionType) => option.label}
               getOptionValue={(option: OptionType) => option.value}
             />
+            {selectedProvince === null && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                Tỉnh/Thành phố không được bỏ trống
+              </span>
+            )}
           </div>
 
-          {/* Select District */}
-
-          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+          {/* Huyện */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
             <label
               htmlFor="district"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
@@ -246,11 +248,16 @@ const FormUpdateAddress = () => {
               getOptionLabel={(option: OptionType) => option.label}
               getOptionValue={(option: OptionType) => option.value}
             />
+            {selectedDistrict === null && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                Quận/Huyện phố không được bỏ trống
+              </span>
+            )}
           </div>
 
-          {/* Select Commune */}
-
-          <div className="col-span-12 mt-[10px] w-full md:col-span-6 lg:w-auto">
+          {/* Xã */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
             <label
               htmlFor="commune"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
@@ -266,10 +273,62 @@ const FormUpdateAddress = () => {
               getOptionLabel={(option: OptionType) => option.label}
               getOptionValue={(option: OptionType) => option.value}
             />
+            {selectedCommune === null && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                Xã/Phường không được bỏ trống
+              </span>
+            )}
           </div>
 
-          {/* Country */}
-          <div className="col-span-12 mt-[10px] lg:w-auto">
+          {/* Văn phòng, Nhà riêng */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
+            <label
+              htmlFor="province"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Văn Phòng, nhà riêng
+            </label>
+            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
+              <select {...register("address_name")} className="w-full">
+                <option value="">Chọn văn phòng ↔️ nhà riêng</option>
+                <option value="Nhà riêng">Nhà riêng</option>
+                <option value="Văn phòng">Văn phòng</option>
+              </select>
+            </div>
+            {errors.address_name && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                {errors.address_name.message}
+              </span>
+            )}
+          </div>
+
+          {/* Số điện thoại */}
+          <div className="col-span-12 mb-[20px] mt-[10px] w-full lg:col-span-6 lg:w-auto">
+            <label
+              htmlFor="province"
+              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
+            >
+              Số điện thoại
+            </label>
+            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
+              <input
+                type="text"
+                {...register("phone_number")}
+                placeholder="098989898"
+              />
+            </div>
+            {errors.phone_number && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                {errors.phone_number.message}
+              </span>
+            )}
+          </div>
+
+          {/* Địa chỉ cụ thể */}
+          <div className="col-span-12 mb-[20px] mt-[10px] lg:w-auto">
             <label
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
@@ -285,34 +344,12 @@ const FormUpdateAddress = () => {
                 {...register("detail_address")}
               />
             </div>
-          </div>
-
-          <div className="col-span-12 mt-[10px] lg:w-auto">
-            <label
-              htmlFor="province"
-              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
-            >
-              Văn Phòng, nhà riêng
-            </label>
-            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
-              <select {...register("address_name")}>
-                <option value="">Chọn văn phòng, nhà riêng</option>
-                <option value="Nhà riêng">Nhà riêng</option>
-                <option value="Văn phòng">Văn phòng</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="col-span-12 mt-[10px] lg:w-auto">
-            <label
-              htmlFor="province"
-              className="text-[1.8rem] font-medium lg:text-[2.2rem]"
-            >
-              Số điện thoại
-            </label>
-            <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
-              <input type="text" {...register("phone_number")} />
-            </div>
+            {errors.detail_address && (
+              <span className="z-2 absolute mt-3 flex items-center gap-1 text-red-500">
+                <ErrorOutlineIcon fontSize="small" />
+                {errors.detail_address.message}
+              </span>
+            )}
           </div>
         </div>
 

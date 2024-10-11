@@ -1,16 +1,28 @@
 import FormField from "../FormField";
 import "./signIn.css";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import TextInputs from "../FormInputs/TextInputs";
-import loginType from "@/types/SignIn";
 import { Link } from "react-router-dom";
+import { VerityEmail } from "@/types/verifyEmail";
+import { useVerifyEmailMutation } from "@/services/authApi";
+import { toast } from "react-toastify";
 
-// interface ErrorResponse {
-//   message: string;
-// }
+interface VerifyEmailError {
+  status: number;
+  message: string;
+}
 
 export default function Forgot() {
-  const { control } = useForm<loginType>();
+  const { control, handleSubmit } = useForm<VerityEmail>();
+  const [verifyEmail, { error, isError }] = useVerifyEmailMutation();
+  const onSubmit: SubmitHandler<VerityEmail> = (data) => {
+    verifyEmail(data);
+  };
+
+  if (isError) {
+    const errorMessage = error as VerifyEmailError;
+    toast.error(errorMessage.message);
+  }
 
   return (
     <>
@@ -24,22 +36,15 @@ export default function Forgot() {
               Don’t worry, happens to all of us. Enter your email below to
               recover your password
             </p>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-[3rem]">
-                <FormField<loginType>
+                <FormField<VerityEmail>
                   label="Email"
                   name="email"
                   placeholder=""
                   type="email"
                   Component={TextInputs}
                   control={control}
-                  rules={{
-                    required: "Không được bỏ trống",
-                    minLength: {
-                      value: 3,
-                      message: "Không được ít hơn 3 kí tự.",
-                    },
-                  }}
                 />
               </div>
               <div className="mt-[3rem]">
