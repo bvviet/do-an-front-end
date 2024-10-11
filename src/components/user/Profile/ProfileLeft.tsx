@@ -9,24 +9,31 @@ import square from "../../../assets/icons/square.svg";
 import danger from "../../../assets/icons/danger.svg";
 import { Link } from "react-router-dom";
 import AvatarComponent from "../../Avatar";
-import { useUserInfor } from "@/hooks/useUserInfor";
 import useDateFormatter from "@/hooks/useDateFormatter";
+import { useGetUsersQuery } from "@/services/authApi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const ProfileLeft = () => {
-  const userInfor = useUserInfor();
+  const { data, isLoading } = useGetUsersQuery();
+  const dispatch = useDispatch();
   const { formatDate } = useDateFormatter();
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
-  const urlImage = userInfor?.avatar
-    ? `http://127.0.0.1:8000/storage/${userInfor.avatar}`
+  const urlImage = data?.avatar
+    ? `http://127.0.0.1:8000/storage/${data.avatar}`
     : "default-avatar-path.jpg";
   return (
     <aside>
       {/* User */}
       <div className="flex w-full flex-col items-center rounded-t-2xl bg-[url('https://sondnpt00343.github.io/f8-project-08/assets/img/profile/cover.png')] bg-cover bg-center bg-no-repeat p-4 px-[20px] pb-[20px] pt-[40px] text-white">
         <AvatarComponent width="110" height="110" urlImage={urlImage} />
-        <h1 className="mt-[20px] text-[1.8rem] font-bold">{userInfor?.name}</h1>
+        <h1 className="mt-[20px] text-[1.8rem] font-bold">{data?.name}</h1>
         <p className="text-[1.5rem] font-medium">
-          Registered: {formatDate(userInfor?.created_at)}
+          Registered: {formatDate(data?.created_at)}
         </p>
       </div>
 
@@ -37,7 +44,7 @@ const ProfileLeft = () => {
             Manage Account
           </h3>
           <img
-            src={`http://127.0.0.1:8000/storage/${userInfor?.avatar}`}
+            src={`http://127.0.0.1:8000/storage/${data?.avatar}`}
             alt="User Avatar"
           />
 

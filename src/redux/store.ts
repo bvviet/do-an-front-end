@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import authReducer from "./slices/authSlice";
+import loadingReducer from "./slices/loadingSlice";
 import { authApi } from "@/services/authApi";
 import storage from "redux-persist/lib/storage";
 import {
@@ -20,13 +21,14 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: [authApi.reducerPath], // Không persist dữ liệu từ authApi
+  blacklist: [authApi.reducerPath],
 };
 
 // Kết hợp các reducer lại với nhau
 const rootReducer = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
+  loading: loadingReducer,
 });
 
 // Kết hợp reducer với redux-persist

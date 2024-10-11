@@ -2,43 +2,48 @@ import { Link } from "react-router-dom";
 import addIco from "@/assets/icons/add.svg";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import Confirm from "../../../Confirm";
-import {
-  useDeleteAddressMutation,
-  useGetAddressQuery,
-} from "@/services/authApi";
+import { useDeleteAddressMutation, useGetUsersQuery } from "@/services/authApi";
 import { toast } from "react-toastify";
+import { useUserInfor } from "@/hooks/useUserInfor";
+import { useDispatch } from "react-redux";
+import { saveUserInfo } from "@/redux/slices/authSlice";
+import { useEffect } from "react";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const Address = () => {
   const { openPopup } = useModalContext();
-  const { data, isLoading, refetch } = useGetAddressQuery(); // Thêm refetch để lấy lại dữ liệu
-  const [deleteAddress] = useDeleteAddressMutation();
+  const dispatch = useDispatch();
 
-  // Kiểm tra trạng thái loading và lỗi
-  if (isLoading) return <div>Loading...</div>;
+  const userInfor = useUserInfor();
+  const {
+    data: user,
+    isLoading: isLoadingAddress,
+    refetch,
+  } = useGetUsersQuery();
+
+  const [deleteAddress, { isLoading: isLoadingDelete }] =
+    useDeleteAddressMutation();
+
+  useEffect(() => {
+    dispatch(setLoading(isLoadingAddress || isLoadingDelete));
+    if (user) {
+      dispatch(saveUserInfo(user));
+    }
+  }, [isLoadingAddress, isLoadingDelete, dispatch, user]);
 
   const handleDelete = async (id: number) => {
     try {
-      // Gọi deleteAddress và sử dụng unwrap để xử lý kết quả
       await deleteAddress(id).unwrap();
-      // Cập nhật lại danh sách địa chỉ
-      refetch();
-
+      await refetch();
       toast.success("Xóa địa chỉ thành công");
     } catch (error) {
-      // Type assertion for error
       const typedError = error as {
         status?: number;
         data?: { message?: string };
       };
-
-      // Create a meaningful error message
       const errorMessage =
-        typedError.data?.message ||
-        "Failed to delete address. Please try again.";
-
-      // Display the error message
+        typedError.data?.message || "Xóa địa chỉ thất bại vui lòng thử lại.";
       toast.error(errorMessage);
-      console.error("Failed to delete address:", typedError);
     }
   };
 
@@ -57,7 +62,7 @@ const Address = () => {
       <p className="text-[1.8rem] font-bold">Địa chỉ</p>
 
       {/* Hiển thị danh sách địa chỉ */}
-      {data?.addresses.map((address) => (
+      {userInfor?.addresses?.map((address) => (
         <div key={address.id} className="my-10">
           <div className="flex items-center">
             <div className="flex w-[50%] flex-col gap-3">
@@ -70,7 +75,7 @@ const Address = () => {
               </div>
               <div>
                 <p>{address.detail_address}</p>
-                <span>{address.Ward}</span>, <span>{address.district}</span>,{" "}
+                <span>{address.Ward}</span>, <span>{address.district}</span>,
                 <span>{address.city}</span>
               </div>
               {address.is_default && (

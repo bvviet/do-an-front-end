@@ -2,7 +2,7 @@ import FormField from "@/components/FormField";
 import { useModalContext } from "../../../../contexts/ModelPopUp/ModelProvider";
 import TextInputs from "@/components/FormInputs/TextInputs";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ProfileType } from "@/types/profile";
+import { ProfileResponseError, ProfileType } from "@/types/profile";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useGetUsersQuery, useUpdateProfileMutation } from "@/services/authApi";
@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 import { saveUserInfo } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useUserInfor } from "@/hooks/useUserInfor";
+import { toast } from "react-toastify";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const FormUpdateInfo = () => {
   const { closePopup } = useModalContext();
@@ -20,10 +21,10 @@ const FormUpdateInfo = () => {
 
   // Validate schema
   const formSchema = yup.object().shape({
-    name: yup.string().required(),
+    name: yup.string().required("Tên không được bỏ trống"),
     avatar: yup.mixed(),
-    link_fb: yup.string(),
-    link_tt: yup.string(),
+    link_fb: yup.string().url("Đường dẫn Facebook không hợp lệ"),
+    link_tt: yup.string().url("Đường dẫn TikTok  không hợp lệ"),
   });
 
   const {
@@ -34,21 +35,26 @@ const FormUpdateInfo = () => {
   } = useForm<ProfileType>({
     resolver: yupResolver(formSchema),
   });
-  const getUseUserInfor = useUserInfor();
-  const [update, { isSuccess, error, isError }] = useUpdateProfileMutation();
-  const { data: users } = useGetUsersQuery(undefined, { skip: !isSuccess });
-  console.log({ getUseUserInfor });
+
+  const [update, { data, isLoading: loadingUpdate, isSuccess }] =
+    useUpdateProfileMutation();
+  const {
+    data: user,
+    isLoading: loadingGetUser,
+    refetch,
+  } = useGetUsersQuery(undefined);
 
   useEffect(() => {
-    if (getUseUserInfor) {
+    if (user) {
       reset({
-        name: getUseUserInfor?.name,
-        link_fb: getUseUserInfor?.link_fb,
-        link_tt: getUseUserInfor?.link_tt,
-        // avatar: users.avatar || null,
+        name: user?.name,
+        link_fb: user?.link_fb,
+        link_tt: user?.link_tt,
+        // avatar: getUseUserInfor.avatar || null,
       });
     }
-  }, [getUseUserInfor, reset]);
+  }, [user, reset]);
+
   const onSubmit: SubmitHandler<ProfileType> = async (formData) => {
     const completeFormData = new FormData();
     completeFormData.append("name", formData.name || "");
@@ -60,12 +66,13 @@ const FormUpdateInfo = () => {
     completeFormData.append("link_fb", formData.link_fb || "");
     completeFormData.append("link_tt", formData.link_tt || "");
     completeFormData.append("_method", "put");
-
     try {
-      const response = await update(completeFormData).unwrap();
-      console.log("Profile updated:", response);
+      await update([completeFormData, user?.id]).unwrap();
+      // Refetch dữ liệu ngay sau khi update thành công
+      await refetch();
     } catch (error) {
-      console.error("Error updating profile:", error);
+      const customError = error as ProfileResponseError;
+      toast.error(customError?.data?.message);
     }
   };
 
@@ -77,17 +84,23 @@ const FormUpdateInfo = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && users) {
-      dispatch(saveUserInfo(users));
+    dispatch(setLoading(loadingGetUser || loadingUpdate));
+    if (isSuccess) {
+      toast.success(data?.message);
+      if (user) {
+        dispatch(saveUserInfo(user));
+      }
       navigate("/profile");
     }
-  }, [dispatch, isSuccess, users, navigate]);
-
-  useEffect(() => {
-    if (isError) {
-      console.error("Error occurred:", error); // Kiểm tra chi tiết lỗi
-    }
-  }, [isError, error]);
+  }, [
+    isSuccess,
+    user,
+    dispatch,
+    navigate,
+    loadingUpdate,
+    loadingGetUser,
+    data?.message,
+  ]);
 
   return (
     <div className="grid grid-cols-12 gap-3">
@@ -121,6 +134,7 @@ const FormUpdateInfo = () => {
             placeholder="https://facebook.com/username"
             Component={TextInputs}
             control={control}
+            error={errors.link_fb}
           />
         </div>
 
@@ -131,6 +145,7 @@ const FormUpdateInfo = () => {
             placeholder="https://tiktok.com/@username"
             Component={TextInputs}
             control={control}
+            error={errors.link_tt}
           />
         </div>
 
