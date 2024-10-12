@@ -14,6 +14,7 @@ import {
   PURGE,
 } from "redux-persist";
 import { logOutMiddleware } from "./middleware";
+import categoryReducer from "../redux/slices/categorySlice"; // Nhập categoryReducer
 
 // Cấu hình cho redux-persist
 const persistConfig = {
@@ -27,6 +28,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
+  categories: categoryReducer, // Thêm categoryReducer vào rootReducer
 });
 
 // Kết hợp reducer với redux-persist
@@ -41,8 +43,8 @@ export const store = configureStore({
         // Bỏ qua các action không thể serialize
         ignoredActions: [FLUSH, REGISTER, REHYDRATE, PAUSE, PERSIST, PURGE],
       },
-    }).concat(logOutMiddleware, authApi.middleware); // Thêm middleware tùy chỉnh và middleware của authApi
-  },
+    }).concat(logOutMiddleware, authApi.middleware);
+   } // Thêm middleware tùy chỉnh và middleware của authApi
 });
 
 // Tạo persistStore

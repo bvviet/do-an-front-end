@@ -4,6 +4,7 @@ import signUpType from "@/types/SignUp";
 import loginType from "@/types/SignIn";
 import { userType } from "@/types/user";
 import { AddressResponse, addressType } from "@/types/address";
+import { CategoriesResponse } from "@/types/genre";
 
 // Định nghĩa kiểu dữ liệu cho phản hồi đăng ký
 interface RegisterResponse {
@@ -53,7 +54,17 @@ interface CreateAddressResponse {
   detail_address: string;
   is_default: boolean;
 }
-
+// interface CategoryType {
+//   id: string;
+//   name: string;
+//   image: string
+// }
+interface AddCategoryType {
+  id: string;
+  name: string;
+  parent_id: number | null;
+  image: string
+}
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_URL,
@@ -133,8 +144,31 @@ export const authApi = createApi({
         },
       }),
     }),
+    addCategory: builder.mutation<AddCategoryType, FormData>({
+      query: (formData) => ({
+        url: '/admin/categories',
+        method: 'POST',
+        body: formData, // Sử dụng FormData trực tiếp
+      }),
+    }),
+    getCategories: builder.query<CategoriesResponse, void>({
+      query: () => '/categories', // Đường dẫn đến API của bạn
+    }),
+    deleteCategory: builder.mutation<CategoriesResponse, string>({
+      query: (id) => ({
+        url: `/admin/categories/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateCategory: builder.mutation<CategoriesResponse, { id: string; data: FormData }>({
+      query: ({ id, data }) => ({
+        url: `/admin/categories/${id}`,
+        method: "PUT",
+        body: data, // Gửi FormData chứa thông tin danh mục
+      }),
+    })
   }),
-});
+})
 
 // Xuất các hooks để sử dụng trong các component
 export const {
@@ -145,4 +179,7 @@ export const {
   useCreateAddressMutation,
   useGetAddressQuery,
   useDeleteAddressMutation,
+  useGetCategoriesQuery,
+  useAddCategoryMutation,
+  useDeleteCategoryMutation
 } = authApi;
