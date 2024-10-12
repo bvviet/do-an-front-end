@@ -13,9 +13,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Tooltip } from "@mui/material";
 import Confirm from "@/components/Confirm";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import { useGetUsersAdminQuery } from "@/services/authApi";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import useDateFormatter from "@/hooks/useDateFormatter";
 
 interface Column {
-  id: "id" | "fullName" | "email" | "role" | "lastLogin" | "action";
+  id: "id" | "name" | "email" | "role" | "created_at" | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -23,133 +27,25 @@ interface Column {
 
 const columns: Column[] = [
   { id: "id", label: "ID", minWidth: 70 },
-  { id: "fullName", label: "Họ tên", minWidth: 180 },
+  { id: "name", label: "Họ tên", minWidth: 180 },
   { id: "email", label: "Email", minWidth: 210 },
   { id: "role", label: "Vai trò", minWidth: 80 },
-  { id: "lastLogin", label: "Ngày đăng ký", minWidth: 170 },
+  { id: "created_at", label: "Ngày đăng ký", minWidth: 170 },
   { id: "action", label: "Hành động", minWidth: 130 },
-];
-
-// Mảng users
-const users = [
-  {
-    id: "1",
-    fullName: "Nguyễn Văn Anh",
-    email: "nguyenvana@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-21 10:00",
-  },
-  {
-    id: "2",
-    fullName: "Trần Văn B",
-    email: "tranvanb@gmail.com",
-    role: "admin",
-    lastLogin: "2024-09-18 09:00",
-  },
-  {
-    id: "3",
-    fullName: "Lê Thị C",
-    email: "lethic@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-17 15:30",
-  },
-  {
-    id: "4",
-    fullName: "Phạm Minh D",
-    email: "phamminhd@gmail.com",
-    role: "moderator",
-    lastLogin: "2024-09-16 14:00",
-  },
-  {
-    id: "5",
-    fullName: "Hoàng Thị E",
-    email: "hoangthie@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-15 11:45",
-  },
-  {
-    id: "6",
-    fullName: "Vũ Văn F",
-    email: "vuf@gmail.com",
-    role: "admin",
-    lastLogin: "2024-09-14 09:20",
-  },
-  {
-    id: "7",
-    fullName: "Nguyễn Thị G",
-    email: "nguyentg@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-13 13:00",
-  },
-  {
-    id: "8",
-    fullName: "Bùi Văn H",
-    email: "buivanh@gmail.com",
-    role: "moderator",
-    lastLogin: "2024-09-12 08:00",
-  },
-  {
-    id: "9",
-    fullName: "Lê Văn I",
-    email: "levani@gmail.com",
-    role: "admin",
-    lastLogin: "2024-09-11 16:30",
-  },
-  {
-    id: "10",
-    fullName: "Trương Thị J",
-    email: "truongthij@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-10 12:15",
-  },
-  {
-    id: "11",
-    fullName: "Nguyễn Văn K",
-    email: "nguyenvank@gmail.com",
-    role: "admin",
-    lastLogin: "2024-09-09 10:50",
-  },
-  {
-    id: "12",
-    fullName: "Đỗ Thị L",
-    email: "dothil@gmail.com",
-    role: "moderator",
-    lastLogin: "2024-09-08 09:30",
-  },
-  {
-    id: "13",
-    fullName: "Nguyễn Thị M",
-    email: "nguyenthm@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-07 14:20",
-  },
-  {
-    id: "14",
-    fullName: "Vũ Văn N",
-    email: "vuvann@gmail.com",
-    role: "admin",
-    lastLogin: "2024-09-06 11:00",
-  },
-  {
-    id: "15",
-    fullName: "Trần Thị O",
-    email: "tranthio@gmail.com",
-    role: "user",
-    lastLogin: "2024-09-05 16:40",
-  },
-  {
-    id: "16",
-    fullName: "Bùi Thị P",
-    email: "buithip@gmail.com",
-    role: "moderator",
-    lastLogin: "2024-09-04 09:10",
-  },
 ];
 
 export default function ListAuth() {
   const { openPopup } = useModalContext();
   const [page, setPage] = React.useState(0);
+  const { formatDate } = useDateFormatter(); // Call the custom hook here
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const dispatch = useDispatch();
+
+  const { data: users, isLoading } = useGetUsersAdminQuery();
+
+  React.useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [dispatch, isLoading]);
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -162,14 +58,19 @@ export default function ListAuth() {
     setPage(0);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     alert(`Deleted user with ID: ${id}`);
-    // Logic để xóa user theo ID
   };
-  const handleUpdate = (id: string) => {
+
+  const handleUpdate = (id: number) => {
     console.log("Update user with ID:", id);
-    // Logic để xóa user theo ID
   };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      dispatch(setLoading(isLoading));
+    }
+  }, [isLoading, dispatch]);
 
   return (
     <Paper sx={{ width: "100%" }}>
@@ -189,7 +90,7 @@ export default function ListAuth() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users
+            {users?.users
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((user) => {
                 return (
@@ -230,9 +131,24 @@ export default function ListAuth() {
                         );
                       } else {
                         const value = user[column.id as keyof typeof user];
+                        let displayValue: React.ReactNode;
+
+                        if (column.id === "created_at") {
+                          displayValue =
+                            typeof value === "string"
+                              ? formatDate(value)
+                              : "N/A";
+                        } else if (Array.isArray(value)) {
+                          displayValue = value.map((address, index) => (
+                            <div key={index}>{JSON.stringify(address)}</div>
+                          ));
+                        } else {
+                          displayValue = value;
+                        }
+
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {value}
+                            {displayValue}
                           </TableCell>
                         );
                       }
@@ -246,7 +162,7 @@ export default function ListAuth() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={users.length}
+        count={users?.users.length || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

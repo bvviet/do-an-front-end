@@ -5,12 +5,14 @@ import { Button } from "@mui/material";
 interface ConfirmProps {
   title?: string;
   description?: string;
+  titleButton: string;
   handleDelete: () => void;
 }
 
 const Confirm: React.FC<ConfirmProps> = ({
   title = "Bạn chắc chắn",
-  description = "Bạn có chắc chắn muốn xóa mục này không? Hành động này sẽ không thể khôi phục.",
+  titleButton,
+  description = "Bạn có chắc chắn muốn thực hiện hành động này không này không? Hành động này sẽ không thể khôi phục.",
   handleDelete,
 }) => {
   const { closePopup } = useModalContext();
@@ -22,9 +24,11 @@ const Confirm: React.FC<ConfirmProps> = ({
 
   return (
     <section className="w-fit rounded-lg py-8">
-      <div className="mx-auto sm:max-w-[86%] text-center">
+      <div className="mx-auto text-center sm:max-w-[86%]">
         <p className="mb-2 text-center text-[2rem] font-semibold">{title}?</p>
-        <p className="mx-auto mb-10 text-[1.5rem] text-gray-600 font-medium">{description}</p>
+        <p className="mx-auto mb-10 text-[1.5rem] font-medium text-gray-600">
+          {description}
+        </p>
       </div>
       <div className="flex justify-end gap-[6%]">
         <Button
@@ -33,14 +37,14 @@ const Confirm: React.FC<ConfirmProps> = ({
           variant="outlined"
           sx={{ borderColor: "gray", color: "gray" }}
         >
-          Cancel
+          Hủy
         </Button>
         <Button
           onClick={handleDeleteClick}
           sx={{ backgroundColor: "red", color: "white" }}
           variant="contained"
         >
-          Delete
+          {titleButton}
         </Button>
       </div>
     </section>
