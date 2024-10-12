@@ -1,11 +1,11 @@
-import { addressType } from "./address";
+import { AddressType } from "./address";
 
 export interface userType {
   id: number;
   name: string;
   email: string;
   avatar: string;
-  addresses: addressType[];
+  addresses: AddressType[];
   link_fb: string;
   link_tt: string;
   role: string;

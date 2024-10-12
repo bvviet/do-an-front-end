@@ -9,12 +9,15 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 export default function Register() {
   const [messagesPassWord, setMessagesPassWord] = useState<string>("");
   const [register, { isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // Validate
   const formSchema = yup.object().shape({
     name: yup.string().required("Tên không được bỏ trống"),
@@ -39,6 +42,10 @@ export default function Register() {
   } = useForm<signType>({
     resolver: yupResolver(formSchema),
   });
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [dispatch, isLoading]);
 
   const onSubmit: SubmitHandler<signType> = async (formData) => {
     try {

@@ -12,7 +12,7 @@ import { useUserInfor } from "@/hooks/useUserInfor";
 
 const ProfileRight = () => {
   const userInfor = useUserInfor();
-  console.log(userInfor);
+  console.log({ userInfor });
 
   return (
     <div className="flex flex-col gap-[30px]">
@@ -126,33 +126,34 @@ const ProfileRight = () => {
                   Phone number
                 </h3>
                 <p>
-                  {userInfor?.addresses[0]?.phone
-                    ? userInfor?.addresses[0]?.phone
-                    : "Phone not available"}
+                  {userInfor?.addresses[0]?.phone_number
+                    ? userInfor?.addresses[0]?.phone_number
+                    : "Số điện thoại chưa được thêm"}
                 </p>
               </div>
             </article>
           </Link>
           {/* item 3 */}
-          <Link to="/profile/addresses">
-            <article className="flex items-center gap-[10px] rounded-[10px] bg-[#f1f1f1] p-[10px]">
-              <div className="flex flex-shrink-0 justify-center rounded-lg bg-white p-[15px]">
-                <img src={location} alt="" />
-              </div>
-              <div>
-                <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
-                  Add an address
-                </h3>
-                <p>
-                  {userInfor?.addresses[0]?.phone
-                    ? userInfor?.addresses[0]?.phone
-                    : "Address not available"}
-                </p>
-              </div>
-            </article>
-          </Link>
         </div>
       </div>
+      <Link to="/profile/addresses">
+        <article className="flex items-center gap-[10px] rounded-[10px] bg-[#f1f1f1] p-[10px]">
+          <div className="flex flex-shrink-0 justify-center rounded-lg bg-white p-[15px]">
+            <img src={location} alt="" />
+          </div>
+          <div className="w-full">
+            <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
+              Add an address
+            </h3>
+            <p className="">
+              {userInfor?.addresses[0]?.detail_address},
+              {userInfor?.addresses[0]?.Ward},
+              {userInfor?.addresses[0]?.district},
+              {userInfor?.addresses[0]?.city},
+            </p>
+          </div>
+        </article>
+      </Link>
 
       {/* Account info */}
       <div className="grid grid-cols-12 gap-5">

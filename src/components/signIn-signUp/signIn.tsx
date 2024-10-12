@@ -13,6 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
 import { login, saveUserInfo } from "@/redux/slices/authSlice";
 import { useEffect } from "react";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 interface LoginResponse {
   access_token: string;
@@ -25,6 +26,12 @@ export default function SignInComponent() {
   const [logIn, { isLoading, isSuccess }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
+
+  console.log({ isLoading });
 
   // Validate
   const formSchema = yup.object().shape({
