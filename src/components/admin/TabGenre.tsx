@@ -5,7 +5,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import ListCategory from './CRUDGenre/List';
-import AddCategory from './CRUDGenre/AddProduct';
+import AddCategory from './CRUDGenre/AddGenre';
 
 export default function GenreTabs() {
     const [value, setValue] = React.useState('1');

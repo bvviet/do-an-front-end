@@ -14,6 +14,7 @@ import {
   addressType,
   SetAddressDefaultResponse,
 } from "@/types/address";
+import { CategoriesResponse } from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { UpdateProfileResponse } from "@/types/profile";
@@ -49,7 +50,17 @@ interface CreateAddressResponse {
   message: string; // Thông điệp trả về
   success: boolean; // Trạng thái thành công
 }
-
+// interface CategoryType {
+//   id: string;
+//   name: string;
+//   image: string
+// }
+interface AddCategoryType {
+  id: string;
+  name: string;
+  parent_id: number | null;
+  image: string
+}
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_URL,
@@ -159,7 +170,6 @@ export const authApi = createApi({
         },
       }),
     }),
-
     setAddressDefault: builder.mutation<SetAddressDefaultResponse, number>({
       query: (id) => ({
         url: `/addresses/${id}/default`,
@@ -180,8 +190,31 @@ export const authApi = createApi({
     getUsersAdmin: builder.query<UserAdminType, void>({
       query: () => "/admin/users",
     }),
+    addCategory: builder.mutation<AddCategoryType, FormData>({
+      query: (formData) => ({
+        url: '/admin/categories',
+        method: 'POST',
+        body: formData, // Sử dụng FormData trực tiếp
+      }),
+    }),
+    getCategories: builder.query<CategoriesResponse, void>({
+      query: () => '/categories', // Đường dẫn đến API của bạn
+    }),
+    deleteCategory: builder.mutation<CategoriesResponse, string>({
+      query: (id) => ({
+        url: `/admin/categories/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateCategory: builder.mutation<CategoriesResponse, { id: string; data: FormData }>({
+      query: ({ id, data }) => ({
+        url: `/admin/categories/${id}`,
+        method: "PUT",
+        body: data, // Gửi FormData chứa thông tin danh mục
+      }),
+    })
   }),
-});
+})
 
 export const {
   useRegisterMutation,
@@ -195,4 +228,7 @@ export const {
   useGetUsersAdminQuery,
   useSetAddressDefaultMutation,
   useGetDetailAddressQuery,
+  useGetCategoriesQuery,
+  useAddCategoryMutation,
+  useDeleteCategoryMutation
 } = authApi;
