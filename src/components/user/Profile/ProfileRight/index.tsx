@@ -12,7 +12,11 @@ import { useUserInfor } from "@/hooks/useUserInfor";
 
 const ProfileRight = () => {
   const userInfor = useUserInfor();
-  console.log({ userInfor });
+
+  const uerInfoDefault = userInfor?.addresses.find(
+    (add) => add.is_default === true,
+  );
+  console.log({ uerInfoDefault });
 
   return (
     <div className="flex flex-col gap-[30px]">
@@ -126,8 +130,8 @@ const ProfileRight = () => {
                   Phone number
                 </h3>
                 <p>
-                  {userInfor?.addresses[0]?.phone_number
-                    ? userInfor?.addresses[0]?.phone_number
+                  {uerInfoDefault?.phone_number
+                    ? uerInfoDefault.phone_number
                     : "Số điện thoại chưa được thêm"}
                 </p>
               </div>
@@ -146,10 +150,14 @@ const ProfileRight = () => {
               Add an address
             </h3>
             <p className="">
-              {userInfor?.addresses[0]?.detail_address},
-              {userInfor?.addresses[0]?.Ward},
-              {userInfor?.addresses[0]?.district},
-              {userInfor?.addresses[0]?.city},
+              {uerInfoDefault?.is_default === true ? (
+                <>
+                  {uerInfoDefault?.detail_address}, {uerInfoDefault?.Ward},{" "}
+                  {uerInfoDefault?.district}, {uerInfoDefault?.city}
+                </>
+              ) : (
+                "Địa chỉ chưa được thêm"
+              )}
             </p>
           </div>
         </article>

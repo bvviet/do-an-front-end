@@ -13,3 +13,7 @@ export interface userType {
   created_at: string;
   updated_at: string;
 }
+
+export interface UserAdminType {
+  users: userType[];
+}

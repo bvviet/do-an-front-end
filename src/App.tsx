@@ -22,15 +22,12 @@ import Verify from "@/pages/SignIn-Login/Verify";
 import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
-//import ListPrd from "./pages/admin/CRUD/ListProduct";
-import LabTabs from "./components/admin/Tab";
-import GenreTabs from "./components/admin/TabGenre";
 import CrudLayout from "@/layouts/CrudProduct";
 import ListProducts from "@/components/admin/CRUD/List";
 import AddProducts from "@/components/admin/CRUD/AddProduct";
 import Register from "@/components/signIn-signUp/Register";
-import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,9 +58,12 @@ function App() {
               element: <Profile />,
               children: [
                 { index: true, element: <ProfileRight /> },
-                { path: "update", element: <FormUpdateInfo /> },
                 { path: "addresses", element: <Address /> },
-                { path: "addresses/add", element: <FormUpdateAddress /> },
+                { path: "addresses/add", element: <FormAddAddress /> },
+                {
+                  path: "addresses/update/:id",
+                  element: <FormUpdateAddress />,
+                },
               ],
             },
           ],
@@ -75,9 +75,15 @@ function App() {
       element: <AdminLayout />,
       children: [
         { path: "lists", element: <ListAuth /> },
-        { path: "product", element: <LabTabs /> },
-        { path: "genre", element: <GenreTabs /> },
-
+        {
+          path: "products",
+          element: <CrudLayout />,
+          children: [
+            { path: "list", element: <ListProducts /> },
+            { path: "add", element: <AddProducts /> },
+            { path: "edit", element: <AddProducts /> },
+          ],
+        },
       ],
     },
   ]);

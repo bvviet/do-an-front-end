@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addressType } from "@/types/address";
-import {
-  useCreateAddressMutation,
-  useGetDetailAddressQuery,
-  useGetUsersQuery,
-} from "@/services/authApi";
+import { useCreateAddressMutation, useGetUsersQuery } from "@/services/authApi";
 import { saveUserInfo } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
@@ -38,7 +34,7 @@ interface CommuneType {
   toponymName: string;
 }
 
-const FormUpdateAddress = () => {
+const FormAddAddress = () => {
   const { closePopup } = useModalContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -151,17 +147,6 @@ const FormUpdateAddress = () => {
     district: yup.string(),
   });
 
-  const { id } = useParams<{ id: string }>();
-
-  // Ép kiểu id thành number
-  const addressId = id ? Number(id) : null;
-  const Id = addressId ?? 0;
-
-  const { data: addressDetail, isLoading: isLoadingGetDetail } =
-    useGetDetailAddressQuery(Id);
-
-  console.log({ addressDetail });
-
   const [createAddress, { isSuccess, isLoading }] = useCreateAddressMutation();
 
   const {
@@ -189,9 +174,7 @@ const FormUpdateAddress = () => {
   });
 
   useEffect(() => {
-    if (isLoading || isLoadingGetDetail) {
-      dispatch(setLoading(isLoading || isLoadingGetDetail));
-    }
+    dispatch(setLoading(isLoading));
 
     // Sau khi thêm thành công refetch lại người dùng và lưu vào store
     if (isSuccess && users) {
@@ -201,15 +184,7 @@ const FormUpdateAddress = () => {
         navigate("/profile/addresses");
       }, 2000);
     }
-  }, [
-    dispatch,
-    isSuccess,
-    isLoading,
-    users,
-    refetch,
-    navigate,
-    isLoadingGetDetail,
-  ]);
+  }, [dispatch, isSuccess, isLoading, users, refetch, navigate]);
 
   return (
     <div className="h-full gap-3 rounded-lg">
@@ -390,7 +365,7 @@ const FormUpdateAddress = () => {
             type="submit"
             className="rounded-[30px] bg-[#FFB700] px-[20px] py-[6px] text-black hover:opacity-65"
           >
-            Cập nhật
+            Save
           </button>
         </div>
       </form>
@@ -398,4 +373,4 @@ const FormUpdateAddress = () => {
   );
 };
 
-export default FormUpdateAddress;
+export default FormAddAddress;

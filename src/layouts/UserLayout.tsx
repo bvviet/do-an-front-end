@@ -17,8 +17,6 @@ const FixedLinearProgress = styled(LinearProgress)({
 
 const UserLayout = () => {
   const loading = useSelector((state: RootState) => state.loading.isLoading);
-  console.log({ loading });
-
   return (
     <div>
       {loading && <FixedLinearProgress color="secondary" />}
