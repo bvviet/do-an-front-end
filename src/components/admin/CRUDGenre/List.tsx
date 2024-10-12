@@ -1,13 +1,18 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { IconButton, Tooltip } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  IconButton,
+  Tooltip,
+  Typography,
+  LinearProgress,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Search from "./Components/Search";
@@ -15,204 +20,159 @@ import LinkProducts from "./Components/Button";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import Confirm from "@/components/Confirm";
 
+import { toast } from "react-toastify";
+import { useDeleteCategoryMutation } from "@/services/authApi"; // Hook để thực hiện xóa danh mục
+import { ICategory } from "@/types/genre"; // Kiểu dữ liệu cho danh mục
+import useCategories from "@/hooks/useGenre";
+import { Link } from "react-router-dom";
+
 interface Column {
-  id: "name" | "price" | "category" | "img" | "action" | "";
+  id: "name" | "id" | "action" | "image" | "slug" | "children";
   label: string;
   minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
+  align?: "right" | "center";
 }
 
 const columns: Column[] = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "price", label: "Price", minWidth: 100 },
-  {
-    id: "category",
-    label: "Category",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "img",
-    label: "Image",
-    minWidth: 170,
-    align: "right",
-  },
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 170,
-    align: "right",
-  },
-  {
-    id: "", // Cột trống không có tiêu đề
-    label: "",
-    minWidth: 50,
-    align: "right",
-  },
-];
-
-interface Data {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  img: string;
-  action: string;
-}
-
-const rows: Data[] = [
-  {
-    id: "1", name: "iPhone 16 Promax", price: 120001, category: "Phones", img: "image1.jpg", action: "Some action",
-  },
-  {
-    id: "2", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "3", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "4", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "5", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "6", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "7", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "8", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "9", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "10", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "11", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "12", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  {
-    id: "13", name: "Samsung Galaxy S22", price: 100000, category: "Phones", img: "image2.jpg", action: "Some action",
-  },
-  // Các mục khác...
+  { id: "id", label: "ID", minWidth: 100, align: "center" },
+  { id: "name", label: "Name", minWidth: 170, align: "center" },
+  { id: "image", label: "Image", minWidth: 170, align: "center" },
+  { id: "slug", label: "Slug", minWidth: 170, align: "center" },
+  { id: "children", label: "Children", minWidth: 200, align: "center" }, // Cột mới cho danh mục con
+  { id: "action", label: "Action", minWidth: 170, align: "center" },
 ];
 
 export default function ListCategory() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { openPopup } = useModalContext();
+  const { categories, isLoading, error } = useCategories();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
-  const handleChangePage = (_event: unknown, newPage: number) => {
+  const categoriesList = Array.isArray(categories) ? categories : categories?.categories || [];
+
+  const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setRowsPerPage(+event.target.value);
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleDelete = (id: string) => {
-    alert(`Deleted product with ID: ${id}`);
-    // Logic để xóa sản phẩm theo ID
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCategory(id).unwrap();
+      toast.success("Category deleted successfully");
+    } catch (err) {
+      const error = err as { status?: number; data?: { message?: string } };
+      const errorMessage = error.data?.message || "Failed to delete category. Please try again.";
+      toast.error(errorMessage);
+      console.error("Failed to delete category:", error);
+    }
   };
 
-  const handleUpdate = (id: string) => {
-    console.log("Update product with ID:", id);
-    // Logic để cập nhật sản phẩm theo ID
-  };
+  if (isLoading) return <LinearProgress />;
 
   return (
     <Paper sx={{ width: "100%", borderRadius: "10px" }}>
       <TableContainer className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]" style={{ borderRadius: "10px" }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead >
-            <TableRow style={{ top: 0 }}>
-              <TableCell align="center" colSpan={5}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" colSpan={4}>
                 <Search />
               </TableCell>
-              <TableCell align="center" colSpan={1}>
+              <TableCell align="center" colSpan={2}>
                 <LinkProducts />
               </TableCell>
             </TableRow>
             <TableRow>
               {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ top: 57, minWidth: column.minWidth }}
-                >
+                <TableCell key={column.id} align={column.align} style={{ top: 57, minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  {columns.map((column) => {
-                    if (column.id === "") {
-                      return (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Tooltip title="Delete product">
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() =>
-                                openPopup(
-                                  <Confirm
-                                    title="Bạn chắc chứ?"
-                                    description="Bạn có thật sự muốn xoá sản phẩm này."
-                                    handleDelete={() => handleDelete(row.id)}
-                                  />,
-                                )
-                              }
-                            >
-                              <DeleteIcon color="error" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit product">
-                            <IconButton
-                              aria-label="edit"
-                              onClick={() => handleUpdate(row.id)}
-                            >
-                              <EditIcon color="primary" />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      );
-                    } else {
-                      const value = row[column.id as keyof Data];
+            {Array.isArray(categoriesList) && categoriesList.length > 0 ? (
+              categoriesList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category: ICategory) => (
+                <React.Fragment key={category.id}>
+                  <TableRow hover role="checkbox" tabIndex={-1}>
+                    {columns.map((column) => {
+                      let value;
+                      if (column.id === "name") {
+                        value = category.name;
+                      } else if (column.id === "id") {
+                        value = category.id;
+                      } else if (column.id === "slug") {
+                        value = category.slug;
+                      } else if (column.id === "image") {
+                        value = (
+                          <img src={category.image} alt={category.name} style={{ width: '100px', height: 'auto' }} />
+                        );
+                      } else if (column.id === "children") {
+                        // Hiển thị ID và name của danh mục con
+                        value = category.children && category.children.length > 0
+                          ? category.children.map(child => (
+                            <div key={child.id} className="flex justify-center">
+                              <span>{child.id} | {child.name}</span>
+                            </div>
+                          ))
+                          : "No children"; // Nếu không có danh mục con
+                      } else if (column.id === "action") {
+                        value = (
+                          <>
+                            <Tooltip title="Delete category">
+                              <IconButton
+                                aria-label="delete"
+                                onClick={() =>
+                                  openPopup(
+                                    <Confirm
+                                      title="Are you sure?"
+                                      description="Do you really want to delete this category?"
+                                      handleDelete={() => handleDelete(category.id)}
+                                    />
+                                  )
+                                }
+                              >
+                                <DeleteIcon color="error" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Edit category">
+                              <Link to={`/admin/categories/${category.id}`}>
+                                <IconButton aria-label="edit">
+                                  <EditIcon color="primary" />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
+                          </>
+                        );
+                      }
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {value}
                         </TableCell>
                       );
-                    }
-                  })}
-                </TableRow>
-              ))}
+                    })}
+                  </TableRow>
+                </React.Fragment>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center"> {/* Đảm bảo colSpan tương ứng với số cột mới */}
+                  <Typography color="error">Không có danh mục nào để hiển thị.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 35]}
+        rowsPerPageOptions={[5, 10, 20]}
         component="div"
-        count={rows.length}
+        count={Array.isArray(categories) ? categories.length : 0} // Kiểm tra categories là mảng
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
