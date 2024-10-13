@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import {
   Avatar,
@@ -25,8 +26,14 @@ const arrayNav = [
   {
     id: 2,
     name: "Sản phẩm",
-    icon: AccountBoxIcon,
+    icon: ShoppingCartIcon,
     link: "/admin",
+  },
+  {
+    id: 3,
+    name: "Danh mục",
+    icon: AccountBoxIcon,
+    link: "/admin/category",
   },
 ];
 
