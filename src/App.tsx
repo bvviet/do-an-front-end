@@ -22,12 +22,14 @@ import Verify from "@/pages/SignIn-Login/Verify";
 import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
-import CrudLayout from "@/layouts/CrudProduct";
-import ListProducts from "@/components/admin/CRUD/List";
-import AddProducts from "@/components/admin/CRUD/AddProduct";
+// import CrudLayout from "@/layouts/CrudProduct";
+// import ListProducts from "@/components/admin/CRUD/List";
+// import AddProducts from "@/components/admin/CRUD/AddProduct";
 import Register from "@/components/signIn-signUp/Register";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
+import GenreTabs from "./components/admin/TabGenre";
+import CartPage from "./pages/user/Cart";
 
 function App() {
   const router = createBrowserRouter([
@@ -49,6 +51,7 @@ function App() {
         { path: "/forgot", element: <ForgotPassword /> },
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
+        { path: "/Cart", element: <CartPage /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,
@@ -75,15 +78,16 @@ function App() {
       element: <AdminLayout />,
       children: [
         { path: "lists", element: <ListAuth /> },
-        {
-          path: "products",
-          element: <CrudLayout />,
-          children: [
-            { path: "list", element: <ListProducts /> },
-            { path: "add", element: <AddProducts /> },
-            { path: "edit", element: <AddProducts /> },
-          ],
-        },
+        { path: "category", element: <GenreTabs /> },
+        // {
+        //   path: "products",
+        //   element: <CrudLayout />,
+        //   children: [
+        //     { path: "list", element: <ListProducts /> },
+        //     { path: "add", element: <AddProducts /> },
+        //     { path: "edit", element: <AddProducts /> },
+        //   ],
+        // },
       ],
     },
   ]);
