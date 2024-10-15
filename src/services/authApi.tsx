@@ -7,8 +7,13 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import signUpType from "@/types/SignUp";
 import loginType from "@/types/SignIn";
-import { userType } from "@/types/user";
-import { AddressResponse, addressType } from "@/types/address";
+import { UserAdminType, userType } from "@/types/user";
+import {
+  AddressDetailResponse,
+  AddressResponse,
+  addressType,
+  SetAddressDefaultResponse,
+} from "@/types/address";
 import { CategoriesResponse } from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
@@ -173,6 +178,26 @@ export const authApi = createApi({
         },
       }),
     }),
+    setAddressDefault: builder.mutation<SetAddressDefaultResponse, number>({
+      query: (id) => ({
+        url: `/addresses/${id}/default`,
+        method: "POST",
+        body: {
+          _method: "PUT",
+        },
+      }),
+    }),
+
+    getDetailAddress: builder.query<AddressDetailResponse, number>({
+      query: (id) => ({
+        url: `/addresses/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    getUsersAdmin: builder.query<UserAdminType, void>({
+      query: () => "/admin/users",
+    }),
     addCategory: builder.mutation<AddCategoryType, FormData>({
       query: (formData) => ({
         url: '/admin/categories',
@@ -205,7 +230,6 @@ export const authApi = createApi({
   }),
 })
 
-// Xuất các hooks để sử dụng trong các component
 export const {
   useRegisterMutation,
   useLoginMutation,
@@ -215,6 +239,9 @@ export const {
   useCreateAddressMutation,
   useGetAddressQuery,
   useDeleteAddressMutation,
+  useGetUsersAdminQuery,
+  useSetAddressDefaultMutation,
+  useGetDetailAddressQuery,
   useGetCategoriesQuery,
   useAddCategoryMutation,
   useDeleteCategoryMutation,

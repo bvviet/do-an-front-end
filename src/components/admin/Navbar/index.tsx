@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import {
   Avatar,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link } from "react-router-dom";
+import { useGetUsersQuery } from "@/services/authApi";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const arrayNav = [
@@ -24,8 +26,14 @@ const arrayNav = [
   {
     id: 2,
     name: "Sản phẩm",
-    icon: AccountBoxIcon,
+    icon: ShoppingCartIcon,
     link: "/admin",
+  },
+  {
+    id: 3,
+    name: "Danh mục",
+    icon: AccountBoxIcon,
+    link: "/admin/category",
   },
 ];
 
@@ -38,6 +46,8 @@ const NavbarAdmin = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const { data: user } = useGetUsersQuery();
 
   return (
     <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white">
@@ -85,9 +95,9 @@ const NavbarAdmin = () => {
             </IconButton>
 
             <div>
-              <Typography>Bàn Văn Việt</Typography>
+              <Typography>{user?.name}</Typography>
               <Typography variant="caption" sx={{ color: "#ccc" }}>
-                Admin
+                {user?.role}
               </Typography>
             </div>
             <Tooltip title="Mở cài đặt">

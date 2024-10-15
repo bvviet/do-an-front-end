@@ -11,7 +11,6 @@ const ProtectedLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Giả lập kiểm tra xác thực
     const checkAuth = () => {
       if (!isAuthenticated) {
         navigate("/login");

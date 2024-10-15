@@ -22,13 +22,24 @@ import Verify from "@/pages/SignIn-Login/Verify";
 import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
+
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
 import GenreTabs from "./components/admin/TabGenre";
+
+// import CrudLayout from "@/layouts/CrudProduct";
+// import ListProducts from "@/components/admin/CRUD/List";
+// import AddProducts from "@/components/admin/CRUD/AddProduct";
+
 import Register from "@/components/signIn-signUp/Register";
-import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+
 import EditCategory from "./components/admin/CRUDGenre/EditGenre";
+
+import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
+import GenreTabs from "./components/admin/TabGenre";
+import CartPage from "./pages/user/Cart";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -36,7 +47,7 @@ function App() {
       element: <UserLayout />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/detail", element: <ProductDetail /> },
+        { path: "/detail/:slug", element: <ProductDetail /> },
         { path: "/account", element: <Account /> },
         { path: "/contacts", element: <ContactUser /> },
         { path: "/blog", element: <Blog /> },
@@ -50,6 +61,7 @@ function App() {
         { path: "/forgot", element: <ForgotPassword /> },
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
+        { path: "/Cart", element: <CartPage /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,
@@ -59,9 +71,12 @@ function App() {
               element: <Profile />,
               children: [
                 { index: true, element: <ProfileRight /> },
-                { path: "update", element: <FormUpdateInfo /> },
                 { path: "addresses", element: <Address /> },
-                { path: "addresses/add", element: <FormUpdateAddress /> },
+                { path: "addresses/add", element: <FormAddAddress /> },
+                {
+                  path: "addresses/update/:id",
+                  element: <FormUpdateAddress />,
+                },
               ],
             },
           ],
@@ -73,10 +88,22 @@ function App() {
       element: <AdminLayout />,
       children: [
         { path: "lists", element: <ListAuth /> },
+
         { path: "product", element: <LabTabs /> },
         { path: "genre", element: <GenreTabs /> },
         { path: "genre/:id", element: <EditCategory /> }
 
+
+        { path: "category", element: <GenreTabs /> },
+        // {
+        //   path: "products",
+        //   element: <CrudLayout />,
+        //   children: [
+        //     { path: "list", element: <ListProducts /> },
+        //     { path: "add", element: <AddProducts /> },
+        //     { path: "edit", element: <AddProducts /> },
+        //   ],
+        // },
       ],
     },
   ]);

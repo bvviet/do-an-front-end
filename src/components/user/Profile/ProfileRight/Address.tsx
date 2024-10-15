@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import addIco from "@/assets/icons/add.svg";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import Confirm from "../../../Confirm";
-import { useDeleteAddressMutation, useGetUsersQuery } from "@/services/authApi";
+import {
+  useDeleteAddressMutation,
+  useGetUsersQuery,
+  useSetAddressDefaultMutation,
+} from "@/services/authApi";
 import { toast } from "react-toastify";
 import { useUserInfor } from "@/hooks/useUserInfor";
 import { useDispatch } from "react-redux";
@@ -24,12 +28,25 @@ const Address = () => {
   const [deleteAddress, { isLoading: isLoadingDelete }] =
     useDeleteAddressMutation();
 
+  const [setAddressDefault, { isLoading: isLoadingSetAddressDefault }] =
+    useSetAddressDefaultMutation();
+
   useEffect(() => {
-    dispatch(setLoading(isLoadingAddress || isLoadingDelete));
+    dispatch(
+      setLoading(
+        isLoadingAddress || isLoadingDelete || isLoadingSetAddressDefault,
+      ),
+    );
     if (user) {
       dispatch(saveUserInfo(user));
     }
-  }, [isLoadingAddress, isLoadingDelete, dispatch, user]);
+  }, [
+    isLoadingAddress,
+    isLoadingDelete,
+    isLoadingSetAddressDefault,
+    dispatch,
+    user,
+  ]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -43,6 +60,23 @@ const Address = () => {
       };
       const errorMessage =
         typedError.data?.message || "Xóa địa chỉ thất bại vui lòng thử lại.";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleSetAddressDefault = async (id: number) => {
+    try {
+      const response = await setAddressDefault(id).unwrap();
+      await refetch();
+      toast.success(response.message);
+    } catch (error) {
+      const typedError = error as {
+        status?: number;
+        data?: { message?: string };
+      };
+      const errorMessage =
+        typedError.data?.message ||
+        "Xét địa chỉ mặc định thất bại vui lòng thử lại.";
       toast.error(errorMessage);
     }
   };
@@ -86,7 +120,7 @@ const Address = () => {
             </div>
             <div className="flex flex-1 flex-col items-end gap-3">
               <Link
-                to={`/profile/addresses/edit/${address.id}`} // Giả sử bạn có một route để chỉnh sửa địa chỉ
+                to={`/profile/addresses/update/${address.id}`}
                 className="text-cyan-500 hover:opacity-60"
               >
                 Cập nhật
@@ -95,7 +129,8 @@ const Address = () => {
                 onClick={() =>
                   openPopup(
                     <Confirm
-                      handleDelete={() => handleDelete(address.id)} // Sử dụng handleDelete
+                      titleButton={"Xóa"}
+                      handleDelete={() => handleDelete(address.id)}
                     />,
                   )
                 }
@@ -103,7 +138,17 @@ const Address = () => {
               >
                 Xóa
               </div>
-              <div className="w-fit cursor-pointer rounded-md border border-solid border-violet-500 px-2 text-violet-500 hover:opacity-60">
+              <div
+                className="w-fit cursor-pointer rounded-md border border-solid border-violet-500 px-2 text-violet-500 hover:opacity-60"
+                onClick={() =>
+                  openPopup(
+                    <Confirm
+                      titleButton={"Xác nhận"}
+                      handleDelete={() => handleSetAddressDefault(address.id)}
+                    />,
+                  )
+                }
+              >
                 Thiết lập mặc định
               </div>
             </div>

@@ -26,3 +26,13 @@ export interface AddressResponse {
   success: boolean;
   addresses: AddressType[];
 }
+
+export interface AddressDetailResponse {
+  message: string;
+  success: boolean;
+  addresses: AddressType;
+}
+
+export interface SetAddressDefaultResponse {
+  message: string;
+}
