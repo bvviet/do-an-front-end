@@ -25,12 +25,10 @@ import ListAuth from "@/pages/admin/Auth/ListAuth";
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
 import GenreTabs from "./components/admin/TabGenre";
-import CrudLayout from "@/layouts/CrudProduct";
-import ListProducts from "@/components/admin/CRUD/List";
-import AddProducts from "@/components/admin/CRUD/AddProduct";
 import Register from "@/components/signIn-signUp/Register";
 import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import EditCategory from "./components/admin/CRUDGenre/EditGenre";
 
 function App() {
   const router = createBrowserRouter([
@@ -77,6 +75,7 @@ function App() {
         { path: "lists", element: <ListAuth /> },
         { path: "product", element: <LabTabs /> },
         { path: "genre", element: <GenreTabs /> },
+        { path: "genre/:id", element: <EditCategory /> }
 
       ],
     },

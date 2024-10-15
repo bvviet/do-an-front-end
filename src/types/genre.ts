@@ -3,7 +3,7 @@ export interface ICategory {
   name: string;
   slug: string;
   image: string;
-  parent_id: string | null;
+  parent_id: number;
   children?: ICategory[];
 }
 
