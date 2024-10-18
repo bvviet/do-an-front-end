@@ -46,24 +46,24 @@ export default function ListCategory() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { openPopup } = useModalContext();
-  const { categories, isLoading, error } = useCategories();
+  const { categories, isLoading } = useCategories();
   const [deleteCategory] = useDeleteCategoryMutation();
 
-  const categoriesList = Array.isArray(categories) ? categories : categories?.categories || [];
+  const categoriesList: ICategory[] = Array.isArray(categories) ? categories : (categories as { categories: ICategory[] })?.categories || [];
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
   const handleDelete = async (id: string) => {
     try {
       await deleteCategory(id).unwrap();
       toast.success("Category deleted successfully");
+      window.location.reload()
     } catch (err) {
       const error = err as { status?: number; data?: { message?: string } };
       const errorMessage = error.data?.message || "Failed to delete category. Please try again.";
@@ -141,7 +141,7 @@ export default function ListCategory() {
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Edit category">
-                              <Link to={`/admin/categories/${category.id}`}>
+                              <Link to={`/admin/genre/${category.id}`}>
                                 <IconButton aria-label="edit">
                                   <EditIcon color="primary" />
                                 </IconButton>
@@ -172,7 +172,7 @@ export default function ListCategory() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 20]}
         component="div"
-        count={Array.isArray(categories) ? categories.length : 0} // Kiểm tra categories là mảng
+        count={categories.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
