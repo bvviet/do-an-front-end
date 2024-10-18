@@ -18,6 +18,7 @@ import { CategoriesResponse } from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { UpdateProfileResponse } from "@/types/profile";
+import { CartGetResponse } from "@/types/cart";
 
 // Định nghĩa kiểu dữ liệu cho phản hồi đăng ký
 interface RegisterResponse {
@@ -59,7 +60,7 @@ interface AddCategoryType {
   id: string;
   name: string;
   parent_id: number | null;
-  image: string
+  image: string;
 }
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -192,13 +193,13 @@ export const authApi = createApi({
     }),
     addCategory: builder.mutation<AddCategoryType, FormData>({
       query: (formData) => ({
-        url: '/admin/categories',
-        method: 'POST',
+        url: "/admin/categories",
+        method: "POST",
         body: formData, // Sử dụng FormData trực tiếp
       }),
     }),
     getCategories: builder.query<CategoriesResponse, void>({
-      query: () => '/categories', // Đường dẫn đến API của bạn
+      query: () => "/categories", // Đường dẫn đến API của bạn
     }),
     deleteCategory: builder.mutation<CategoriesResponse, string>({
       query: (id) => ({
@@ -206,15 +207,22 @@ export const authApi = createApi({
         method: "DELETE",
       }),
     }),
-    updateCategory: builder.mutation<CategoriesResponse, { id: string; data: FormData }>({
+    updateCategory: builder.mutation<
+      CategoriesResponse,
+      { id: string; data: FormData }
+    >({
       query: ({ id, data }) => ({
         url: `/admin/categories/${id}`,
         method: "PUT",
         body: data, // Gửi FormData chứa thông tin danh mục
       }),
-    })
+    }),
+
+    getCart: builder.query<CartGetResponse, void>({
+      query: () => "/carts",
+    }),
   }),
-})
+});
 
 export const {
   useRegisterMutation,
@@ -230,5 +238,6 @@ export const {
   useGetDetailAddressQuery,
   useGetCategoriesQuery,
   useAddCategoryMutation,
-  useDeleteCategoryMutation
+  useDeleteCategoryMutation,
+  useGetCartQuery,
 } = authApi;

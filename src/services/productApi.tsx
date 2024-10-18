@@ -7,7 +7,12 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
-import { getAllProductsResponse } from "@/types/product";
+import { getAllProductsResponse, ProductDetailType } from "@/types/product";
+import {
+  CartAddResponse,
+  CartDeleteResponse,
+  updateQuantityCarResponse,
+} from "@/types/cart";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -52,7 +57,48 @@ export const productApi = createApi({
         url: "/products",
       }),
     }),
+
+    getDetailProduct: builder.query<ProductDetailType, number>({
+      query: (productId) => ({
+        url: `/products/${productId}`,
+      }),
+    }),
+
+    addCart: builder.mutation<
+      CartAddResponse,
+      { product_id: number; quantity: number; color: string; size: string }
+    >({
+      query: ({ product_id, quantity, color, size }) => ({
+        url: `/carts`,
+        method: "POST",
+        body: { product_id, quantity, color, size },
+      }),
+    }),
+
+    deleteCart: builder.mutation<CartDeleteResponse, number>({
+      query: (cartId) => ({
+        url: `/carts/${cartId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    updateQuantityCart: builder.mutation<
+      updateQuantityCarResponse,
+      { cartId: number; quantity: number }
+    >({
+      query: ({ cartId, quantity }) => ({
+        url: `/cart/${cartId}`,
+        method: "PATCH",
+        body: { quantity },
+      }),
+    }),
   }),
 });
 
-export const { useGetAllProductsQuery } = productApi;
+export const {
+  useGetAllProductsQuery,
+  useGetDetailProductQuery,
+  useAddCartMutation,
+  useDeleteCartMutation,
+  useUpdateQuantityCartMutation,
+} = productApi;

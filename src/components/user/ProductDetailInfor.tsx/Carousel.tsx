@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Slider from "react-slick";
 import { CSSProperties } from "react";
 import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
-import ao2 from "../../../../public/images/ao2.png";
 
 interface ArrowProps {
   className: string;
@@ -16,8 +16,7 @@ const SampleNextArrow: React.FC<ArrowProps> = (props) => {
       className={className}
       style={{
         ...style,
-        display: "block",
-        background: "red",
+        background: "#ccc",
         marginLeft: "20px",
       }}
       onClick={onClick}
@@ -32,8 +31,7 @@ const SamplePrevArrow: React.FC<ArrowProps> = (props) => {
       className={className}
       style={{
         ...style,
-        display: "block",
-        background: "red",
+        color: "#ccc",
         marginRight: "20px",
       }}
       onClick={onClick}
@@ -43,9 +41,10 @@ const SamplePrevArrow: React.FC<ArrowProps> = (props) => {
 
 interface CarouselProps {
   SetImage: (imageUrl: string) => void;
+  imgs: any;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ SetImage }) => {
+const Carousel: React.FC<CarouselProps> = ({ SetImage, imgs }) => {
   const { openPopup } = useModalContext();
   const settings = {
     dots: true,
@@ -86,6 +85,9 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage }) => {
     ],
   };
 
+  const imgChild = imgs?.slice(0, 5)??[];
+
+  console.log({ imgChild });
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const imgElement = e.currentTarget.querySelector("img");
     if (imgElement) {
@@ -98,46 +100,57 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage }) => {
       <Slider {...settings}>
         {/* Example images */}
         <div
-          onClick={() => openPopup(<img src={ao2} />)}
-          className="h-[100px] w-[100px] cursor-pointer bg-[#FEFFE9]"
+          onClick={() => openPopup(<img src={imgChild[0]?.image} />)}
+          className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={ao2}
-            className="h-full w-full object-contain"
+            src={imgChild[0]?.image}
+            className="h-full w-[90%] object-cover"
             alt="Image 1"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={ao2} />)}
-          className="h-[100px] w-[100px] cursor-pointer bg-[#C4D1D0]"
+          onClick={() => openPopup(<img src={imgChild[1]?.image} />)}
+          className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={ao2}
-            className="h-full w-full object-contain"
+            src={imgChild[1]?.image}
+            className="h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={ao2} />)}
-          className="h-[100px] w-[100px] cursor-pointer bg-[#F8E9EC]"
+          onClick={() => openPopup(<img src={imgChild[2]?.image} />)}
+          className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={ao2}
-            className="h-full w-full object-contain"
+            src={imgChild[2]?.image}
+            className="h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={ao2} />)}
-          className="h-[100px] w-[100px] cursor-pointer bg-[#ede6b4]"
+          onClick={() => openPopup(<img src={imgChild[3]?.image} />)}
+          className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={ao2}
-            className="h-full w-full object-contain"
+            src={imgChild[3]?.image}
+            className="h-full w-[90%] object-cover"
+            alt="Image 2"
+          />
+        </div>
+        <div
+          onClick={() => openPopup(<img src={imgChild[4]?.image} />)}
+          className="h-[100px] w-[100px] cursor-pointer"
+          onMouseEnter={handleImageClick}
+        >
+          <img
+            src={imgChild[4]?.image}
+            className="h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>

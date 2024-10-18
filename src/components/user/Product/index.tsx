@@ -19,10 +19,9 @@ const ProductItem: FC<ProductItemProps> = ({
   newProduct,
   product,
 }) => {
-  console.log({ product });
-
   const [isLoading, setIsLoading] = useState(false);
   const [showSticker, setShowSticker] = useState<boolean>(false);
+console.log({SanPham: product});
 
   const truncateString = (str: string, num: number) => {
     return str.length > num ? str.slice(0, num) + "..." : str;
@@ -48,7 +47,7 @@ const ProductItem: FC<ProductItemProps> = ({
 
       {/* Product Image */}
       <div className="relative">
-        <Link to={`/detail/${product?.slug}`}>
+        <Link to={`/detail/${product?.id}`}>
           <img
             src={product?.img_thumbnail}
             alt=""

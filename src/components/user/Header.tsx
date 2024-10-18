@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import { Avatar, Badge, IconButton, Menu, Tooltip } from "@mui/material";
 import { useLogout } from "@/hooks/useLogOut";
 import { useUserInfor } from "@/hooks/useUserInfor";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | SVGSVGElement | null>(
@@ -32,6 +34,9 @@ const Header = () => {
   useEffect(() => {
     setAnchorEl(null);
   }, [userInfor]);
+
+  const cartItems = useSelector((state: RootState) => state.carts.cart_items);
+
   const renderMenu = (
     <Menu
       open={Boolean(anchorEl)}
@@ -136,8 +141,8 @@ const Header = () => {
                 </Link>
               </Tooltip>
               <Tooltip title="Giỏ hàng" arrow>
-                <Link to={"#!"} className="flex items-center gap-1">
-                  <Badge badgeContent={3} color="secondary">
+                <Link to={"/cart"} className="flex items-center gap-1">
+                  <Badge badgeContent={cartItems.length} color="secondary">
                     <img src={cartIcon} alt="Cart" />
                   </Badge>
                 </Link>

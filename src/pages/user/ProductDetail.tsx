@@ -1,10 +1,12 @@
 import ProductDetailInfo from "@/components/user/ProductDetailInfor.tsx";
+import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
+  const { id } = useParams();
+  const numericId = id ? parseInt(id, 10) : 0;
   return (
     <div className="container mb-[150px]">
-      {/* <BreadcrumbsWithRouter /> */}
-      <ProductDetailInfo />
+      <ProductDetailInfo id={numericId} />
     </div>
   );
 };

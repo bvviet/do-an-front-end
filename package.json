@@ -20,6 +20,7 @@
         "@tippyjs/react": "^4.2.6",
         "@types/react-icons": "^3.0.0",
         "axios": "^1.7.5",
+        "color-name": "^2.0.0",
         "date-fns": "^4.1.0",
         "filepond": "^4.31.3",
         "filepond-plugin-file-validate-type": "^1.2.9",
@@ -47,6 +48,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.9.0",
+        "@types/color-name": "^2.0.0",
         "@types/node": "^22.5.1",
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",

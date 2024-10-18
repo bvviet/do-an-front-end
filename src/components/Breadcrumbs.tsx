@@ -11,7 +11,6 @@ const formatBreadcrumbName = (crumb: string) => {
 
 const Breadcrumbs = () => {
   const location = useLocation();
-  console.log({ location });
 
   const breadcrumbs = location.pathname.split("/").filter((path) => path);
 
