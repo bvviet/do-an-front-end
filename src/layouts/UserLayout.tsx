@@ -18,7 +18,7 @@ const FixedLinearProgress = styled(LinearProgress)({
 const UserLayout = () => {
   const loading = useSelector((state: RootState) => state.loading.isLoading);
   return (
-    <div>
+    <div className="bg-[#F0F0F0]">
       {loading && <FixedLinearProgress color="secondary" />}
       <Header />
       <Breadcrumbs />

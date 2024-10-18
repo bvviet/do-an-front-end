@@ -1,11 +1,82 @@
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import ButtonComponent from "../../ButtonComponent";
+import { ProductDetailType } from "@/types/product";
+import { useAddCartMutation } from "@/services/productApi";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { setCart } from "@/redux/slices/CartSlice";
+import { useGetCartQuery } from "@/services/authApi";
+interface FormDetailProps {
+  productDetail?: ProductDetailType;
+}
 
-const FormDetail = () => {
-  const [color, setColor] = useState<string>("green");
-  const [size, setSize] = useState<string>("XL");
+type VariantsProps = {
+  color: string;
+  size: string;
+};
+type uniqueVariantsProps = VariantsProps[];
+
+const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
+  const [color, setColor] = useState<string>("");
+  const [size, setSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
+  const { id } = useParams();
+  const productId = Number(id);
+  const disPatch = useDispatch();
+
+  const { data: carts, refetch } = useGetCartQuery();
+  const [addCart, { isLoading }] = useAddCartMutation();
+
+  console.log({ carts });
+
+  const uniqueVariants: uniqueVariantsProps = [];
+  productDetail?.product_variants.forEach((product) => {
+    const colorName = product.product_color.name;
+    const sizeName = product.product_size.name;
+    if (
+      !uniqueVariants.some(
+        (variant) => variant.color === colorName && variant.size === sizeName,
+      )
+    ) {
+      uniqueVariants.push({
+        color: colorName,
+        size: sizeName,
+      });
+    }
+  });
+
+  const handleAddCart = async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res: any = await addCart({
+        color,
+        size,
+        quantity,
+        product_id: productId,
+      });
+      console.log({ res });
+
+      if (res?.error?.status === 404) {
+        toast.error(res.error.data.error);
+      } else {
+        toast.success("Thêm vào giỏ hàng thành công");
+        refetch();
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    disPatch(setLoading(isLoading));
+    if (carts) {
+      disPatch(setCart(carts));
+    }
+  }, [isLoading, disPatch, carts]);
+
   return (
     <div>
       <form action="">
@@ -17,30 +88,25 @@ const FormDetail = () => {
             Color:
           </label>
           <div className="ml-[14px] flex items-center gap-[12px]">
-            <div
-              onClick={() => setColor("green")}
-              className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded bg-[#90A338] text-white"
-            >
-              {color === "green" && <CheckIcon color="inherit" />}
-            </div>
-            <div
-              onClick={() => setColor("black")}
-              className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded bg-[#2A2A2A] text-white"
-            >
-              {color === "black" && <CheckIcon color="inherit" />}
-            </div>
-            <div
-              onClick={() => setColor("pink")}
-              className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded bg-[#EF8195] text-white"
-            >
-              {color === "pink" && <CheckIcon color="inherit" />}
-            </div>
-            <div
-              onClick={() => setColor("white")}
-              className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded border border-solid border-[#C4D1D0] bg-[#FFF] text-black"
-            >
-              {color === "white" && <CheckIcon color="inherit" />}
-            </div>
+            {uniqueVariants
+              .map((variant) => variant.color) // Lấy danh sách màu duy nhất
+              .filter((value, index, self) => self.indexOf(value) === index) // Lọc bỏ trùng lặp
+              .map((colorName) => (
+                <div
+                  key={colorName}
+                  onClick={() => {
+                    if (color === colorName) {
+                      setColor("");
+                    } else {
+                      setColor(colorName);
+                    }
+                  }}
+                  className={`flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded border-2 border-solid border-[#ccc]`}
+                  style={{ backgroundColor: colorName }}
+                >
+                  {color === colorName && <CheckIcon color="info" />}
+                </div>
+              ))}
           </div>
         </div>
         <div className="flex items-center gap-[14px]">
@@ -51,68 +117,32 @@ const FormDetail = () => {
             Size:
           </label>
           <div className="ml-[25px] flex items-center gap-[12px]">
-            <div
-              onClick={() => setSize("XL")}
-              className={`${
-                size === "XL"
-                  ? "bg-[#005D63] text-white"
-                  : "border border-solid border-[#C4D1D0] text-[#566363]"
-              } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
-            >
-              <div
-                className={`${size === "XL" ? "text-white" : "text-[#566363]"} leading-[171.429%]`}
-              >
-                XL
-              </div>
-            </div>
-            <div
-              onClick={() => setSize("L")}
-              className={`${
-                size === "L"
-                  ? "bg-[#005D63] text-white"
-                  : "border border-solid border-[#C4D1D0] text-[#566363]"
-              } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
-            >
-              <div
-                className={`${
-                  size === "L" ? "text-white" : "text-[#566363]"
-                }text-[#566363] leading-[171.429%]`}
-              >
-                L
-              </div>
-            </div>
-            <div
-              onClick={() => setSize("M")}
-              className={`${
-                size === "M"
-                  ? "bg-[#005D63] text-white"
-                  : "border border-solid border-[#C4D1D0] text-[#566363]"
-              } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
-            >
-              <div
-                className={`${
-                  size === "M" ? "text-white" : "text-[#566363]"
-                } leading-[171.429%] text-[#566363]`}
-              >
-                M
-              </div>
-            </div>
-            <div
-              onClick={() => setSize("S")}
-              className={`${
-                size === "S"
-                  ? "bg-[#005D63] text-white"
-                  : "border border-solid border-[#C4D1D0] text-[#566363]"
-              } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
-            >
-              <div
-                className={`${
-                  size === "S" ? "text-white" : "text-[#566363]"
-                }text-[#566363] leading-[171.429%]`}
-              >
-                S
-              </div>
-            </div>
+            {uniqueVariants
+              .map((variant) => variant.size) // Lấy danh sách size duy nhất
+              .filter((value, index, self) => self.indexOf(value) === index) // Lọc bỏ trùng lặp
+              .map((sizeName) => (
+                <div
+                  key={sizeName}
+                  onClick={() => {
+                    if (sizeName === size) {
+                      setSize("");
+                    } else {
+                      setSize(sizeName);
+                    }
+                  }}
+                  className={`${
+                    size === sizeName
+                      ? "bg-[#005D63] text-white"
+                      : "border border-solid border-[#C4D1D0] text-[#566363]"
+                  } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
+                >
+                  <div
+                    className={`${size === sizeName ? "text-white" : "text-[#566363]"}`}
+                  >
+                    {sizeName}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
 
@@ -147,15 +177,13 @@ const FormDetail = () => {
         </div>
       </form>
       <p className="leading-[ 166.667%] mb-[40px] mt-[25px] text-[1.8rem] text-[#566363]">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam,{" "}
+        {productDetail?.description}
       </p>
       <div className="flex flex-col gap-[18px]">
         <ButtonComponent
           title="Thêm giỏ hàng"
           width="100%"
-          onClick={() => alert("Ok")}
+          onClick={() => handleAddCart()}
           loading={false}
         />
         <ButtonComponent

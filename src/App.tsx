@@ -47,7 +47,7 @@ function App() {
       element: <UserLayout />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/detail/:slug", element: <ProductDetail /> },
+        { path: "/detail/:id", element: <ProductDetail /> },
         { path: "/account", element: <Account /> },
         { path: "/contacts", element: <ContactUser /> },
         { path: "/blog", element: <Blog /> },

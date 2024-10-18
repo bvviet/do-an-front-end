@@ -8,7 +8,7 @@ const ProductOffers = () => {
   const [visibleCount, setVisibleCount] = useState(6);
 
   const { data: products } = useGetAllProductsQuery();
-  const productOffer = products?.data;
+  const productOffer = products?.products;
 
   const showHide = visibleCount < (productOffer?.length || 0);
 

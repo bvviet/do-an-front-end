@@ -18,6 +18,7 @@ import { CategoriesResponse } from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { UpdateProfileResponse } from "@/types/profile";
+import { CartGetResponse } from "@/types/cart";
 
 // Định nghĩa kiểu dữ liệu cho phản hồi đăng ký
 interface RegisterResponse {
@@ -66,8 +67,9 @@ interface IGenre {
 interface AddCategoryType {
   id: string;
   name: string;
-  parent_id: number;
-  image: string
+  parent_id: number | null;
+  image: string;
+
 }
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -200,13 +202,13 @@ export const authApi = createApi({
     }),
     addCategory: builder.mutation<AddCategoryType, FormData>({
       query: (formData) => ({
-        url: '/admin/categories',
-        method: 'POST',
+        url: "/admin/categories",
+        method: "POST",
         body: formData, // Sử dụng FormData trực tiếp
       }),
     }),
     getCategories: builder.query<CategoriesResponse, void>({
-      query: () => '/categories', // Đường dẫn đến API của bạn
+      query: () => "/categories", // Đường dẫn đến API của bạn
     }),
     deleteCategory: builder.mutation<CategoriesResponse, string>({
       query: (id) => ({
@@ -214,9 +216,11 @@ export const authApi = createApi({
         method: "DELETE",
       }),
     }),
+
     getCategoryDetail: builder.query<IGenre, string>({
       query: (id) => `/admin/categories/${id}`,
     }),
+      
     updateCategory: builder.mutation<CategoriesResponse, [CategoriesResponse, string | undefined]>({
       query: ([jsonData, id]) => ({
         url: `/admin/categories/${id}`,
@@ -227,8 +231,12 @@ export const authApi = createApi({
         },
       }),
     }),
+
+    getCart: builder.query<CartGetResponse, void>({
+      query: () => "/carts",
+    }),
   }),
-})
+});
 
 export const {
   useRegisterMutation,
@@ -245,6 +253,7 @@ export const {
   useGetCategoriesQuery,
   useAddCategoryMutation,
   useDeleteCategoryMutation,
+  useGetCartQuery,
   useUpdateCategoryMutation,
   useGetCategoryDetailQuery
 } = authApi;

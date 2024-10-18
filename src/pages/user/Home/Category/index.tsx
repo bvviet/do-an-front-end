@@ -15,7 +15,7 @@ const Category = () => {
   };
 
   return (
-    <div className="lg:mb-[75px] lg:mt-[150px] mt-[100px] mb-[50px] px-[30px] lg:px-0">
+    <div className="mb-[50px] mt-[100px] px-[30px] lg:mb-[75px] lg:mt-[150px] lg:px-0">
       <h2 className="max-w-[470px] font-slab text-[3.2rem] font-bold lg:text-[4.2rem]">
         Explore, find exactly what you need
       </h2>
