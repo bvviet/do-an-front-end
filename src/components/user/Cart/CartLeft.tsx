@@ -52,12 +52,13 @@ const CartLeft = () => {
       <div className="flex flex-col gap-5">
         {carts?.cart_items?.map((cart, index) => {
           // Chuyển đổi giá trị price_regular sang số
-          const price = formatCurrency(cart.price_regular);
-          const totalPrice = formatCurrency(
-            (typeof cart.price_regular === "string"
-              ? parseFloat(cart.price_regular)
-              : cart.price_regular) * cart.quantity,
-          );
+          //const price = formatCurrency(cart.price_regular);
+          const priceSale = formatCurrency(cart.total)
+          // const totalPrice = formatCurrency(
+          //   (typeof cart.price_regular === "string"
+          //     ? parseFloat(cart.price_regular)
+          //     : cart.price_regular) * cart.quantity,
+          // );
 
           return (
             <div key={cart.id}>
@@ -86,13 +87,13 @@ const CartLeft = () => {
                     <div className="my-3 flex items-center gap-6">
                       <p className="my-2 text-[#566363]">Cart ID: {cart.id}</p>
                       <div>
-                        <span className="text-[#ff4d00]">{price}</span>
+                        <span className="text-[#ff4d00]">{priceSale}</span>
                         {""}x{""} {cart.quantity}
                       </div>
                     </div>
                     <div>
                       Tổng Tiền:{" "}
-                      <span className="text-[#ff4d00]">{totalPrice}</span>
+                      <span className="text-[#ff4d00]">{priceSale}</span>
                     </div>
                     <div className="flex flex-wrap items-center justify-between">
                       <QuantitySelector

@@ -5,6 +5,7 @@ export interface userType {
   name: string;
   email: string;
   avatar: string;
+  phone:string
   addresses: AddressType[];
   link_fb: string;
   link_tt: string;

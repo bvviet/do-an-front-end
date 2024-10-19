@@ -14,7 +14,7 @@ export interface AddressType {
   phone_number: string;
   city: string;
   district: string;
-  Ward: string;
+  ward: string;
   detail_address: string;
   is_default: boolean | null;
   created_at: string;

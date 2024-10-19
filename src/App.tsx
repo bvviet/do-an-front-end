@@ -26,18 +26,13 @@ import ListAuth from "@/pages/admin/Auth/ListAuth";
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
 import GenreTabs from "./components/admin/TabGenre";
-
 // import CrudLayout from "@/layouts/CrudProduct";
 // import ListProducts from "@/components/admin/CRUD/List";
 // import AddProducts from "@/components/admin/CRUD/AddProduct";
-
 import Register from "@/components/signIn-signUp/Register";
 import ProtectedLayout from "./layouts/ProtectedLayout";
-
 import EditCategory from "./components/admin/CRUDGenre/EditGenre";
-
 import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
-import GenreTabs from "./components/admin/TabGenre";
 import CartPage from "./pages/user/Cart";
 
 
@@ -93,8 +88,6 @@ function App() {
         { path: "genre", element: <GenreTabs /> },
         { path: "genre/:id", element: <EditCategory /> }
 
-
-        { path: "category", element: <GenreTabs /> },
         // {
         //   path: "products",
         //   element: <CrudLayout />,

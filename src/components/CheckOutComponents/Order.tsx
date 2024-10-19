@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import ThanhToan from "./ThanhToan";
 import ItemOrder from "./ItemOrder";
+import { useGetCartQuery } from "@/services/authApi";
+import { CircularProgress } from "@mui/material";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export default function Order() {
+  const { data: carts, isLoading, error } = useGetCartQuery();
+
+  const shippingFee = 20000; // 20.000đ
+  const subtotal = carts?.total_price ?? 0; // Giá tạm tính
+  const total = subtotal + shippingFee; // Tổng tiền
+  // Kiểm tra nếu đang loading hoặc có lỗi
+  if (isLoading) return <div className="flex items-center justify-center"><CircularProgress /></div>;
+  if (error) return <div className="text-red-500">Lỗi khi lấy dữ liệu giỏ hàng</div>;
   return (
     <>
       <div>
@@ -17,16 +28,16 @@ export default function Order() {
             <p>Phí vận chuyển</p>
           </div>
           <div className="text-end text-[16px] font-manrope font-medium leading-[171.429%]">
-            <p>990.000đ</p>
-            <p>20.000đ</p>
+            <p>{formatCurrency(carts?.total_price ?? 0)}</p>
+            <p>{formatCurrency(shippingFee)}</p>
           </div>
         </div>
         <div className="border-b border-[#C4D1D0] mt-4 border-solid"></div>
         {/* Tổng tiền */}
         <div className="mt-6">
-          <div className="flex justify-between text-[20px] font-manrope font-bold leading-[171.429%] ">
+          <div className="flex justify-between text-red-600 text-[20px] font-manrope font-bold leading-[171.429%] ">
             <p className="">Tổng tiền</p>
-            <p className="">1.010.000đ</p>
+            <p className="">{formatCurrency(total)}</p>
           </div>
           <ThanhToan />
           <div className="mt-6 flex justify-between">

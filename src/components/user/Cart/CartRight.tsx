@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 interface CartRightProps {
   totalPrice?: number;
@@ -35,8 +36,8 @@ const CartRight: FC<CartRightProps> = ({ totalPrice }) => {
         <span className="leading-[171.429%]">{totalPrice}</span>
       </div>
 
-      <button className="mt-[50px] w-full rounded-md bg-[#FFD44D] py-[15px] text-[18px] font-semibold text-[#131717]">
-        Proceed to Check Out
+      <button className="mt-[20px] w-full rounded-md bg-[#FFD44D] py-[10px] text-[18px] font-semibold text-[#131717]">
+        <Link to={"/checkout"}>Check Out</Link>
       </button>
     </div>
   );

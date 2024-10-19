@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import { useUserInfor } from "@/hooks/useUserInfor";
 
 interface OptionType {
   value: string;
@@ -36,14 +37,33 @@ const FormBill = () => {
     null
   );
   console.log(import.meta.env.VITE_GEONAMES_USERNAME);
+  const userInfor = useUserInfor();
+  const userInfoDefault = userInfor?.addresses.find(add => add.is_default === true);
+  console.log("Đây là userDefaut", userInfoDefault);
+  console.log("Đây là user", userInfor);
 
+  // Thiết lập thông tin người dùng
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [detailAddress, setDetailAddress] = useState<string>("")
+
+  useEffect(() => {
+    if (userInfor) {
+      setEmail(userInfor.email || "");
+      setName(userInfor.name || "");
+      setPhone(userInfoDefault?.phone_number || ""); // Lấy số điện thoại từ địa chỉ mặc định
+      setDetailAddress(userInfoDefault?.detail_address || ""); // Lấy số điện thoại từ địa chỉ mặc định
+     
+    }
+  }, [userInfor, userInfoDefault]);
+  console.log(userInfor);
   // Fetch danh sách tỉnh
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
         const response = await axios.get(
-          `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${
-            import.meta.env.VITE_GEONAMES_USERNAME
+          `http://api.geonames.org/searchJSON?country=VN&featureClass=A&username=${import.meta.env.VITE_GEONAMES_USERNAME
           }`
         );
         const data = response.data;
@@ -64,8 +84,7 @@ const FormBill = () => {
   const fetchDistricts = async (provinceId: string) => {
     try {
       const response = await axios.get(
-        `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${
-          import.meta.env.VITE_GEONAMES_USERNAME
+        `http://api.geonames.org/childrenJSON?geonameId=${provinceId}&username=${import.meta.env.VITE_GEONAMES_USERNAME
         }`
       );
       const data = response.data;
@@ -83,8 +102,7 @@ const FormBill = () => {
   const fetchCommunes = async (districtId: string) => {
     try {
       const response = await axios.get(
-        `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${
-          import.meta.env.VITE_GEONAMES_USERNAME
+        `http://api.geonames.org/childrenJSON?geonameId=${districtId}&username=${import.meta.env.VITE_GEONAMES_USERNAME
         }`
       );
       const data = response.data;
@@ -133,7 +151,7 @@ const FormBill = () => {
           >
             Email
           </label>
-          <input className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] w-full rounded-xl mt-3 bg-white" />
+          <input value={email} className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] w-full rounded-xl mt-3 bg-white" />
         </div>
         {/* Ho ten */}
         <div className="col-span-12 md:col-span-6 w-full lg:w-auto mt-[10px]">
@@ -143,7 +161,7 @@ const FormBill = () => {
           >
             Họ và tên
           </label>
-          <input className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] w-full rounded-xl mt-3 bg-white" />
+          <input value={name} className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] w-full rounded-xl mt-3 bg-white" />
         </div>
         <div className="grid grid-cols-12 gap-[10px] lg:gap-[20px] items-center">
           {/* Country */}
@@ -227,7 +245,7 @@ const FormBill = () => {
               Số điện thoại
             </label>
             <div className="flex items-center px-[12px] border border-solid border-[#d2d1d6] h-[36px] rounded-xl mt-3 bg-white">
-              <input id="phone" type="number" className="w-full" />
+              <input value={phone} id="phone" type="number" className="w-full" />
             </div>
           </div>
           {/* Country */}
@@ -242,6 +260,7 @@ const FormBill = () => {
               <input
                 id="fullName"
                 type="text"
+                value={detailAddress}
                 placeholder="24a, ngõ 123, Xuân Phương"
                 className="w-full"
               />
