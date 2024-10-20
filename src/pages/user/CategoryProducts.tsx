@@ -1,23 +1,17 @@
-import { FC, useEffect, useState } from "react";
-import BaseSection from "../../../pages/user/Home/BaseSection";
-import ProductItem from "../Product";
+import { useState } from "react";
+import BaseSection from "./Home/BaseSection";
+import ProductItem from "@/components/user/Product";
 import { useGetCategoryProductsQuery } from "@/services/authApi";
-import { useDispatch } from "react-redux";
-import { setLoading } from "@/redux/slices/loadingSlice";
+import { useParams } from "react-router-dom";
 
-interface SimilarProductDetailProps {
-  categoriesId: number;
-}
-
-const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
-  categoriesId,
-}) => {
+const CategoryProducts = () => {
   const [visibleCount, setVisibleCount] = useState(6);
-  const { data: products, isLoading } =
-    useGetCategoryProductsQuery(categoriesId);
-  const dispatch = useDispatch();
-
+  const { categoriesChildId } = useParams();
+  const numericId = categoriesChildId ? parseInt(categoriesChildId, 10) : 0;
+  const { data: products } = useGetCategoryProductsQuery(numericId);
+  // Khai báo productNew ở ngoài if block
   const productCategory = products?.category.products;
+
   // Đảm bảo rằng showHide kiểm tra productCategory một cách chính xác
   const showHide = visibleCount < (productCategory?.length || 0);
 
@@ -29,15 +23,11 @@ const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
     );
   };
 
-  useEffect(() => {
-    dispatch(setLoading(isLoading));
-  }, [dispatch, isLoading]);
-
   return (
     <div className="container">
       <BaseSection
         typeProduct={true}
-        title={`Sản phẩm thuộc cùng thể loại `}
+        title={`Sản phẩm thuộc ${products?.category.name} `}
         description="Browse our new products and make your day more beautiful and glorious."
         handleShowMore={handleShowMore}
         showHide={showHide}
@@ -49,4 +39,5 @@ const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
     </div>
   );
 };
-export default SimilarProductDetail;
+
+export default CategoryProducts;

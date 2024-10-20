@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Carousel from "./Carousel";
 import start from "../../../assets/icons/start.png";
 import { FC, useEffect, useState } from "react";
@@ -41,7 +42,7 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
             <div className="mb-[18px] flex h-[300px] w-full items-center justify-center lg:h-[570px]">
               <img
                 className="flex h-[100%] w-[100%] rounded-md object-cover"
-                src={`${image}`}
+                src={`${productDetail?.img_thumbnail}`}
                 alt=""
               />
             </div>
@@ -92,7 +93,7 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
       {/* Comment */}
       <Reviews />
       {/* Similar Product */}
-      <SimilarProductDetail />
+      <SimilarProductDetail categoriesId={productDetail?.category_id ?? 0} />
     </div>
   );
 };

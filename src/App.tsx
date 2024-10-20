@@ -30,6 +30,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
 import GenreTabs from "./components/admin/TabGenre";
 import CartPage from "./pages/user/Cart";
+import CategoryProducts from "./pages/user/CategoryProducts";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,6 +53,10 @@ function App() {
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
         { path: "/Cart", element: <CartPage /> },
+        {
+          path: "/categories/products/:categoriesChildId",
+          element: <CategoryProducts />,
+        },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,

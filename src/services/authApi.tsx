@@ -14,7 +14,10 @@ import {
   addressType,
   SetAddressDefaultResponse,
 } from "@/types/address";
-import { CategoriesResponse } from "@/types/genre";
+import {
+  CategoriesResponse,
+  GetCategoriesProductsResponse,
+} from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { UpdateProfileResponse } from "@/types/profile";
@@ -207,6 +210,7 @@ export const authApi = createApi({
         method: "DELETE",
       }),
     }),
+
     updateCategory: builder.mutation<
       CategoriesResponse,
       { id: string; data: FormData }
@@ -215,6 +219,13 @@ export const authApi = createApi({
         url: `/admin/categories/${id}`,
         method: "PUT",
         body: data, // Gửi FormData chứa thông tin danh mục
+      }),
+    }),
+
+    getCategoryProducts: builder.query<GetCategoriesProductsResponse, number>({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "GET",
       }),
     }),
 
@@ -238,6 +249,7 @@ export const {
   useGetDetailAddressQuery,
   useGetCategoriesQuery,
   useAddCategoryMutation,
+  useGetCategoryProductsQuery,
   useDeleteCategoryMutation,
   useGetCartQuery,
 } = authApi;
