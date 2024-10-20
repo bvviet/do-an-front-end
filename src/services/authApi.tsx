@@ -14,7 +14,10 @@ import {
   addressType,
   SetAddressDefaultResponse,
 } from "@/types/address";
-import { CategoriesResponse } from "@/types/genre";
+import {
+  CategoriesResponse,
+  GetCategoriesProductsResponse,
+} from "@/types/genre";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { UpdateProfileResponse } from "@/types/profile";
@@ -200,6 +203,7 @@ export const authApi = createApi({
     getUsersAdmin: builder.query<UserAdminType, void>({
       query: () => "/admin/users",
     }),
+
     addCategory: builder.mutation<AddCategoryType, FormData>({
       query: (formData) => ({
         url: "/admin/categories",
@@ -207,9 +211,11 @@ export const authApi = createApi({
         body: formData, // Sử dụng FormData trực tiếp
       }),
     }),
+    
     getCategories: builder.query<CategoriesResponse, void>({
       query: () => "/categories", // Đường dẫn đến API của bạn
     }),
+
     deleteCategory: builder.mutation<CategoriesResponse, string>({
       query: (id) => ({
         url: `/admin/categories/${id}`,
@@ -229,6 +235,13 @@ export const authApi = createApi({
         headers: {
           'Content-Type': 'application/json', // Đặt Content-Type là application/json
         },
+      }),
+    }),
+
+    getCategoryProducts: builder.query<GetCategoriesProductsResponse, number>({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "GET",
       }),
     }),
 
@@ -252,6 +265,7 @@ export const {
   useGetDetailAddressQuery,
   useGetCategoriesQuery,
   useAddCategoryMutation,
+  useGetCategoryProductsQuery,
   useDeleteCategoryMutation,
   useGetCartQuery,
   useUpdateCategoryMutation,
