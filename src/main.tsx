@@ -12,19 +12,22 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { persistor, store } from "@/redux/store.ts";
 import { PersistGate } from "redux-persist/integration/react";
+import { TabProvider } from "./contexts/TabContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
       <ThemeProvider theme={theme}>
-        <StrictMode>
-          <ModalProvider>
-            <OverlayProvider>
-              <App />
-              <ToastContainer />
-            </OverlayProvider>
-          </ModalProvider>
-        </StrictMode>
+        <TabProvider>
+          <StrictMode>
+            <ModalProvider>
+              <OverlayProvider>
+                <App />
+                <ToastContainer />
+              </OverlayProvider>
+            </ModalProvider>
+          </StrictMode>
+        </TabProvider>
       </ThemeProvider>
     </PersistGate>
   </Provider>,

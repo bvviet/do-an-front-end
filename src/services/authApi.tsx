@@ -54,16 +54,25 @@ interface CreateAddressResponse {
   message: string; // Thông điệp trả về
   success: boolean; // Trạng thái thành công
 }
-// interface CategoryType {
-//   id: string;
-//   name: string;
-//   image: string
-// }
+interface CategoryType {
+  id: string;
+  name: string;
+  slug: string;
+  parent_id: string;
+  image: string
+  children?: CategoryType[];
+}
+interface IGenre {
+  success: boolean;
+  message: string;
+  category: CategoryType
+}
 interface AddCategoryType {
   id: string;
   name: string;
   parent_id: number | null;
   image: string;
+
 }
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -194,6 +203,7 @@ export const authApi = createApi({
     getUsersAdmin: builder.query<UserAdminType, void>({
       query: () => "/admin/users",
     }),
+
     addCategory: builder.mutation<AddCategoryType, FormData>({
       query: (formData) => ({
         url: "/admin/categories",
@@ -201,9 +211,11 @@ export const authApi = createApi({
         body: formData, // Sử dụng FormData trực tiếp
       }),
     }),
+    
     getCategories: builder.query<CategoriesResponse, void>({
       query: () => "/categories", // Đường dẫn đến API của bạn
     }),
+
     deleteCategory: builder.mutation<CategoriesResponse, string>({
       query: (id) => ({
         url: `/admin/categories/${id}`,
@@ -211,14 +223,18 @@ export const authApi = createApi({
       }),
     }),
 
-    updateCategory: builder.mutation<
-      CategoriesResponse,
-      { id: string; data: FormData }
-    >({
-      query: ({ id, data }) => ({
+    getCategoryDetail: builder.query<IGenre, string>({
+      query: (id) => `/admin/categories/${id}`,
+    }),
+      
+    updateCategory: builder.mutation<CategoriesResponse, [CategoriesResponse, string | undefined]>({
+      query: ([jsonData, id]) => ({
         url: `/admin/categories/${id}`,
         method: "PUT",
-        body: data, // Gửi FormData chứa thông tin danh mục
+        body: JSON.stringify(jsonData), // Chuyển đổi đối tượng JSON thành chuỗi JSON
+        headers: {
+          'Content-Type': 'application/json', // Đặt Content-Type là application/json
+        },
       }),
     }),
 
@@ -252,4 +268,6 @@ export const {
   useGetCategoryProductsQuery,
   useDeleteCategoryMutation,
   useGetCartQuery,
+  useUpdateCategoryMutation,
+  useGetCategoryDetailQuery
 } = authApi;

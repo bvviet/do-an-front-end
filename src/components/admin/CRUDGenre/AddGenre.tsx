@@ -1,47 +1,46 @@
 import FormField from "@/components/FormField";
 import TextInputs from "@/components/FormInputs/TextInputs";
+import { useTabContext } from "@/contexts/TabContext";
 import { useAddCategoryMutation, useGetCategoriesQuery } from "@/services/authApi";
 import { ICategory } from "@/types/genre";
-import { MenuItem, Select } from "@mui/material";
+import { CircularProgress, MenuItem, Select } from "@mui/material";
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // Định nghĩa kiểu dữ liệu cho các trường của form
 interface FormData {
   name: string;
-  parent_id: number | null;
+  parent_id: number;
   image: FileList | null;
 }
 
 export default function AddCategory() {
   const { control, handleSubmit, reset } = useForm<FormData>();
   const [addCategory, { isLoading, error }] = useAddCategoryMutation();
-  const navi = useNavigate();
-  const { data: categories = [] } = useGetCategoriesQuery();
+  const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
+  const { setValue } = useTabContext(); // Lấy setValue từ TabContext
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      // Tạo đối tượng FormData
       const formData = new FormData();
       formData.append("name", data.name);
-      if (data.image) {
+
+      if (data.image && data.image[0]) {
         formData.append("image", data.image[0]);
       }
 
-      // Chỉ thêm parent_id nếu có giá trị khác null
-      if (data.parent_id !== null) {
-        formData.append("parent_id", data.parent_id.toString());
-      }
+      formData.append("parent_id", String(data.parent_id || ""));
 
-      console.log("data add:", data);
       const newCategory = await addCategory(formData).unwrap();
-      console.log("Danh mục đã được thêm:", newCategory);
+      console.log(newCategory);
+
       toast.success("Tạo thể loại thành công");
-      reset(); // Đặt lại biểu mẫu sau khi thêm thành công
-      setTimeout(() => navi("/admin/genre"), 3000);
+
+      // Chuyển tab về "List Category" và reset form
+      setValue("1");
+      reset();
     } catch (err) {
       console.error("Lỗi khi thêm danh mục:", err);
       toast.error("Tạo thể loại thất bại");
@@ -55,8 +54,8 @@ export default function AddCategory() {
           <div className="w-full">
             <div className="px-2">
               <div className="py-7">
-                <div className="grid grid-cols-2 gap-8 max-lg:grid-cols-1">
-                  <div>
+                <div className="flex flex-col items-center gap-8 ">
+                  <div className="w-[340px]">
                     <FormField
                       label="Tên danh mục"
                       name="name"
@@ -73,20 +72,19 @@ export default function AddCategory() {
                       }}
                     />
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <label>Chọn danh mục cha</label>
                     <Controller
                       name="parent_id"
                       control={control}
-                      defaultValue={null} // Đặt giá trị mặc định là null
                       render={({ field }) => (
-                        <Select {...field} displayEmpty>
-                          <MenuItem value={null}>
+                        <Select {...field} displayEmpty sx={{ width: "340px" }}>
+                          <MenuItem value="">
                             <em>Không chọn</em>
                           </MenuItem>
                           {Array.isArray(categories?.categories)
                             ? categories.categories
-                              .filter((category) => category.parent_id === null)
+                              .filter((category) => category.parent_id === 0)
                               .map((category: ICategory) => (
                                 <MenuItem key={category.id} value={category.id}>
                                   {category.name}
@@ -97,8 +95,20 @@ export default function AddCategory() {
                       )}
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div className="">
+                    <label className="text-[2rem] text-black font-semibold mb-2 block">Upload file</label>
+                    <input name="image" accept=".jpeg,.jpg,.png,.svg,.webp"
+                      onChange={(e) => {
+                        const file = e.target.files;
+                        if (file) {
+                          reset({ image: file });
+                        }
+                      }} type="file"
+                      className="w-[340px] text-gray-400 font-semibold text-xl bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-6 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+                    <p className="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+                  </div>
+                  {/* <div>
+                    <label className="block font-medium text-gray-700 text-3xl">
                       Hình ảnh (Tải lên tệp)
                     </label>
                     <input
@@ -108,12 +118,11 @@ export default function AddCategory() {
                       onChange={(e) => {
                         const file = e.target.files;
                         if (file) {
-                          // Cập nhật hình ảnh vào trường image
                           reset({ image: file });
                         }
                       }}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flex w-full flex-col flex-wrap items-center justify-center gap-x-4 gap-y-4 px-7 md:justify-end lg:flex-row lg:justify-end">
@@ -129,7 +138,7 @@ export default function AddCategory() {
                     className="w-full transform rounded bg-indigo-700 px-6 py-4 text-xl font-medium text-white duration-300 ease-in-out hover:bg-indigo-600 lg:max-w-[144px]"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                    {isLoading ? <CircularProgress size={16} sx={{ color: "white" }} /> : 'Lưu thay đổi'}
                   </button>
                 </div>
                 {error && (
