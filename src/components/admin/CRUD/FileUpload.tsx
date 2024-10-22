@@ -59,9 +59,10 @@ const FileUploadPreview: React.FC = () => {
             </p>
           </div>
           <input
-            id="dropzone-file"
+            id="img_thumbnail"
             type="file"
             className="hidden"
+            name='img_thumbnail'
             onChange={handleFileChange}
             multiple // Cho phép chọn nhiều file
           />

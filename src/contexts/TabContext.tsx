@@ -1,10 +1,20 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Tạo context
 const TabContext = createContext<{ value: string; setValue: (value: string) => void } | undefined>(undefined);
 
 export const TabProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [value, setValue] = useState("1");
+    // Khôi phục giá trị tab từ localStorage nếu có, ngược lại sử dụng "1"
+    const [value, setValue] = useState(() => {
+        const storedValue = localStorage.getItem("activeTab");
+        return storedValue ? storedValue : "1"; // Giá trị mặc định là "1"
+    });
+
+    // Lưu giá trị tab vào localStorage khi nó thay đổi
+    useEffect(() => {
+        localStorage.setItem("activeTab", value);
+    }, [value]);
+
     return (
         <TabContext.Provider value={{ value, setValue }}>
             {children}

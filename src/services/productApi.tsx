@@ -13,6 +13,7 @@ import {
   CartDeleteResponse,
   updateQuantityCarResponse,
 } from "@/types/cart";
+import { BrandType, GetAllBrandsResponse } from "@/types/brand";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -63,7 +64,16 @@ export const productApi = createApi({
         url: `/products/${productId}`,
       }),
     }),
-
+    addProduct: builder.mutation<
+      ProductDetailType,
+      ProductDetailType
+    >({
+      query: (newProduct) => ({
+        url: `/admin/products`, // Thay đổi URL nếu cần
+        method: "POST",
+        body: newProduct,
+      }),
+    }),
     addCart: builder.mutation<
       CartAddResponse,
       { product_id: number; quantity: number; color: string; size: string }
@@ -92,6 +102,17 @@ export const productApi = createApi({
         body: { quantity },
       }),
     }),
+    deleteProduct: builder.mutation<ProductDetailType, number>({
+      query: (productId) => ({
+        url: `/admin/products/${productId}`,
+        method: "DELETE",
+      }),
+    }),
+    getAllBrand: builder.query<GetAllBrandsResponse, void>({
+      query: () => ({
+        url: "/admin/brands",
+      }),
+    }),
   }),
 });
 
@@ -101,4 +122,7 @@ export const {
   useAddCartMutation,
   useDeleteCartMutation,
   useUpdateQuantityCartMutation,
+  useDeleteProductMutation,
+  useAddProductMutation,
+  useGetAllBrandQuery
 } = productApi;
