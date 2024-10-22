@@ -35,6 +35,7 @@ import EditCategory from "./components/admin/CRUDGenre/EditGenre";
 import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
 import CartPage from "./pages/user/Cart";
 import CategoryProducts from "./pages/user/CategoryProducts";
+import Thanks from "./pages/user/Thanks";
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
         { path: "/Cart", element: <CartPage /> },
+        { path: "/thanks", element: < Thanks /> },
         {
           path: "/categories/products/:categoriesChildId",
           element: <CategoryProducts />,

@@ -69,7 +69,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="mx-auto h-full w-[470px] border-2 border-black bg-custom-white max-sm:w-full">
+      <div className="mx-auto h-full w-[470px] border-2 border-black  max-sm:w-full">
         <div className="mx-[30px] pt-[30px]">
           <p className="signin">Create your account</p>
           <form onSubmit={handleSubmit(onSubmit)}>
