@@ -173,7 +173,7 @@ export default function ListProducts() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[5, 10, 20, 50]}
         component="div"
         count={products.length}
         rowsPerPage={rowsPerPage}
