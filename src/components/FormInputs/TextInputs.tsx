@@ -6,8 +6,10 @@ interface TextFieldProps {
   value: string;
   name: string;
   type?: string;
+  label: string;
   placeholder?: string;
-  error: boolean;
+  error?: boolean; // Thay đổi thành optional (tuỳ chọn)
+  helperText?: string; // Thêm thông báo trợ giúp (tuỳ chọn)
 }
 
 const TextInputs: React.FC<TextFieldProps> = ({
@@ -16,21 +18,25 @@ const TextInputs: React.FC<TextFieldProps> = ({
   name,
   type = "text",
   placeholder,
-  error,
+  error = false, // Đặt giá trị mặc định cho error
+  helperText,
 }) => {
   return (
     <TextField
       fullWidth
-      slotProps={{
-        input: { className: "h-[40px] px-3 py-2" },
-        htmlInput: { className: "!p-0" },
-      }}
       name={name}
       onChange={onChange}
       value={value}
       type={type}
       placeholder={placeholder}
       error={error}
+      helperText={error ? helperText : undefined} // Hiển thị helperText nếu có lỗi
+      inputProps={{
+        className: "h-[40px] px-3 py-2", // Thay đổi lớp cho input
+      }}
+      InputProps={{
+        className: "!p-0", // Thay đổi lớp cho input
+      }}
     />
   );
 };

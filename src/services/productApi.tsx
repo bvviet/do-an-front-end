@@ -7,13 +7,14 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
-import { getAllProductsResponse, ProductDetailType } from "@/types/product";
+import { AddProduct, getAllProductsResponse, ProductDetailType } from "@/types/product";
 import {
   CartAddResponse,
   CartDeleteResponse,
   updateQuantityCarResponse,
 } from "@/types/cart";
 import { BrandType, GetAllBrandsResponse } from "@/types/brand";
+import { GetColor, GetSize } from "@/types/tags";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -64,15 +65,15 @@ export const productApi = createApi({
         url: `/products/${productId}`,
       }),
     }),
-    addProduct: builder.mutation<
-      ProductDetailType,
-      ProductDetailType
-    >({
-      query: (newProduct) => ({
-        url: `/admin/products`, // Thay đổi URL nếu cần
-        method: "POST",
-        body: newProduct,
-      }),
+    addProduct: builder.mutation<AddProduct, FormData>({
+      query: (newProduct) => {
+        return {
+          url: `/admin/products`, // Thay đổi URL nếu cần
+          method: "POST",
+          body: newProduct, // Sử dụng FormData
+          // Không cần thiết lập Content-Type, fetch sẽ tự động làm điều này cho FormData
+        };
+      },
     }),
     addCart: builder.mutation<
       CartAddResponse,
@@ -113,6 +114,16 @@ export const productApi = createApi({
         url: "/admin/brands",
       }),
     }),
+    getAllSize: builder.query<GetSize, void>({
+      query: () => ({
+        url: "/admin/product/sizes",
+      }),
+    }),
+    getAllColor: builder.query<GetColor, void>({
+      query: () => ({
+        url: "/admin/product/colors",
+      }),
+    }),
   }),
 });
 
@@ -124,5 +135,7 @@ export const {
   useUpdateQuantityCartMutation,
   useDeleteProductMutation,
   useAddProductMutation,
-  useGetAllBrandQuery
+  useGetAllBrandQuery,
+  useGetAllColorQuery,
+  useGetAllSizeQuery
 } = productApi;
