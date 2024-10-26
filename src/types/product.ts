@@ -22,7 +22,7 @@ export interface ProductVariants {
   product_size_id: number;
   product_color_id: number;
   quantity: number;
-  image: string;
+  image: File | null;
   created_at: string | null;
   updated_at: string | null;
   product_color: ProductColor;
@@ -82,5 +82,22 @@ export interface ProductDetailType {
   brand: BrandType;
   tags: TagsType[];
   product_images: [];
+  product_variants: ProductVariants[];
+}
+
+export interface AddProduct {
+  name: string;
+  price_regular: number;
+  price_sale: number;
+  description: string;
+  content: string;
+  user_manual: string;
+  view: number;
+  is_active: number;
+  is_new: number;
+  is_show_home: number;
+  category_id: number;
+  brand_id: number;
+  img_thumbnail: File | null;
   product_variants: ProductVariants[];
 }

@@ -39,6 +39,7 @@ import ListAdminOrders from "./pages/admin/AdminOrders/ListAdminOrders";
 import OrderDetailAdmin from "./pages/admin/AdminOrders/OrderDetailAdmin";
 import Orders from "./pages/user/Orders";
 import OrderDetail from "./pages/user/OrderDetail";
+import Thanks from "./pages/user/Thanks";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,6 +62,7 @@ function App() {
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
         { path: "/Cart", element: <CartPage /> },
+        { path: "/thanks", element: < Thanks /> },
         {
           path: "/categories/products/:categoriesChildId",
           element: <CategoryProducts />,

@@ -61,7 +61,7 @@ export default function Register() {
     } catch (err) {
       toast.error(
         (err as { data?: { message?: string } }).data?.message ||
-          "Đã xảy ra lỗi không xác định.",
+        "Đã xảy ra lỗi không xác định.",
       );
       console.error("Đăng ký thất bại:", err);
     }
@@ -69,13 +69,13 @@ export default function Register() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-8">
-        <div>
+      <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1 container">
+        <div className="max-sm:hidden max-lg:flex max-lg:items-center">
           <img src="../src/images/Rectangle 20.png" alt="" />
         </div>
-        <div className="flex h-full w-[470px] flex-col justify-center border-2 border-black bg-custom-white max-sm:w-full">
+        <div className="flex h-full max-lg:w-full w-[470px] flex-col justify-center border-2 border-black  max-sm:w-full">
           <div className="">
-            <p className="login font-manrope text-[40px] font-semibold">
+            <p className="login font-manrope max-sm:text-[32px] text-[40px] font-semibold">
               Sign Up
             </p>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -152,13 +152,13 @@ export default function Register() {
             <span className="relative flex justify-center">
               <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
 
-              <span className="relative z-10 my-12 bg-white px-6 text-[14px] font-medium text-gray-400">
+              <span className="relative z-10 my-12 bg-[#F0F0F0] px-6 text-[14px] font-medium text-gray-400">
                 OR login with
               </span>
             </span>
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-center gap-6 max-xl:mb-12">
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
                   <img
                     className="h-6 w-6"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
@@ -168,7 +168,7 @@ export default function Register() {
                 </button>
               </div>
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
                   <img
                     className="h-6 w-6"
                     src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -178,7 +178,7 @@ export default function Register() {
                 </button>
               </div>
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
                   <img
                     className="h-6 w-6"
                     src="https://cdn.freebiesupply.com/images/large/2x/apple-logo-transparent.png"

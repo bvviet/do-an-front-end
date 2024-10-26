@@ -53,7 +53,7 @@ export default function Contacts() {
             <BannerContact
                 title="Contact Us"
                 subtitle="Let’s talk about how we can help your startup scale" />
-            <div className="container isolate bg-white w-[1440px] max-xl:w-full  mx-auto my-24 ">
+            <div className="container isolate  w-[1440px] max-xl:w-full  mx-auto my-24 ">
                 <ToastContainer />
                 <div className=" mx-auto max-sm:mx-4 text-center w-[642px] max-md:w-auto">
                     <p className="mt-2 text-2xl font-manrope leading-8 text-[#566363]">

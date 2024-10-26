@@ -27,13 +27,13 @@ const arrayNav = [
     id: 2,
     name: "Sản phẩm",
     icon: ShoppingCartIcon,
-    link: "/admin",
+    link: "/admin/product",
   },
   {
     id: 3,
     name: "Danh mục",
     icon: AccountBoxIcon,
-    link: "/admin/category",
+    link: "/admin/genre",
   },
   {
     id: 4,
@@ -74,11 +74,10 @@ const NavbarAdmin = () => {
                 onClick={() => setActiveNavbar(nav.id)}
               >
                 <div
-                  className={`${
-                    activeNavbar === nav.id
-                      ? "rounded-[10px] bg-white text-main"
-                      : "hover:opacity-70"
-                  } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
+                  className={`${activeNavbar === nav.id
+                    ? "rounded-[10px] bg-white text-main"
+                    : "hover:opacity-70"
+                    } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
                 >
                   <nav.icon />
                   <span>{nav.name}</span>
