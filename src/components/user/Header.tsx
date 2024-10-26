@@ -71,10 +71,10 @@ const Header = () => {
           <ul>
             <li>
               <a
-                href="#!"
+                href="/orders"
                 className="block py-[10px] font-medium hover:text-[#444]"
               >
-                Viết blog
+                Đơn hàng đã mua
               </a>
             </li>
             <li>

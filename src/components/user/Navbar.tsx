@@ -3,7 +3,7 @@ import React, { useState, ReactNode, useRef, useEffect } from "react";
 import dropDownIcon from "../../assets/icons/dropdown.svg";
 import dropDownActiveIcon from "../../assets/icons/dropdownActive.svg";
 import shopIcon from "../../assets/icons/cart.svg";
-import { useGetCategoriesQuery } from "@/services/authApi";
+import { useGetAllCategoriesQuery } from "@/services/authApi";
 import { Link } from "react-router-dom";
 
 interface MenuItemProps {
@@ -12,8 +12,7 @@ interface MenuItemProps {
 }
 
 const Navbar: React.FC = () => {
-  const { data: category } = useGetCategoriesQuery();
-  console.log(category?.categories);
+  const { data: category } = useGetAllCategoriesQuery();
 
   return (
     <div className="mt-[28px] px-8 sm:px-0 lg:flex">

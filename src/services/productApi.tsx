@@ -13,6 +13,12 @@ import {
   CartDeleteResponse,
   updateQuantityCarResponse,
 } from "@/types/cart";
+import {
+  CanCelOrderUserResponse,
+  GetallOrderAdminsResponse,
+  OrderDetailTypeResponse,
+  OrderResponse,
+} from "@/types/order";
 import { BrandType, GetAllBrandsResponse } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 
@@ -103,6 +109,42 @@ export const productApi = createApi({
         body: { quantity },
       }),
     }),
+      
+    // Order user
+    getOrdersUser: builder.query<OrderResponse, string>({
+      query: (status) => ({
+        url: `/user/orders?status=${status}`,
+      }),
+    }),
+
+    getOrderDetailUser: builder.query<OrderDetailTypeResponse, number>({
+      query: (orderId) => ({
+        url: `/user/orders/${orderId}`,
+      }),
+    }),
+
+    cancelOrderUser: builder.mutation<
+      CanCelOrderUserResponse,
+      { orderId: number; note: string }
+    >({
+      query: ({ orderId, note }) => ({
+        url: `/user/orders/${orderId}/cancel`,
+        method: "PATCH",
+        body: { note },
+      }),
+    }),
+
+    // Order admin
+    getOrdersAdmin: builder.query<GetallOrderAdminsResponse, void>({
+      query: () => ({
+        url: `/admin/orders`,
+      }),
+    }),
+
+    getDetailOrderAdmin: builder.query<OrderDetailTypeResponse, number>({
+      query: (orderId) => ({
+        url: `/admin/orders/${orderId}`,
+
     deleteProduct: builder.mutation<ProductDetailType, number>({
       query: (productId) => ({
         url: `/admin/products/${productId}`,
@@ -133,6 +175,11 @@ export const {
   useAddCartMutation,
   useDeleteCartMutation,
   useUpdateQuantityCartMutation,
+  useGetOrdersUserQuery,
+  useGetOrderDetailUserQuery,
+  useCancelOrderUserMutation,
+  useGetOrdersAdminQuery,
+  useGetDetailOrderAdminQuery,
   useDeleteProductMutation,
   useAddProductMutation,
   useGetAllBrandQuery,

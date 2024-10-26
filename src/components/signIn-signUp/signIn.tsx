@@ -31,8 +31,6 @@ export default function SignInComponent() {
     dispatch(setLoading(isLoading));
   }, [isLoading, dispatch]);
 
-  console.log({ isLoading });
-
   // Validate
   const formSchema = yup.object().shape({
     email: yup

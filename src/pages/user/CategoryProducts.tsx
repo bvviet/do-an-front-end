@@ -10,6 +10,9 @@ const CategoryProducts = () => {
   const numericId = categoriesChildId ? parseInt(categoriesChildId, 10) : 0;
   const { data: products } = useGetCategoryProductsQuery(numericId);
   // Khai báo productNew ở ngoài if block
+
+  console.log({ products });
+
   const productCategory = products?.category.products;
 
   // Đảm bảo rằng showHide kiểm tra productCategory một cách chính xác
