@@ -8,40 +8,39 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Tooltip } from "@mui/material";
-import Confirm from "@/components/Confirm";
-import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
-import { useGetUsersAdminQuery } from "@/services/authApi";
+import { Tooltip, MenuItem, Select } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import useDateFormatter from "@/hooks/useDateFormatter";
+import { Visibility } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { useGetOrdersAdminQuery } from "@/services/productApi";
 
 interface Column {
-  id: "id" | "name" | "email" | "role" | "created_at" | "action";
+  id: "id" | "order_status" | "user_id" | "total_amount" | "created_at" | "action";
   label: string;
   minWidth?: number;
   align?: "right";
 }
 
 const columns: Column[] = [
-  { id: "id", label: "ID", minWidth: 70 },
-  { id: "name", label: "Họ tên", minWidth: 180 },
-  { id: "email", label: "Email", minWidth: 210 },
-  { id: "role", label: "Vai trò", minWidth: 80 },
-  { id: "created_at", label: "Ngày đăng ký", minWidth: 170 },
+  { id: "id", label: "Mã đơn hàng", minWidth: 70 },
+  { id: "order_status", label: "Tình trạng", minWidth: 180 },
+  { id: "user_id", label: "Khách hàng", minWidth: 210 },
+  { id: "total_amount", label: "Tổng tiền", minWidth: 80 },
+  { id: "created_at", label: "Ngày mua hàng", minWidth: 170 },
   { id: "action", label: "Hành động", minWidth: 130 },
 ];
 
-export default function ListAuth() {
-  const { openPopup } = useModalContext();
+export default function ListAdminOrders() {
   const [page, setPage] = React.useState(0);
   const { formatDate } = useDateFormatter();
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const dispatch = useDispatch();
 
-  const { data: users, isLoading } = useGetUsersAdminQuery();
+  const { data: orders, isLoading } = useGetOrdersAdminQuery();
+  // const [updateOrderStatus] = useUpdateOrderStatusMutation();
 
   React.useEffect(() => {
     dispatch(setLoading(isLoading));
@@ -58,22 +57,18 @@ export default function ListAuth() {
     setPage(0);
   };
 
-  const handleDelete = (id: number) => {
-    alert(`Deleted user with ID: ${id}`);
+  const handleUpdateStatus = async (orderId: number, newStatus: string) => {
+    // try {
+    //   await updateOrderStatus({ id: orderId, status: newStatus }).unwrap();
+    //   // Cập nhật thành công
+    //   console.log("Cập nhật trạng thái thành công cho đơn hàng ID:", orderId);
+    // } catch (error) {
+    //   console.error("Cập nhật trạng thái không thành công:", error);
+    // }
   };
-
-  const handleUpdate = (id: number) => {
-    console.log("Update user with ID:", id);
-  };
-
-  React.useEffect(() => {
-    if (isLoading) {
-      dispatch(setLoading(isLoading));
-    }
-  }, [isLoading, dispatch]);
 
   return (
-    <Paper sx={{ width: "100%" }}>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: "555px" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -82,7 +77,11 @@ export default function ListAuth() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{
+                    minWidth: column.minWidth,
+                    backgroundColor: "#f5f5f5",
+                    fontWeight: "bold",
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -90,10 +89,16 @@ export default function ListAuth() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users?.users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user) => {
-                return (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  Đang tải dữ liệu...
+                </TableCell>
+              </TableRow>
+            ) : (
+              orders?.orders
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((user) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={user.id}>
                     {columns.map((column) => {
                       if (column.id === "action") {
@@ -103,31 +108,41 @@ export default function ListAuth() {
                             align={column.align}
                             sx={{ display: "flex", alignItems: "center" }}
                           >
-                            <Tooltip title="Xóa người dùng">
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() =>
-                                  openPopup(
-                                    <Confirm
-                                      title="Bạn chắc chắn"
-                                      description="Bạn có chắc chắn muốn xóa mục này không? Hành động này sẽ không thể khôi phục."
-                                      titleButton={"Xóa"}
-                                      handleDelete={() => handleDelete(user.id)}
-                                    />,
-                                  )
-                                }
-                              >
-                                <DeleteIcon color="error" />
+                            <Tooltip title="Chi tiết đơn hàng">
+                              <IconButton aria-label="VisibilityIcon">
+                                <Link to={`/admin/order/detail/${user.id}`}>
+                                  <Visibility color="info" />
+                                </Link>
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Sửa người dùng">
+                            <Tooltip title="Cập nhật trạng thái">
                               <IconButton
                                 aria-label="update"
-                                onClick={() => handleUpdate(user.id)}
+                                onClick={() =>
+                                  console.log("Update user with ID:", user.id)
+                                }
                               >
                                 <EditIcon color="info" />
                               </IconButton>
                             </Tooltip>
+                          </TableCell>
+                        );
+                      } else if (column.id === "status") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            <Select
+                              value={orders.orders}
+                              onChange={(e) =>
+                                handleUpdateStatus(user.id, e.target.value)
+                              }
+                              displayEmpty
+                              inputProps={{ "aria-label": "Chọn trạng thái" }}
+                            >
+                              <MenuItem value="pending">Đang chờ</MenuItem>
+                              <MenuItem value="processing">Đang xử lý</MenuItem>
+                              <MenuItem value="completed">Hoàn thành</MenuItem>
+                              <MenuItem value="canceled">Đã hủy</MenuItem>
+                            </Select>
                           </TableCell>
                         );
                       } else {
@@ -139,10 +154,6 @@ export default function ListAuth() {
                             typeof value === "string"
                               ? formatDate(value)
                               : "N/A";
-                        } else if (Array.isArray(value)) {
-                          displayValue = value.map((address, index) => (
-                            <div key={index}>{JSON.stringify(address)}</div>
-                          ));
                         } else {
                           displayValue = value;
                         }
@@ -155,15 +166,15 @@ export default function ListAuth() {
                       }
                     })}
                   </TableRow>
-                );
-              })}
+                ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={users?.users.length || 0}
+        count={orders?.orders.length || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

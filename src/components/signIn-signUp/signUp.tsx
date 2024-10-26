@@ -56,8 +56,6 @@ export default function SignUp() {
   });
 
   const onSubmit: SubmitHandler<signInterface> = async (formData) => {
-    console.log(formData);
-
     try {
       const response = await register(formData).unwrap();
       toast.success("Đăng ký thành công!");

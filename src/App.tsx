@@ -35,7 +35,10 @@ import EditCategory from "./components/admin/CRUDGenre/EditGenre";
 import FormAddAddress from "@/components/user/Profile/ProfileRight/FormAddAddress";
 import CartPage from "./pages/user/Cart";
 import CategoryProducts from "./pages/user/CategoryProducts";
-
+import ListAdminOrders from "./pages/admin/AdminOrders/ListAdminOrders";
+import OrderDetailAdmin from "./pages/admin/AdminOrders/OrderDetailAdmin";
+import Orders from "./pages/user/Orders";
+import OrderDetail from "./pages/user/OrderDetail";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,6 +64,14 @@ function App() {
         {
           path: "/categories/products/:categoriesChildId",
           element: <CategoryProducts />,
+        },
+        {
+          path: "/orders",
+          element: <Orders />,
+        },
+        {
+          path: "/order/detail/:orderId",
+          element: <OrderDetail />,
         },
         { path: "*", element: <NotFoundPage /> },
         {
@@ -88,10 +99,11 @@ function App() {
       element: <AdminLayout />,
       children: [
         { path: "lists", element: <ListAuth /> },
-
         { path: "product", element: <LabTabs /> },
         { path: "genre", element: <GenreTabs /> },
-        { path: "genre/:id", element: <EditCategory /> }
+        { path: "genre/:id", element: <EditCategory /> },
+        { path: "orders", element: <ListAdminOrders /> },
+        { path: "order/detail/:orderAdminId", element: <OrderDetailAdmin /> },
 
         // {
         //   path: "products",
