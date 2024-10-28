@@ -13,13 +13,16 @@ const FixedLinearProgress = styled(LinearProgress)({
 const AdminLayout = () => {
   const loading = useSelector((state: RootState) => state.loading.isLoading);
   return (
-    <div className="bg-[#F5F5F5]">
+    <div className="overflow-hidden bg-[#F5F5F5]">
+      {/* Thêm overflow-hidden */}
       {loading && <FixedLinearProgress color="secondary" />}
-      <div className="mx-auto flex h-screen w-[1500px] max-sm:w-full">
+      <div className="mx-auto flex h-screen max-w-[1500px]">
+        {/* Đổi width thành max-w */}
         <div className="w-1/6 max-sm:hidden">
           <NavbarAdmin />
         </div>
-        <div className="content h-fit w-5/6 bg-[#E8E9EB] p-7 max-sm:w-full">
+        <div className="content h-full w-5/6 overflow-y-auto bg-[#E8E9EB] p-7">
+          {/* Đặt h-full và overflow-y-auto */}
           <Outlet />
         </div>
       </div>
