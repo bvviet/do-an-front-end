@@ -56,7 +56,7 @@ const NavbarAdmin = () => {
   const { data: user } = useGetUsersQuery();
 
   return (
-    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white">
+    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white text-[1.5rem]">
       {/* Logo */}
       <div>
         <Logo />

@@ -17,7 +17,7 @@ const status = [
     label: "Chờ xác nhận",
   },
   {
-    id: "shipped",
+    id: "shipping",
     label: "Đang vận chuyển",
   },
   {
@@ -38,18 +38,27 @@ const Orders = () => {
     dispatch(setLoading(isLoading));
   }, [dispatch, isLoading]);
 
-  const getOrderStatus = (status: string) => {
+  const getOrderStatus = (status: string | undefined) => {
     switch (status) {
       case "pending":
-        return "Chờ xác nhận";
+        return {
+          label: "Chờ xác nhận",
+          className: "text-[#BEADFA]",
+        };
       case "processing":
-        return "Đã xác nhận";
+        return { label: "Đã xác nhận", className: "bg-blue-200 text-blue-800" };
       case "shipping":
-        return "Đang vận chuyển";
+        return {
+          label: "Đang vận chuyển",
+          className: "text-[#61A3BA]",
+        };
       case "cancelled":
-        return "Đã hủy";
+        return { label: "Đã hủy", className: "text-red-500" };
       default:
-        return "Không xác định";
+        return {
+          label: "Không xác định",
+          className: "bg-gray-200 text-gray-800 p-3",
+        };
     }
   };
 
@@ -90,8 +99,10 @@ const Orders = () => {
                     <td className="px-4 py-2 text-center">
                       {order?.created_at}
                     </td>
-                    <td className="px-4 py-2 text-center">
-                      {getOrderStatus(order?.order_status)}
+                    <td
+                      className={`px-4 py-2 text-center ${getOrderStatus(order.order_status).className} `}
+                    >
+                      {getOrderStatus(order?.order_status).label}
                     </td>
                     <td className="px-4 py-2 text-center">
                       <span className="font-medium text-[#ee4d2d]">

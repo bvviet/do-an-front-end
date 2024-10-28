@@ -79,7 +79,7 @@ const OrderDetail = () => {
         return "Chờ xác nhận";
       case "processing":
         return "Đã xác nhận";
-      case "shipped":
+      case "shipping":
         return "Đang vận chuyển";
       case "cancelled":
         return "Đã hủy";
@@ -94,7 +94,7 @@ const OrderDetail = () => {
         return "bg-yellow-500";
       case "processing":
         return "bg-[#88C273]";
-      case "shipped":
+      case "shipping":
         return "bg-purple-500";
       case "cancelled":
         return "bg-red-500";
@@ -109,7 +109,7 @@ const OrderDetail = () => {
       <div className="mb-[100px]">
         <span
           className={`rounded-lg px-8 py-3 font-medium text-white ${getOrderStatusClass(orderDetail?.order_status ?? "")}`}
-        > 
+        >
           {getOrderStatus(orderDetail?.order_status ?? "")}
         </span>
         {/* Item Group */}
@@ -132,6 +132,13 @@ const OrderDetail = () => {
                   <h3 className="font-medium">{orderItem.product_name}</h3>
                 </Link>
                 <div>Phân loại: {orderItem.size}</div>
+                <div className="flex items-center gap-3">
+                  Màu:{" "}
+                  <span
+                    style={{ backgroundColor: orderItem.color }}
+                    className="inline-block h-6 w-8 rounded-md"
+                  ></span>
+                </div>
                 <div>X{orderItem.quantity}</div>
               </div>
               <div className="flex gap-3">
@@ -160,7 +167,8 @@ const OrderDetail = () => {
                 onClick={handleOpenDialog}
                 disabled={
                   orderDetail?.order_status === "cancelled" ||
-                  orderDetail?.order_status === "delivered"
+                  orderDetail?.order_status === "delivered" ||
+                  orderDetail?.order_status === "shipping"
                 }
               >
                 Hủy đơn hàng

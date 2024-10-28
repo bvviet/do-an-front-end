@@ -74,3 +74,12 @@ export interface GetallOrderAdminsResponse {
   order_count: number;
   orders: OrderItem[];
 }
+
+export interface updateStatusOrderAdminsResponse {
+  message: string;
+  order: {
+    id: number;
+    order_status: string;
+    updated_at: string;
+  };
+}
