@@ -72,9 +72,13 @@ function App() {
           element: <Orders />,
         },
         {
-          path: "/order/detail/:orderId",
+          path: "/order/detail",
           element: <OrderDetail />,
         },
+        // {
+        //   path: "/order/detail/:orderId",
+        //   element: <OrderDetail />,
+        // },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,
