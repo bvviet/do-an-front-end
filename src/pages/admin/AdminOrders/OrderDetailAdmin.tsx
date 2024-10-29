@@ -3,6 +3,7 @@ import {
   useGetDetailOrderAdminQuery,
   useUpdateOrderStatusAdminMutation,
 } from "@/services/productApi";
+import { getOrderStatus } from "@/utils/getOrderStatus";
 import {
   Box,
   FormControl,
@@ -11,42 +12,15 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-const getOrderStatus = (status: string | undefined) => {
-  switch (status) {
-    case "pending":
-      return {
-        label: "Chờ xác nhận",
-        className: "bg-yellow-200 text-yellow-800 p-3",
-      };
-    case "processing":
-      return { label: "Đã xác nhận", className: "bg-blue-200 text-blue-800" };
-    case "shipping":
-      return {
-        label: "Đang vận chuyển",
-        className: "bg-green-200 text-[#C1D8C3] p-3",
-      };
-    case "delivered":
-      return {
-        label: "Đã giao hàng",
-        className: "bg-green-200 text-green-800 p-3",
-      };
-    case "cancelled":
-      return { label: "Đã hủy", className: "bg-red-200 text-red-800 p-3" };
-    default:
-      return {
-        label: "Không xác định",
-        className: "bg-gray-200 text-gray-800 p-3",
-      };
-  }
-};
 
 const OrderDetailAdmin = () => {
+  const [orderStatus, setOrderStatus] = useState("");
   const { orderAdminId } = useParams();
-
   const id = Number(orderAdminId);
   const disPatch = useDispatch();
 
@@ -58,8 +32,11 @@ const OrderDetailAdmin = () => {
     disPatch(setLoading(isLoading || isLoadingUpdateStatus));
   }, [isLoading, isLoadingUpdateStatus, disPatch]);
 
-  const [orderStatus, setOrderStatus] = useState(data ? data.order_status : "");
-  console.log({ orderStatus });
+  useEffect(() => {
+    if (data) {
+      setOrderStatus(data.order_status);
+    }
+  }, [data]);
 
   const handleChange = async (event: SelectChangeEvent) => {
     const newStatus = event.target.value as string;
@@ -72,13 +49,22 @@ const OrderDetailAdmin = () => {
       toast.success(response.message);
       refetch();
     } catch (error) {
-      console.error("Failed to update order status: ", error);
+      const fetchError = error as FetchBaseQueryError;
+
+      if (fetchError.status === 422) {
+        // Kiểm tra nếu `fetchError.data` có dạng `message`
+        const errorMessage =
+          (fetchError.data as { message?: string })?.message ||
+          "Đã xảy ra lỗi không xác định";
+        toast.error(errorMessage);
+      } else {
+        toast.error("Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng");
+      }
     }
   };
 
   return (
     <div className="overflow-x-auto">
-      {" "}
       {/* Thêm overflow-x-auto ở đây */}
       <div className="grid grid-cols-3 gap-8">
         <div className="col-span-1 bg-gray-200">
@@ -128,7 +114,7 @@ const OrderDetailAdmin = () => {
                 {getOrderStatus(data?.order_status).label}
               </span>
             </div>
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{ minWidth: 120, marginTop: "10px" }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Trạng thái
@@ -142,7 +128,7 @@ const OrderDetailAdmin = () => {
                 >
                   <MenuItem value={"pending"}>Chờ xác nhận</MenuItem>
                   <MenuItem value={"processing"}>Đang xử lý</MenuItem>
-                  <MenuItem value={"shipping"}>Đang vận chuyển</MenuItem>
+                  <MenuItem value={"shipped"}>Đang vận chuyển</MenuItem>
                   <MenuItem value={"delivered"}>Đã giao hàng</MenuItem>
                   <MenuItem value={"cancelled"}>Đã hủy</MenuItem>
                 </Select>

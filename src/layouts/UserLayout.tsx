@@ -6,6 +6,7 @@ import { LinearProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { styled } from "@mui/material/styles";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const FixedLinearProgress = styled(LinearProgress)({
   position: "fixed",
@@ -19,6 +20,7 @@ const UserLayout = () => {
   const loading = useSelector((state: RootState) => state.loading.isLoading);
   return (
     <div className="bg-[#F0F0F0]">
+      <ScrollToTopButton />
       {loading && <FixedLinearProgress color="secondary" />}
       <Header />
       <Breadcrumbs />
