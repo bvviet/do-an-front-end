@@ -21,7 +21,6 @@ import {
   CanCelOrderUserResponse,
   GetallOrderAdminsResponse,
   OrderDetailTypeResponse,
-  OrderResponse,
   updateStatusOrderAdminsResponse,
 } from "@/types/order";
 import { GetAllBrandsResponse } from "@/types/brand";
@@ -114,7 +113,7 @@ export const productApi = createApi({
     }),
 
     // Order user
-    getOrdersUser: builder.query<OrderResponse, string>({
+    getOrdersUser: builder.query<GetallOrderAdminsResponse, string>({
       query: (status) => ({
         url: `/user/orders?status=${status}`,
       }),
@@ -185,6 +184,15 @@ export const productApi = createApi({
         body: { status },
       }),
     }),
+
+    filterByDateOrdersAdmin: builder.query<
+      GetallOrderAdminsResponse,
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `/admin/orders/filter?start_date=${start_date}&end_date=${end_date}`,
+      }),
+    }),
   }),
 });
 
@@ -205,4 +213,5 @@ export const {
   useGetAllColorQuery,
   useGetAllSizeQuery,
   useUpdateOrderStatusAdminMutation,
+  useFilterByDateOrdersAdminQuery,
 } = productApi;

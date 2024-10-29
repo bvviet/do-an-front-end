@@ -9,20 +9,66 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
-import { Tooltip, MenuItem, Select } from "@mui/material";
+import { Box, Button, Tab, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import useDateFormatter from "@/hooks/useDateFormatter";
 import { Visibility } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { useGetOrdersAdminQuery } from "@/services/productApi";
+import {
+  useFilterByDateOrdersAdminQuery,
+  // useGetOrdersAdminQuery,
+  useGetOrdersUserQuery,
+} from "@/services/productApi";
+import { getOrderStatus } from "@/utils/getOrderStatus";
 
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/vi"; // Nhập locale tiếng Việt
+import { toast } from "react-toastify";
+import { GetallOrderAdminsResponse } from "@/types/order";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+type FetchError = {
+  data?: {
+    message?: string;
+  };
+};
+dayjs.locale("vi");
 interface Column {
-  id: "id" | "order_status" | "user_id" | "total_amount" | "created_at" | "action";
+  id:
+    | "id"
+    | "order_status"
+    | "user_id"
+    | "total_amount"
+    | "created_at"
+    | "action";
   label: string;
   minWidth?: number;
   align?: "right";
 }
+
+const status = [
+  {
+    id: "all",
+    label: "Tất cả",
+  },
+  {
+    id: "pending",
+    label: "Chờ xác nhận",
+  },
+  {
+    id: "shipping",
+    label: "Đang vận chuyển",
+  },
+  {
+    id: "cancelled",
+    label: "Đã hủy",
+  },
+];
 
 const columns: Column[] = [
   { id: "id", label: "Mã đơn hàng", minWidth: 70 },
@@ -34,17 +80,82 @@ const columns: Column[] = [
 ];
 
 export default function ListAdminOrders() {
+  const [value, setValue] = React.useState("all");
+  const [orders, setOrders] = React.useState<
+    GetallOrderAdminsResponse | undefined
+  >(undefined);
   const [page, setPage] = React.useState(0);
   const { formatDate } = useDateFormatter();
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selectedDateRange, setSelectedDateRange] = React.useState<
+    [Dayjs | null, Dayjs | null]
+  >([null, null]);
   const dispatch = useDispatch();
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const { data: orders, isLoading } = useGetOrdersAdminQuery();
-  // const [updateOrderStatus] = useUpdateOrderStatusMutation();
+  // const {
+  //   data: ordersAll,
+  //   isLoading: isLoadingAll,
+  //   refetch,
+  // } = useGetOrdersAdminQuery(undefined, {
+  //   refetchOnMountOrArgChange: true,
+  // });
+
+  const {
+    data: ordersStatus,
+    isLoading: isLoadingGetStatus,
+    refetch,
+  } = useGetOrdersUserQuery(value, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Format start_date và end_date
+  const start_date = selectedDateRange[0]
+    ? dayjs(selectedDateRange[0]).format("YYYY-MM-DD HH:mm:ss")
+    : "";
+  const end_date = selectedDateRange[1]
+    ? dayjs(selectedDateRange[1]).format("YYYY-MM-DD HH:mm:ss")
+    : "";
+
+  // Luôn luôn gọi query
+  const {
+    data: ordersByDate,
+    error,
+    isLoading: isLoadingByDate,
+  } = useFilterByDateOrdersAdminQuery(
+    { start_date, end_date },
+    { skip: !selectedDateRange[0] || !selectedDateRange[1] },
+  );
 
   React.useEffect(() => {
-    dispatch(setLoading(isLoading));
-  }, [dispatch, isLoading]);
+    if (ordersByDate || ordersStatus) {
+      setOrders(ordersByDate || ordersStatus);
+    }
+  }, [ordersByDate, ordersStatus, value]);
+
+  console.log({ orders });
+
+  const handleDateChange = (newValue: [Dayjs | null, Dayjs | null]) => {
+    setSelectedDateRange(newValue);
+  };
+
+  // Hiển thị thông báo lỗi nếu có
+  React.useEffect(() => {
+    if (error) {
+      toast.error((error as FetchError).data?.message || "Có lỗi xảy ra");
+    }
+  }, [error, ordersByDate]);
+
+  // Dispatch hành động loading
+  React.useEffect(() => {
+    dispatch(setLoading(isLoadingByDate || isLoadingGetStatus));
+  }, [dispatch, isLoadingByDate, isLoadingGetStatus]);
+
+  const handleClear = () => {
+    setValue("all");
+    setSelectedDateRange([null, null]);
+    refetch();
+    setOrders(ordersStatus);
+  };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -57,129 +168,160 @@ export default function ListAdminOrders() {
     setPage(0);
   };
 
-  const handleUpdateStatus = async (orderId: number, newStatus: string) => {
-    // try {
-    //   await updateOrderStatus({ id: orderId, status: newStatus }).unwrap();
-    //   // Cập nhật thành công
-    //   console.log("Cập nhật trạng thái thành công cho đơn hàng ID:", orderId);
-    // } catch (error) {
-    //   console.error("Cập nhật trạng thái không thành công:", error);
-    // }
+  console.log({ ordersStatus });
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
   };
-
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: "555px" }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{
-                    minWidth: column.minWidth,
-                    backgroundColor: "#f5f5f5",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? (
+    <>
+      <div className="flex">
+        <div className="w-1/2">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DateRangePicker"]}>
+              <DateRangePicker
+                value={selectedDateRange}
+                onChange={handleDateChange}
+                localeText={{ start: "Từ ngày", end: "Đến ngày" }}
+              />
+              <Button
+                onClick={handleClear}
+                variant="outlined"
+                color="secondary"
+              >
+                Chọn lại
+              </Button>
+            </DemoContainer>
+          </LocalizationProvider>
+        </div>
+        <div className="w-1/2"></div>
+      </div>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            {status.map((tus) => (
+              <Tab label={tus.label} value={tus.id} />
+            ))}
+          </TabList>
+        </Box>
+      </TabContext>
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: "555px" }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={columns.length} align="center">
-                  Đang tải dữ liệu...
-                </TableCell>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{
+                      minWidth: column.minWidth,
+                      backgroundColor: "#f5f5f5",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
               </TableRow>
-            ) : (
-              orders?.orders
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((user) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={user.id}>
-                    {columns.map((column) => {
-                      if (column.id === "action") {
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <Tooltip title="Chi tiết đơn hàng">
-                              <IconButton aria-label="VisibilityIcon">
-                                <Link to={`/admin/order/detail/${user.id}`}>
-                                  <Visibility color="info" />
-                                </Link>
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Cập nhật trạng thái">
-                              <IconButton
-                                aria-label="update"
-                                onClick={() =>
-                                  console.log("Update user with ID:", user.id)
-                                }
-                              >
-                                <EditIcon color="info" />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        );
-                      } else if (column.id === "status") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <Select
-                              value={orders.orders}
-                              onChange={(e) =>
-                                handleUpdateStatus(user.id, e.target.value)
-                              }
-                              displayEmpty
-                              inputProps={{ "aria-label": "Chọn trạng thái" }}
+            </TableHead>
+            <TableBody>
+              {isLoadingGetStatus ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    Đang tải dữ liệu...
+                  </TableCell>
+                </TableRow>
+              ) : (
+                orders?.orders
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((user) => (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={user.id}>
+                      {columns.map((column) => {
+                        if (column.id === "action") {
+                          return (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              sx={{ display: "flex", alignItems: "center" }}
                             >
-                              <MenuItem value="pending">Đang chờ</MenuItem>
-                              <MenuItem value="processing">Đang xử lý</MenuItem>
-                              <MenuItem value="completed">Hoàn thành</MenuItem>
-                              <MenuItem value="canceled">Đã hủy</MenuItem>
-                            </Select>
-                          </TableCell>
-                        );
-                      } else {
-                        const value = user[column.id as keyof typeof user];
-                        let displayValue: React.ReactNode;
-
-                        if (column.id === "created_at") {
-                          displayValue =
-                            typeof value === "string"
-                              ? formatDate(value)
-                              : "N/A";
+                              <Tooltip title="Chi tiết đơn hàng">
+                                <IconButton aria-label="VisibilityIcon">
+                                  <Link to={`/admin/order/detail/${user.id}`}>
+                                    <Visibility color="info" />
+                                  </Link>
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Cập nhật trạng thái">
+                                <IconButton
+                                  aria-label="update"
+                                  onClick={() =>
+                                    console.log("Update user with ID:", user.id)
+                                  }
+                                >
+                                  <EditIcon color="info" />
+                                </IconButton>
+                              </Tooltip>
+                            </TableCell>
+                          );
                         } else {
-                          displayValue = value;
-                        }
+                          const value = user[column.id as keyof typeof user];
+                          let displayValue: React.ReactNode;
 
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {displayValue}
-                          </TableCell>
-                        );
-                      }
-                    })}
-                  </TableRow>
-                ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={orders?.orders.length || 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+                          if (column.id === "created_at") {
+                            displayValue =
+                              typeof value === "string"
+                                ? formatDate(value)
+                                : "N/A";
+                          } else if (column.id === "order_status") {
+                            const statusValue =
+                              user[column.id as keyof typeof user];
+                            const status = getOrderStatus(
+                              statusValue as string | undefined,
+                            ); // Đảm bảo kiểu dữ liệu là string hoặc undefined
+
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  {status.icon}
+                                  <span style={{ marginLeft: 4 }}>
+                                    {status.label}
+                                  </span>
+                                </div>
+                              </TableCell>
+                            );
+                          } else {
+                            displayValue = value;
+                          }
+
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {displayValue}
+                            </TableCell>
+                          );
+                        }
+                      })}
+                    </TableRow>
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={orders?.orders.length || 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </>
   );
 }

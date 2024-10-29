@@ -21,7 +21,7 @@ const ProductItem: FC<ProductItemProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSticker, setShowSticker] = useState<boolean>(false);
-console.log({SanPham: product});
+  console.log({ SanPham: product });
 
   const truncateString = (str: string, num: number) => {
     return str.length > num ? str.slice(0, num) + "..." : str;
@@ -47,11 +47,11 @@ console.log({SanPham: product});
 
       {/* Product Image */}
       <div className="relative">
-        <Link to={`/detail/${product?.id}`}>
+        <Link to={`/detail/${product?.id}`} className="">
           <img
             src={product?.img_thumbnail}
             alt=""
-            className="h-[310px] w-full rounded-[10px] object-cover"
+            className="h-[310px] w-full transform cursor-pointer rounded-[10px] object-cover transition-all duration-300 ease-in-out hover:scale-105"
           />
         </Link>
         {/* StickerAddFavorite positioned at the bottom */}
@@ -76,9 +76,11 @@ console.log({SanPham: product});
       </div>
 
       {/* Title */}
-      <h2 className="text-[20px] font-bold text-[#131717]">
-        {truncateString(product?.name || "", 60)}
-      </h2>
+      <Link to={`/detail/${product?.id}`}>
+        <h2 className="transform cursor-pointer text-[20px] font-bold text-[#131717] transition-all duration-200 ease-in-out hover:text-[#43766C]">
+          {truncateString(product?.name || "", 60)}
+        </h2>
+      </Link>
 
       {/* Price */}
       <div className="mb-[28px] mt-[12px] flex items-center justify-between">
