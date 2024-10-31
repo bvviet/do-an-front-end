@@ -128,7 +128,7 @@ const OrderDetailAdmin = () => {
                 >
                   <MenuItem value={"pending"}>Chờ xác nhận</MenuItem>
                   <MenuItem value={"processing"}>Đang xử lý</MenuItem>
-                  <MenuItem value={"shipped"}>Đang vận chuyển</MenuItem>
+                  <MenuItem value={"shipping"}>Đang vận chuyển</MenuItem>
                   <MenuItem value={"delivered"}>Đã giao hàng</MenuItem>
                   <MenuItem value={"cancelled"}>Đã hủy</MenuItem>
                 </Select>
