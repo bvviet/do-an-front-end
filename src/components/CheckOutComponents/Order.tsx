@@ -8,7 +8,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 export default function Order() {
   const { data: carts, isLoading, error } = useGetCartQuery();
 
-  const shippingFee = 20000; // 20.000đ
+  const shippingFee = 10000; // 20.000đ
   const subtotal = carts?.total_price ?? 0; // Giá tạm tính
   const total = subtotal + shippingFee; // Tổng tiền
   // Kiểm tra nếu đang loading hoặc có lỗi

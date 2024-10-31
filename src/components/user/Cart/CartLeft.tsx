@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import QuantitySelector from "./QuantitySelector";
 import { Delete, Favorite } from "@mui/icons-material";
 import { useEffect } from "react";
@@ -45,7 +45,7 @@ const CartLeft = () => {
 
   return (
     <div>
-      <h2 className="mb-12 text-[20px] font-bold">
+      <h2 className="mb-12 text-[22px] font-bold">
         Giỏ hàng ({carts?.cart_items?.length} sản phẩm)
       </h2>
 
@@ -87,13 +87,13 @@ const CartLeft = () => {
                     <div className="my-3 flex items-center gap-6">
                       <p className="my-2 text-[#566363]">Cart ID: {cart.id}</p>
                       <div>
-                        <span className="text-[#ff4d00]">{priceSale}</span>
+                        <span className="text-red-600">{priceSale}</span>
                         {""}x{""} {cart.quantity}
                       </div>
                     </div>
                     <div>
                       Tổng Tiền:{" "}
-                      <span className="text-[#ff4d00]">{priceSale}</span>
+                      <span className="text-red-600">{priceSale}</span>
                     </div>
                     <div className="flex flex-wrap items-center justify-between">
                       <QuantitySelector
@@ -102,7 +102,17 @@ const CartLeft = () => {
                         refetch={refetch}
                       />
                       <div>
-                        <p>Màu {cart.color}</p>
+                        <p>Màu :
+                          <Box
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              backgroundColor: cart.color,
+                              borderRadius: '4px',
+                              marginRight: 1,
+                              display: 'inline-block',
+                            }}
+                          /></p>
                         <p>Size: {cart.size}</p>
                       </div>
                       <div className="flex gap-8">

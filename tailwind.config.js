@@ -22,6 +22,8 @@ export default {
       fontFamily: {
         slab: ['"Roboto Slab"', "serif"],
         manrope: ['"Manrope", sans-serif'],
+        itim: ['Itim', 'cursive'],
+        nerko: ['Nerko One', 'cursive'],
       },
       colors: {
         main: "#005d63",

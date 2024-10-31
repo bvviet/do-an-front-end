@@ -1,9 +1,9 @@
-import logo from "@/assets/icons/logo.png";
+
 
 const Logo = () => {
     return (
         <a href="/">
-            <img src={logo} alt="" />
+            <span className="font-itim text-[34px] font-semibold">Top Deal</span>
         </a>
     );
 };

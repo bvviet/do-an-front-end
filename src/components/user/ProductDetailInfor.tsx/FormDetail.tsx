@@ -82,12 +82,12 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
       <form action="">
         <div className="flex items-center gap-[14px]">
           <label
-            className="text-[1.8rem] font-semibold leading-[166.667%] text-[#131717]"
+            className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]"
             htmlFor=""
           >
             Color:
           </label>
-          <div className="ml-[14px] flex items-center gap-[12px]">
+          <div className="ml-[60px] flex items-center gap-[12px]">
             {uniqueVariants
               .map((variant) => variant.color) // Lấy danh sách màu duy nhất
               .filter((value, index, self) => self.indexOf(value) === index) // Lọc bỏ trùng lặp
@@ -109,14 +109,14 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
               ))}
           </div>
         </div>
-        <div className="flex items-center gap-[14px]">
+        <div className="flex items-center gap-[14px] my-3">
           <label
-            className="text-[1.8rem] font-semibold leading-[166.667%] text-[#131717]"
+            className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]"
             htmlFor=""
           >
             Size:
           </label>
-          <div className="ml-[25px] flex items-center gap-[12px]">
+          <div className="ml-[70px] flex items-center gap-[12px]">
             {uniqueVariants
               .map((variant) => variant.size) // Lấy danh sách size duy nhất
               .filter((value, index, self) => self.indexOf(value) === index) // Lọc bỏ trùng lặp
@@ -130,11 +130,10 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
                       setSize(sizeName);
                     }
                   }}
-                  className={`${
-                    size === sizeName
-                      ? "bg-[#005D63] text-white"
-                      : "border border-solid border-[#C4D1D0] text-[#566363]"
-                  } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
+                  className={`${size === sizeName
+                    ? "bg-[#005D63] text-white"
+                    : "border border-solid border-[#C4D1D0] text-[#566363]"
+                    } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
                 >
                   <div
                     className={`${size === sizeName ? "text-white" : "text-[#566363]"}`}
@@ -148,12 +147,12 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
 
         <div className="flex items-center gap-[14px]">
           <label
-            className="text-[1.8rem] font-semibold leading-[166.667%] text-[#131717]"
+            className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]"
             htmlFor=""
           >
-            Qty:
+            Số lượng:
           </label>
-          <div className="ml-[30px] flex items-center gap-[12px]">
+          <div className="ml-[39px] flex items-center gap-[12px]">
             <div
               onClick={() =>
                 setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1))
@@ -176,7 +175,7 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
           </div>
         </div>
       </form>
-      <p className="leading-[ 166.667%] mb-[40px] mt-[25px] text-[1.8rem] text-[#566363]">
+      <p className="leading-[ 166.667%] mb-[40px] mt-[25px] text-[1.6rem] text-[#757575]">
         {productDetail?.description}
       </p>
       <div className="flex flex-col gap-[18px]">
