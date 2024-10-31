@@ -22,6 +22,7 @@ import Verify from "@/pages/SignIn-Login/Verify";
 import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
+import Statistical from '@/pages/admin/Statistical'
 
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
@@ -110,6 +111,7 @@ function App() {
         { path: "genre/:id", element: <EditCategory /> },
         { path: "orders", element: <ListAdminOrders /> },
         { path: "order/detail/:orderAdminId", element: <OrderDetailAdmin /> },
+        { path: "statistical", element: <Statistical /> },
 
         // {
         //   path: "products",

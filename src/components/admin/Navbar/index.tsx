@@ -41,6 +41,12 @@ const arrayNav = [
     icon: AccountBoxIcon,
     link: "/admin/orders",
   },
+  {
+    id: 5,
+    name: "Thống kê",
+    icon: AccountBoxIcon,
+    link: "/admin/statistical",
+  },
 ];
 
 const NavbarAdmin = () => {
