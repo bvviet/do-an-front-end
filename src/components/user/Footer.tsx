@@ -2,7 +2,6 @@ import startGroup from "../../assets/icons/startGroup.svg";
 import startText from "../../assets/icons/startText.png";
 import social from "../../assets/icons/Social.svg";
 import payMethod from "../../assets/icons/payMethod.svg";
-import logoBlack from "../../assets/icons/logoBlack.png";
 
 const Footer = () => {
     return (
@@ -119,11 +118,13 @@ const Footer = () => {
             </div>
             <div className="py-[20px] mt-[30px] lg:py-[28px] bg-[#F1DEB4] text-black">
                 <div className="container mx-auto flex flex-wrap justify-between items-center">
-                    <img src={logoBlack} alt="Logo" />
+                    <a href="/">
+                        <span className="font-itim text-[30px] font-semibold">Top Deal</span>
+                    </a>
                     <div className="flex justify-center items-center">
                         <img src={payMethod} alt="Payment Method" />
                     </div>
-                    <p className="mt-[10px] lg:mt-0">Copyright © 2022 BVV All Rights Reserved</p>
+                    <p className="mt-[10px] lg:mt-0">Copyright © 2022 TopDeal All Rights Reserved</p>
                 </div>
             </div>
         </footer>
