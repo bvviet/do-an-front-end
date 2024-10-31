@@ -25,6 +25,7 @@ import {
 } from "@/types/order";
 import { GetAllBrandsResponse } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
+import { CheckOut } from "@/types/Checkout";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -193,6 +194,13 @@ export const productApi = createApi({
         url: `/admin/orders/filter?start_date=${start_date}&end_date=${end_date}`,
       }),
     }),
+    Checkout: builder.mutation<CheckOut, FormData>({
+      query: (newOrders) => ({
+        url: `/orders`,
+        method: "POST",
+        body: newOrders,
+      }),
+    }),
   }),
 });
 
@@ -214,4 +222,5 @@ export const {
   useGetAllSizeQuery,
   useUpdateOrderStatusAdminMutation,
   useFilterByDateOrdersAdminQuery,
+  useCheckoutMutation
 } = productApi;
