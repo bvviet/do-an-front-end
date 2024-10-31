@@ -41,6 +41,7 @@ import OrderDetailAdmin from "./pages/admin/AdminOrders/OrderDetailAdmin";
 import Orders from "./pages/user/Orders";
 import OrderDetail from "./pages/user/OrderDetail";
 import Thanks from "./pages/user/Thanks";
+import Shipper from "./pages/admin/Shipper";
 
 function App() {
   const router = createBrowserRouter([
@@ -73,7 +74,7 @@ function App() {
           element: <Orders />,
         },
         {
-          path: "/order/detail",
+          path: "/order/detail/:orderId",
           element: <OrderDetail />,
         },
         // {
@@ -112,6 +113,7 @@ function App() {
         { path: "orders", element: <ListAdminOrders /> },
         { path: "order/detail/:orderAdminId", element: <OrderDetailAdmin /> },
         { path: "statistical", element: <Statistical /> },
+        { path: "shipper", element: <Shipper /> },
 
         // {
         //   path: "products",

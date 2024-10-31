@@ -22,7 +22,7 @@ export const getOrderStatus = (status: string | undefined) => {
     case "shipping":
       return {
         label: "Đang vận chuyển",
-        className: "bg-green-200 text-[#C1D8C3] p-3",
+        className: "bg-green-200 text-[#355137] p-3",
         icon: <LocalShippingIcon color="secondary" />,
       };
     case "delivered":
