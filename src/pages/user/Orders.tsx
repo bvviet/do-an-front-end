@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
+import useDateFormatter from "@/hooks/useDateFormatter";
 const status = [
   {
     id: "all",
@@ -56,6 +57,7 @@ const Orders = () => {
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  const { formatDate } = useDateFormatter();
   return (
     <div className="container">
       {/* Table */}
@@ -86,7 +88,7 @@ const Orders = () => {
                   <tr key={order.id} className="border-b">
                     <td className="px-4 py-2 text-center">{index + 1}</td>
                     <td className="px-4 py-2 text-center">
-                      {order?.created_at}
+                      {formatDate(order?.created_at ?? undefined)}
                     </td>
                     <td className="px-4 py-2 text-center">
                       {getOrderStatus(order?.order_status)}

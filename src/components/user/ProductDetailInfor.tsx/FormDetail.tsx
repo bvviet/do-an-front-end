@@ -30,8 +30,6 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
   const { data: carts, refetch } = useGetCartQuery();
   const [addCart, { isLoading }] = useAddCartMutation();
 
-  console.log({ carts });
-
   const uniqueVariants: uniqueVariantsProps = [];
   productDetail?.product_variants.forEach((product) => {
     const colorName = product.product_color.name;
@@ -61,6 +59,8 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
 
       if (res?.error?.status === 404) {
         toast.error(res.error.data.error);
+      } else if (res?.error?.status === 422) {
+        toast.error("Bạn chưa chọn màu sắc hoặc kích thước");
       } else {
         toast.success("Thêm vào giỏ hàng thành công");
         refetch();
@@ -109,7 +109,7 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
               ))}
           </div>
         </div>
-        <div className="flex items-center gap-[14px] my-3">
+        <div className="my-3 flex items-center gap-[14px]">
           <label
             className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]"
             htmlFor=""
@@ -130,10 +130,11 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
                       setSize(sizeName);
                     }
                   }}
-                  className={`${size === sizeName
-                    ? "bg-[#005D63] text-white"
-                    : "border border-solid border-[#C4D1D0] text-[#566363]"
-                    } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
+                  className={`${
+                    size === sizeName
+                      ? "bg-[#005D63] text-white"
+                      : "border border-solid border-[#C4D1D0] text-[#566363]"
+                  } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
                 >
                   <div
                     className={`${size === sizeName ? "text-white" : "text-[#566363]"}`}
