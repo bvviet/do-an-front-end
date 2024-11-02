@@ -9,11 +9,18 @@ import ProductOffers from "./ProductOffer";
 import ShopFeatures from "./ShopFeatures";
 import Subscribe from "./Subscribe.tsx";
 import { useGetAllProductsQuery } from "@/services/productApi.tsx";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setLoading } from "@/redux/slices/loadingSlice.ts";
 
 const HomePage = () => {
-  const { data: products } = useGetAllProductsQuery();
+  const dispatch = useDispatch();
+  const { data: products, isLoading, refetch } = useGetAllProductsQuery();
   console.log({ products });
-
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+    refetch()
+  }, [dispatch, isLoading, refetch]);
   return (
     <>
       <SliceShow />

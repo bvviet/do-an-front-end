@@ -7,7 +7,7 @@ const useDateFormatter = () => {
       if (!isoString) {
         return undefined;
       }
-      return format(parseISO(isoString), "yyyy-MM-dd");
+      return format(parseISO(isoString), "yyyy-MM-dd HH:mm:ss");
     },
     [],
   );

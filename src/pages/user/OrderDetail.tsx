@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { toast } from "react-toastify";
 import HorizontalStepperWithError from "./Stepper";
+import useDateFormatter from "@/hooks/useDateFormatter";
 
 const OrderDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -101,6 +102,8 @@ const OrderDetail = () => {
         return "bg-gray-500";
     }
   };
+  const { formatDate } = useDateFormatter();
+
   return (
     <div className="container">
       <div className="mb-1 rounded-md bg-slate-100 py-6 shadow-sm">
@@ -128,7 +131,8 @@ const OrderDetail = () => {
               <strong>Đơn hàng ID:</strong> 1
             </Typography>
             <Typography variant="body1">
-              <strong>Ngày đặt hàng:</strong> {orderDetail?.created_at}
+              <strong>Ngày đặt hàng:</strong>
+              {formatDate(orderDetail?.created_at)}
             </Typography>
             <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
               Thông tin người mua
