@@ -87,8 +87,8 @@ const CartLeft = () => {
                     <div className="my-3 flex items-center gap-6">
                       <p className="my-2 text-[#566363]">Cart ID: {cart.id}</p>
                       <div>
-                        <span className="text-red-600">{priceSale}</span>
-                        {""}x{""} {cart.quantity}
+                        <span className="text-red-600">{formatCurrency(cart.price)}</span>
+                        {" "}x{""} {cart.quantity}
                       </div>
                     </div>
                     <div>

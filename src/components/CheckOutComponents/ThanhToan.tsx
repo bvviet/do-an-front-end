@@ -1,8 +1,10 @@
+import { setCart } from "@/redux/slices/CartSlice";
+import { useGetCartQuery } from "@/services/authApi";
 import { useCheckoutMutation } from "@/services/productApi";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 
 type RadioValue = "1" | "0" | null;
 
@@ -12,6 +14,8 @@ const ThanhToan: React.FC = () => {
   const navigate = useNavigate();
   const [checkout] = useCheckoutMutation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const disPatch = useDispatch();
+  const { data: carts, refetch } = useGetCartQuery();
 
   const handleRadioChange = (value: RadioValue) => {
     setSelectedRadio(value);
@@ -27,22 +31,32 @@ const ThanhToan: React.FC = () => {
       const response = await checkout(checkoutData).unwrap();
 
       if (selectedRadio === "1" && response.payment_url) {
-
-        toast.success("Cảm ơn bạn đã mua hàng")
+        toast.success("Cảm ơn bạn đã mua hàng");
         setTimeout(() => {
           window.location.href = response.payment_url;
-        }, 2000)
+        }, 2000);
+        refetch();
+        disPatch(setCart([])); // Đặt giỏ hàng về trống sau khi thanh toán thành công
       } else {
-        toast.success("Cảm ơn bạn đã mua hàng")
+        toast.success("Cảm ơn bạn đã mua hàng");
+        refetch();
+        disPatch(setCart([])); // Đặt giỏ hàng về trống sau khi thanh toán thành công
         navigate("/thanks");
       }
     } catch (error) {
-      toast.error("Thanh toán thất bại")
+      toast.error("Thanh toán thất bại");
       console.error("Thanh toán thất bại", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (carts && Array.isArray(carts)) {
+      // Chỉ cập nhật giỏ hàng nếu carts có dữ liệu hợp lệ
+      disPatch(setCart(carts));
+    }
+  }, [disPatch, carts]);
 
   return (
     <div className="mt-6">
@@ -58,7 +72,7 @@ const ThanhToan: React.FC = () => {
           <div className="flex items-center justify-between w-full my-2 h-[60px]">
             <p>Thanh toán trực tuyến an toàn bằng cổng thanh toán VNPAY</p>
             <img
-              className="max-lg:w-[52px] max-lg:h-[28px]  object-contain"
+              className="max-lg:w-[52px] max-lg:h-[28px] object-contain"
               src="https://bizweb.dktcdn.net/assets/themes_support/vnpay_icon.png"
               alt="VNPAY"
             />
@@ -108,7 +122,7 @@ const ThanhToan: React.FC = () => {
       <div className="mt-6 flex justify-between">
         <Link
           to={"#"}
-          className=" hover:text-black text-[#566363] text-[16px] flex items-center gap-2"
+          className="hover:text-black text-[#566363] text-[16px] flex items-center gap-2"
         >
           <i className="fa-solid fa-chevron-left"></i>
           <p>Quay lại giỏ hàng</p>

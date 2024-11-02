@@ -35,7 +35,7 @@ const Header = () => {
     setAnchorEl(null);
   }, [userInfor]);
 
-  const cartItems = useSelector((state: RootState) => state.carts.cart_items);
+  const cartItems = useSelector((state: RootState) => state.carts.cart_items || []);
 
   const renderMenu = (
     <Menu
@@ -142,7 +142,7 @@ const Header = () => {
               </Tooltip>
               <Tooltip title="Giỏ hàng" arrow>
                 <Link to={"/cart"} className="flex items-center gap-1">
-                  <Badge badgeContent={cartItems.length} color="secondary">
+                  <Badge badgeContent={cartItems.length || 0} color="secondary">
                     <img src={cartIcon} alt="Cart" />
                   </Badge>
                 </Link>
