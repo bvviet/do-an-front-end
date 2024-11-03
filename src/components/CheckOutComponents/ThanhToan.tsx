@@ -62,7 +62,7 @@ const ThanhToan: React.FC = () => {
     <div className="mt-6">
       <div className="border-b border-[#C4D1D0] mb-6 border-solid"></div>
       <div className="mt-6">
-        <label className="flex items-center gap-5 mx-6 max-lg:mx-0">
+        <label className="flex items-center gap-5 mx-6 max-lg:mx-0 max-lg:text-[14px]">
           <input
             type="radio"
             value="1"
@@ -82,7 +82,7 @@ const ThanhToan: React.FC = () => {
 
       <div className="border-b border-[#C4D1D0] mb-6 border-solid"></div>
       <div className="my-6">
-        <label className="flex gap-5 mx-6 max-lg:mx-0">
+        <label className="flex gap-5 mx-6 max-lg:mx-0 max-lg:text-[14px]">
           <input
             type="radio"
             value="0"
@@ -104,14 +104,14 @@ const ThanhToan: React.FC = () => {
       <div className="col-span-12 lg:w-auto mt-[10px]">
         <label
           htmlFor="note"
-          className="text-[1.8rem] lg:text-[1.8rem] font-medium"
+          className="text-[1.8rem] max-lg:text-[14px] lg:text-[1.8rem] font-medium"
         >
           Ghi chú
         </label>
         <div>
           <textarea
             id="note"
-            className="flex items-center px-[12px] border border-solid border-[#d2d1d6] w-full rounded-xl mt-3 bg-white"
+            className="flex items-center px-[12px] max-lg:text-[14px] border border-solid border-[#d2d1d6] w-full rounded-xl mt-3 bg-white"
             placeholder="Nói cho tôi điều bạn muốn"
             rows={3}
             value={note}
@@ -122,14 +122,14 @@ const ThanhToan: React.FC = () => {
       <div className="mt-6 flex justify-between">
         <Link
           to={"#"}
-          className="hover:text-black text-[#566363] text-[16px] flex items-center gap-2"
+          className="hover:text-black text-[#566363] text-[16px] max-lg:text-[14px] flex items-center gap-2"
         >
           <i className="fa-solid fa-chevron-left"></i>
           <p>Quay lại giỏ hàng</p>
         </Link>
         <button
           onClick={handleCheckout}
-          className="text-black text-[18px] max-sm:text-[14px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
+          className="text-black text-[18px] max-lg:text-[14px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
           disabled={isLoading}
         >
           {isLoading ? (
