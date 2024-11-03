@@ -21,11 +21,11 @@ export default function Order() {
         </div>
         {/* Tính tiền */}
         <div className="flex justify-between text-[#566363]  bg-white border-t border-b border-solid border-gray-300 p-6">
-          <div className="text-[16px] font-manrope font-medium leading-[171.429%]">
+          <div className="text-[16px] max-lg:text-[14px] font-manrope font-medium leading-[171.429%]">
             <p>Tổng tiền hàng</p>
             <p>Phí vận chuyển</p>
           </div>
-          <div className="text-end text-[16px] font-manrope font-medium leading-[171.429%]">
+          <div className="text-end text-[16px] max-lg:text-[14px] font-manrope font-medium leading-[171.429%]">
             <p>{formatCurrency(carts?.total_price ?? 0)}</p>
             <p>Miễn phí</p>
           </div>
