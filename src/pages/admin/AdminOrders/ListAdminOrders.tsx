@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import { GetallOrderAdminsResponse } from "@/types/order";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
+import status from "@/utils/status";
 type FetchError = {
   data?: {
     message?: string;
@@ -50,25 +51,6 @@ interface Column {
   minWidth?: number;
   align?: "right";
 }
-
-const status = [
-  {
-    id: "all",
-    label: "Tất cả",
-  },
-  {
-    id: "pending",
-    label: "Chờ xác nhận",
-  },
-  {
-    id: "shipping",
-    label: "Đang vận chuyển",
-  },
-  {
-    id: "cancelled",
-    label: "Đã hủy",
-  },
-];
 
 const columns: Column[] = [
   { id: "id", label: "Mã đơn hàng", minWidth: 70 },

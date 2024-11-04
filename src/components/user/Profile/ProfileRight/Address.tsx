@@ -109,7 +109,7 @@ const Address = () => {
               </div>
               <div>
                 <p>{address.detail_address}</p>
-                <span>{address.Ward}</span>, <span>{address.district}</span>,
+                <span>{address.ward}</span>, <span>{address.district}</span>,
                 <span>{address.city}</span>
               </div>
               {address.is_default && (

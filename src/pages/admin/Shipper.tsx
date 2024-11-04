@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -15,178 +15,209 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-
-// Định nghĩa kiểu dữ liệu cho đơn hàng
-interface Product {
-  name: string;
-  quantity: number;
-  price: number;
-}
-
-interface Order {
-  id: string;
-  customerName: string;
-  phone: string;
-  address: string;
-  estimatedTime: string;
-  products: Product[];
-  total: number;
-  status: "pending" | "delivered" | "canceled";
-}
+import {
+  useConfirmDeliveryMutation,
+  useGetOrdersByStatusShippingQuery,
+} from "@/services/productApi";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 const Shipper: React.FC = () => {
-  // Danh sách đơn hàng mẫu
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: "1",
-      customerName: "Nguyễn Văn A",
-      phone: "0123456789",
-      address: "123 Đường ABC, Thành phố X",
-      estimatedTime: "14:00 01/11/2024",
-      products: [
-        {
-          name: "Sản phẩm 1",
-          quantity: 2,
-          price: 2000000,
-        },
-        {
-          name: "Sản phẩm 2",
-          quantity: 1,
-          price: 1000000,
-        },
-      ],
-      total: 5000000,
-      status: "pending",
-    },
-    {
-      id: "2",
-      customerName: "Trần Thị B",
-      phone: "0987654321",
-      address: "456 Đường DEF, Thành phố Y",
-      estimatedTime: "15:30 01/11/2024",
-      products: [
-        {
-          name: "Sản phẩm 3",
-          quantity: 1,
-          price: 1500000,
-        },
-      ],
-      total: 1500000,
-      status: "pending",
-    },
-  ]);
-
-  // State cho dialog xác nhận giao và hủy giao
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openCancel, setOpenCancel] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
   const [cancelReason, setCancelReason] = useState("");
+  const dispatch = useDispatch();
+  const {
+    data: ordersShipping,
+    error,
+    isLoading,
+    refetch,
+  } = useGetOrdersByStatusShippingQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
-  // Mở dialog xác nhận giao
-  const handleOpenConfirmDialog = (orderId: string) => {
+  const [confirmDelivery] = useConfirmDeliveryMutation();
+
+  const handleOpenConfirmDialog = (orderId: number) => {
     setSelectedOrder(orderId);
     setOpenConfirm(true);
   };
 
-  // Mở dialog hủy giao
-  const handleOpenCancelDialog = (orderId: string) => {
+  const handleOpenCancelDialog = (orderId: number) => {
     setSelectedOrder(orderId);
     setOpenCancel(true);
   };
 
-  // Đóng dialog
   const handleCloseDialogs = () => {
     setOpenConfirm(false);
     setOpenCancel(false);
-    setSelectedOrder(null);
     setCancelReason("");
+    setSelectedOrder(null);
   };
 
-  // Xác nhận giao hàng
-  const handleConfirmDelivery = () => {
+  const handleConfirmDelivery = async () => {
     if (selectedOrder) {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === selectedOrder
-            ? { ...order, status: "delivered" }
-            : order,
-        ),
-      );
+      try {
+        await confirmDelivery({ orderId: selectedOrder }).unwrap();
+        toast.success("Đơn hàng đã được xác nhận đã giao hàng.");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        toast.error("Lỗi xác nhận đơn hàng.");
+      }
     }
     handleCloseDialogs();
   };
 
-  // Hủy giao hàng
   const handleCancelDelivery = () => {
-    if (selectedOrder && cancelReason.trim()) {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === selectedOrder ? { ...order, status: "canceled" } : order,
-        ),
-      );
-    }
     handleCloseDialogs();
   };
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, refetch, dispatch]);
+
+  // Kiểm tra xem API có trả về thông điệp "Không có đơn hàng nào cần giao" hay không
+  const isNoOrdersMessage =
+    error && "status" in error && (error as FetchBaseQueryError).status === 404;
+
+  // Xác định danh sách đơn hàng
+  const ordersShippingFinal = isNoOrdersMessage
+    ? []
+    : ordersShipping?.orders || [];
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Box>
         <Typography variant="h5" gutterBottom>
           Danh sách đơn hàng
         </Typography>
-        {orders.map((order) => (
-          <Card key={order.id} sx={{ marginBottom: 2 }}>
-            <CardContent>
-              <Typography variant="h6">Mã đơn hàng: {order.id}</Typography>
-              <Typography variant="body2">
-                Khách hàng: {order.customerName}
-              </Typography>
-              <Typography variant="body2">
-                Số điện thoại: {order.phone}
-              </Typography>
-              <Typography variant="body2">Địa chỉ: {order.address}</Typography>
-              <Typography variant="body2">
-                Thời gian dự kiến: {order.estimatedTime}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Sản phẩm:
-              </Typography>
-              {order.products.map((product, index) => (
-                <Box key={index} sx={{ marginLeft: 2 }}>
-                  <Typography variant="body2">
-                    - {product.name} (x{product.quantity}) -{" "}
-                    {product.price.toLocaleString()}đ
+        {ordersShippingFinal.length > 0 ? (
+          ordersShippingFinal.map((order) => (
+            <Card key={order.order_id} sx={{ mb: 3, boxShadow: 3 }}>
+              <CardContent>
+                <Box sx={{ p: 2, backgroundColor: "#f0f4f8", borderRadius: 1 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Mã đơn hàng: {order.order_id}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Khách hàng:{" "}
+                    <span style={{ color: "#333" }}>{order.customer_name}</span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Số điện thoại:{" "}
+                    <span style={{ color: "#333" }}>{order.customer_name}</span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Địa chỉ:{" "}
+                    <span style={{ color: "#333" }}>{order.address}</span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Thời gian dự kiến:{" "}
+                    <span style={{ color: "#333" }}>{order.delivery_time}</span>
                   </Typography>
                 </Box>
-              ))}
-              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                Tổng tiền: {order.total.toLocaleString()}đ
-              </Typography>
-              <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={() => handleOpenConfirmDialog(order.id)}
-                  startIcon={<CheckCircleIcon />}
-                  disabled={order.status !== "pending"}
+
+                <Typography
+                  variant="body2"
+                  mt={2}
+                  fontWeight="bold"
+                  gutterBottom
                 >
-                  {order.status === "delivered"
-                    ? "Đã giao"
-                    : "Xác nhận đã giao"}
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => handleOpenCancelDialog(order.id)}
-                  startIcon={<CancelIcon />}
-                  disabled={order.status !== "pending"}
-                >
-                  {order.status === "canceled" ? "Đã hủy" : "Hủy giao"}
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
+                  Sản phẩm:
+                </Typography>
+                {order.products.map((product, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      py: 1,
+                      borderBottom: "1px solid #e0e0e0",
+                      "&:last-child": { borderBottom: "none" },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={product.image}
+                      alt={product.product_name}
+                      sx={{
+                        width: 50,
+                        height: 50,
+                        objectFit: "cover",
+                        borderRadius: 1,
+                        mr: 2,
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="body2" fontWeight="bold">
+                        {product.product_name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Số lượng: {product.quantity}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Giá: {parseInt(product.price).toLocaleString()}đ
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+
+                <Typography variant="body2" sx={{ fontWeight: "bold", mt: 2 }}>
+                  Tổng tiền: {order.total_amount.toLocaleString()}đ
+                </Typography>
+
+                <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleOpenConfirmDialog(order.order_id)}
+                    startIcon={<CheckCircleIcon />}
+                    disabled={order.order_status === "delivered"}
+                    sx={{ width: "45%", fontSize: "1.3rem" }}
+                  >
+                    {order.order_status === "delivered"
+                      ? "Đã giao"
+                      : "Xác nhận đã giao"}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleOpenCancelDialog(order.order_id)}
+                    startIcon={<CancelIcon />}
+                    disabled={order.order_status === "delivered"}
+                    sx={{ width: "45%", fontSize: "1.3rem" }}
+                  >
+                    {order.order_status === "canceled" ? "Đã hủy" : "Hủy giao"}
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Typography variant="body1" color="text.secondary">
+            Không có đơn hàng nào cần giao.
+          </Typography>
+        )}
 
         {/* Dialog Xác nhận giao hàng */}
         <Dialog open={openConfirm} onClose={handleCloseDialogs}>

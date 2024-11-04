@@ -20,6 +20,7 @@ import {
 import {
   CanCelOrderUserResponse,
   GetallOrderAdminsResponse,
+  GetOrdersByStatusShippingResponse,
   OrderDetailTypeResponse,
   updateStatusOrderAdminsResponse,
 } from "@/types/order";
@@ -62,6 +63,7 @@ const baseQueryWithForceLogout = async (
 // Tạo API với createApi
 export const productApi = createApi({
   reducerPath: "productApi",
+  tagTypes: ["orderUser", "orderShipping"],
   baseQuery: baseQueryWithForceLogout,
   endpoints: (builder) => ({
     getAllProducts: builder.query<getAllProductsResponse, void>({
@@ -113,17 +115,33 @@ export const productApi = createApi({
       }),
     }),
 
+    // Xác nhận đã giao
+    confirmDelivery: builder.mutation<
+      {
+        message: string;
+      },
+      { orderId: number }
+    >({
+      query: ({ orderId }) => ({
+        url: `/admin/orders/confirm-delivery/${orderId}`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "orderShipping" }],
+    }),
+
     // Order user
     getOrdersUser: builder.query<GetallOrderAdminsResponse, string>({
       query: (status) => ({
         url: `/user/orders?status=${status}`,
       }),
+      providesTags: [{ type: "orderUser" }, { type: "orderShipping" }],
     }),
 
     getOrderDetailUser: builder.query<OrderDetailTypeResponse, number>({
       query: (orderId) => ({
         url: `/user/orders/${orderId}`,
       }),
+      providesTags: [{ type: "orderUser" }],
     }),
 
     cancelOrderUser: builder.mutation<
@@ -136,6 +154,32 @@ export const productApi = createApi({
         body: { note },
       }),
     }),
+
+    markReceivedOrderUser: builder.mutation<
+      {
+        message: string;
+      },
+      number
+    >({
+      query: (orderId) => ({
+        url: `/user/orders/mark-as-received/${orderId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: [{ type: "orderUser" }],
+    }),
+
+    // Đơn hàng đang giao
+    getOrdersByStatusShipping: builder.query<
+      GetOrdersByStatusShippingResponse,
+      void
+    >({
+      query: () => ({
+        url: "/admin/orders/delivery",
+      }),
+      providesTags: [{ type: "orderShipping" }],
+    }),
+
+    // Product
 
     deleteProduct: builder.mutation<ProductDetailType, number>({
       query: (productId) => ({
@@ -181,7 +225,7 @@ export const productApi = createApi({
     >({
       query: ({ orderId, status }) => ({
         url: `/admin/orders/status/${orderId}`,
-        method: "PATCH",
+        method: "PUT",
         body: { status },
       }),
     }),
@@ -212,6 +256,9 @@ export const {
   useUpdateQuantityCartMutation,
   useGetOrdersUserQuery,
   useGetOrderDetailUserQuery,
+  useMarkReceivedOrderUserMutation,
+  useGetOrdersByStatusShippingQuery,
+  useConfirmDeliveryMutation,
   useCancelOrderUserMutation,
   useGetOrdersAdminQuery,
   useGetDetailOrderAdminQuery,
@@ -222,5 +269,5 @@ export const {
   useGetAllSizeQuery,
   useUpdateOrderStatusAdminMutation,
   useFilterByDateOrdersAdminQuery,
-  useCheckoutMutation
+  useCheckoutMutation,
 } = productApi;

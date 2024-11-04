@@ -17,9 +17,9 @@ export const getOrderStatus = (status: string | undefined) => {
       return {
         label: "Đã xác nhận",
         className: "bg-blue-200 text-blue-800",
-        icon: <PublishedWithChangesIcon color="primary"/>,
+        icon: <PublishedWithChangesIcon color="primary" />,
       };
-    case "shipping":
+    case "shipped":
       return {
         label: "Đang vận chuyển",
         className: "bg-green-200 text-[#355137] p-3",
@@ -29,13 +29,25 @@ export const getOrderStatus = (status: string | undefined) => {
       return {
         label: "Đã giao hàng",
         className: "bg-green-200 text-green-800 p-3",
-        icon: <VerifiedIcon color="success"/>,
+        icon: <VerifiedIcon color="success" />,
+      };
+    case "completed":
+      return {
+        label: "Đã hoàn thành",
+        className: "bg-green-200 text-green-800 p-3",
+        icon: <VerifiedIcon color="success" />,
       };
     case "cancelled":
       return {
         label: "Đã hủy",
         className: "bg-red-200 text-red-800 p-3",
-        icon: <DeleteIcon color="error"/>,
+        icon: <DeleteIcon color="error" />,
+      };
+    case "failed":
+      return {
+        label: "Đã hủy",
+        className: "bg-red-200 text-red-800 p-3",
+        icon: <DeleteIcon color="error" />,
       };
     default:
       return {

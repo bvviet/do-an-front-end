@@ -7,28 +7,8 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import useDateFormatter from "@/hooks/useDateFormatter";
-const status = [
-  {
-    id: "all",
-    label: "Tất cả",
-  },
-  {
-    id: "pending",
-    label: "Chờ xác nhận",
-  },
-  {
-    id: "shipping",
-    label: "Đang vận chuyển",
-  },
-  {
-    id: "delivered",
-    label: "Đã giao hàng",
-  },
-  {
-    id: "cancelled",
-    label: "Đã hủy",
-  },
-];
+import status from "@/utils/status";
+
 const Orders = () => {
   const [value, setValue] = useState("all");
   const dispatch = useDispatch();
@@ -44,12 +24,18 @@ const Orders = () => {
         return "Chờ xác nhận";
       case "processing":
         return "Đã xác nhận";
-      case "shipping":
+      case "shipped":
         return "Đang vận chuyển";
       case "delivered":
         return "Đã giao hàng";
+      case "received":
+        return "Đã nhận";
+      case "completed":
+        return "Hoàn thành";
       case "cancelled":
         return "Đã hủy";
+      case "failed":
+        return "Giao hàng thất bại";
       default:
         return "Không xác định";
     }
