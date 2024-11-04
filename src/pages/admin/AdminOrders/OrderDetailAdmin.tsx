@@ -1,16 +1,19 @@
+import Confirm from "@/components/Confirm";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import {
+  useCancelOrderUserMutation,
   useGetDetailOrderAdminQuery,
   useUpdateOrderStatusAdminMutation,
 } from "@/services/productApi";
 import { getOrderStatus } from "@/utils/getOrderStatus";
 import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextareaAutosize,
 } from "@mui/material";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
@@ -18,36 +21,51 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const statusUpdate = (status: string | undefined) => {
+  switch (status) {
+    case "pending":
+      return "Xác nhận đơn hàng";
+    case "processing":
+      return "Giao cho đơn vị vận chuyển";
+    default:
+      return "Cập nhật trạng thái";
+  }
+};
+
 const OrderDetailAdmin = () => {
-  const [orderStatus, setOrderStatus] = useState("");
   const { orderAdminId } = useParams();
   const id = Number(orderAdminId);
   const disPatch = useDispatch();
+  const { openPopup } = useModalContext();
 
   const { data, isLoading, refetch } = useGetDetailOrderAdminQuery(id);
   const [updateStatus, { isLoading: isLoadingUpdateStatus }] =
     useUpdateOrderStatusAdminMutation();
 
   useEffect(() => {
-    disPatch(setLoading(isLoading || isLoadingUpdateStatus));
-  }, [isLoading, isLoadingUpdateStatus, disPatch]);
-
-  useEffect(() => {
-    if (data) {
-      setOrderStatus(data.order_status);
-    }
-  }, [data]);
-
-  const handleChange = async (event: SelectChangeEvent) => {
-    const newStatus = event.target.value as string;
-    setOrderStatus(newStatus);
-    try {
-      const response = await updateStatus({
-        orderId: id,
-        status: newStatus,
-      }).unwrap();
-      toast.success(response.message);
+    if (id) {
       refetch();
+    }
+  }, [id, refetch]);
+
+  // Cập nhật đơn hàng
+  const handleUpdateStatus = async () => {
+    try {
+      if (data?.order_status === "pending") {
+        const response = await updateStatus({
+          orderId: id,
+          status: "processing",
+        }).unwrap();
+        toast.success(response.message);
+        refetch();
+      } else if (data?.order_status === "processing") {
+        const response = await updateStatus({
+          orderId: id,
+          status: "shipped",
+        }).unwrap();
+        toast.success(response.message);
+        refetch();
+      }
     } catch (error) {
       const fetchError = error as FetchBaseQueryError;
 
@@ -62,6 +80,42 @@ const OrderDetailAdmin = () => {
       }
     }
   };
+
+  // Hủy đơn hàng
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
+
+  const handleOpenDialog = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+    setReason("");
+  };
+  const [cancelOrder, { isLoading: loadingCancelOrder }] =
+    useCancelOrderUserMutation();
+  const handleConfirmCancel = async () => {
+    try {
+      const res = await cancelOrder({
+        orderId: id,
+        note: reason,
+      }).unwrap();
+      refetch();
+      toast.success(res.message);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || "Hủy đơn hàng thất bại";
+      toast.error(errorMessage);
+    }
+    handleCloseDialog();
+  };
+
+  useEffect(() => {
+    disPatch(
+      setLoading(isLoading || isLoadingUpdateStatus || loadingCancelOrder),
+    );
+  }, [isLoading, isLoadingUpdateStatus, loadingCancelOrder, disPatch]);
 
   return (
     <div className="overflow-x-auto">
@@ -114,26 +168,79 @@ const OrderDetailAdmin = () => {
                 {getOrderStatus(data?.order_status).label}
               </span>
             </div>
-            <Box sx={{ minWidth: 120, marginTop: "10px" }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Trạng thái
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={orderStatus}
-                  label="orderStatus"
-                  onChange={handleChange}
-                >
-                  <MenuItem value={"pending"}>Chờ xác nhận</MenuItem>
-                  <MenuItem value={"processing"}>Đang xử lý</MenuItem>
-                  <MenuItem value={"shipping"}>Đang vận chuyển</MenuItem>
-                  <MenuItem value={"delivered"}>Đã giao hàng</MenuItem>
-                  <MenuItem value={"cancelled"}>Đã hủy</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+
+            {/* Cập nhật đơn hàng */}
+            <Button
+              variant="contained"
+              disabled={
+                data?.order_status === "cancelled" ||
+                data?.order_status === "delivered" ||
+                data?.order_status === "shipped" ||
+                data?.order_status === "completed" ||
+                data?.order_status === "received"
+              }
+              onClick={() =>
+                openPopup(
+                  <Confirm
+                    titleButton={"Xác nhận"}
+                    handleDelete={() => handleUpdateStatus()}
+                  />,
+                )
+              }
+            >
+              {statusUpdate(data?.order_status)}
+            </Button>
+
+            {/* Hủy đơn hàng */}
+            <>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleOpenDialog}
+                disabled={
+                  data?.order_status === "cancelled" ||
+                  data?.order_status === "delivered" ||
+                  data?.order_status === "shipped" ||
+                  data?.order_status === "completed" ||
+                  data?.order_status === "received"
+                }
+              >
+                Hủy đơn hàng
+              </Button>
+              <Dialog open={open} onClose={handleCloseDialog} fullWidth>
+                <DialogTitle>Nhập lý do hủy đơn hàng</DialogTitle>
+                <DialogContent>
+                  <TextareaAutosize
+                    autoFocus
+                    minRows={3}
+                    placeholder="Lý do hủy"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      fontSize: "16px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      outline: "none",
+                    }}
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                </DialogContent>
+
+                <DialogActions>
+                  <Button onClick={handleCloseDialog} color="primary">
+                    Hủy
+                  </Button>
+                  <Button
+                    onClick={handleConfirmCancel}
+                    color="error"
+                    disabled={!reason}
+                  >
+                    Xác nhận hủy
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
           </div>
         </div>
         <div className="col-span-1 bg-gray-200">

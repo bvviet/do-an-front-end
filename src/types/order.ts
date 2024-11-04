@@ -83,3 +83,26 @@ export interface updateStatusOrderAdminsResponse {
     updated_at: string;
   };
 }
+
+// Đơn hàng đang giao
+export interface GetOrdersByStatusShippingResponse {
+  message: string;
+  orders: {
+    order_id: number;
+    customer_name: string;
+    address: string;
+    products: {
+      product_name: string;
+      quantity: number;
+      price: string;
+      image: string;
+    }[];
+    total_quantity: number;
+    total_amount: string;
+    order_status: string;
+    delivery_time: string;
+  }[];
+  order_count_by_status: {
+    shipped: number;
+  };
+}

@@ -15,6 +15,7 @@ import { Link, useParams } from "react-router-dom";
 import {
   useCancelOrderUserMutation,
   useGetOrderDetailUserQuery,
+  useMarkReceivedOrderUserMutation,
 } from "@/services/productApi";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
@@ -22,11 +23,16 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 import { toast } from "react-toastify";
 import HorizontalStepperWithError from "./Stepper";
 import useDateFormatter from "@/hooks/useDateFormatter";
+import Confirm from "@/components/Confirm";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 
 const OrderDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const { openPopup } = useModalContext();
   const dispatch = useDispatch();
   const { orderId } = useParams();
+  const [markReceived, { isLoading: isLoadingMark }] =
+    useMarkReceivedOrderUserMutation();
   const id = Number(orderId);
   const {
     data: orderDetail,
@@ -35,12 +41,12 @@ const OrderDetail = () => {
   } = useGetOrderDetailUserQuery(id);
   useEffect(() => {
     refetch();
-  }, [id]);
+  }, [id, refetch]);
   const [cancelOrder, { isLoading: loadingCancelOrder }] =
     useCancelOrderUserMutation();
   useEffect(() => {
-    dispatch(setLoading(isLoading || loadingCancelOrder));
-  }, [dispatch, isLoading, loadingCancelOrder]);
+    dispatch(setLoading(isLoading || loadingCancelOrder || isLoadingMark));
+  }, [dispatch, isLoading, loadingCancelOrder, isLoadingMark]);
   const {
     register,
     handleSubmit,
@@ -55,7 +61,6 @@ const OrderDetail = () => {
     reset();
   };
   // Hàm xử lý submit form
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     try {
       const res = await cancelOrder({
@@ -76,12 +81,18 @@ const OrderDetail = () => {
         return "Chờ xác nhận";
       case "processing":
         return "Đã xác nhận";
-      case "shipping":
+      case "shipped":
         return "Đang vận chuyển";
       case "delivered":
         return "Đã giao hàng";
+      case "received":
+        return "Đã nhận";
+      case "completed":
+        return "Hoàn thành";
       case "cancelled":
         return "Đã hủy";
+      case "failed":
+        return "Giao hàng thất bại";
       default:
         return "Không xác định";
     }
@@ -92,17 +103,34 @@ const OrderDetail = () => {
         return "bg-yellow-500";
       case "processing":
         return "bg-[#88C273]";
-      case "shipping":
+      case "shipped":
         return "bg-purple-500";
       case "delivered":
         return "bg-[#48673c]";
+      case "received":
+        return "bg-[#48673c]";
+      case "completed":
+        return "bg-[#48673c]";
       case "cancelled":
+        return "bg-red-500";
+      case "failed":
         return "bg-red-500";
       default:
         return "bg-gray-500";
     }
   };
   const { formatDate } = useDateFormatter();
+
+  // Xác nhận đã nhận được hàng
+  const handleReceived = async (orderId: number) => {
+    try {
+      await markReceived(orderId).unwrap();
+      toast.success("Đơn hàng đã được hoàn thành.");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Đơn hàng không thể được đánh dấu là đã nhận.");
+    }
+  };
 
   return (
     <div className="container">
@@ -237,17 +265,37 @@ const OrderDetail = () => {
             </div>
             <div className="mt-6 flex justify-end gap-6">
               <Button variant="outlined">Thanh toán khi nhận hàng</Button>
-              <Button
-                variant="contained"
-                onClick={handleOpenDialog}
-                disabled={
-                  orderDetail?.order_status === "cancelled" ||
-                  orderDetail?.order_status === "delivered" ||
-                  orderDetail?.order_status === "shipping"
-                }
-              >
-                Hủy đơn hàng
-              </Button>
+              {orderDetail?.order_status === "delivered" ? (
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    openPopup(
+                      <Confirm
+                        titleButton={"Xác nhận"}
+                        handleDelete={() =>
+                          handleReceived(orderDetail?.order_id)
+                        }
+                      />,
+                    )
+                  }
+                >
+                  Đã nhận được hàng
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={handleOpenDialog}
+                  disabled={
+                    orderDetail?.order_status === "cancelled" ||
+                    orderDetail?.order_status === "delivered" ||
+                    orderDetail?.order_status === "shipped" ||
+                    orderDetail?.order_status === "completed" ||
+                    orderDetail?.order_status === "received"
+                  }
+                >
+                  Hủy đơn hàng
+                </Button>
+              )}
             </div>
           </div>
         </div>

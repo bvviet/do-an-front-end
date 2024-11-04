@@ -4,9 +4,11 @@ import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import StepConnector, {
   stepConnectorClasses,
@@ -66,7 +68,9 @@ function ColorlibStepIcon(props: StepIconProps) {
     1: <HourglassBottomIcon />,
     2: <AssignmentTurnedInIcon />,
     3: <LocalShippingIcon />,
-    4: <ThumbUpIcon />,
+    4: <ShoppingCartCheckoutIcon />,
+    5: <HandshakeIcon />,
+    6: <ThumbUpIcon />,
   };
 
   return (
@@ -82,7 +86,9 @@ function ColorlibStepIcon(props: StepIconProps) {
 const steps = [
   "Chờ xác nhận",
   "Đã Xác Nhận",
-  "Đang Giao Hàng",
+  "Đang vận chuyển",
+  "Đã giao hàng",
+  "Đã nhận",
   "Đơn Hàng Đã Hoàn Thành",
 ];
 
@@ -96,10 +102,14 @@ const order_status = (sta: string | undefined) => {
       return 0;
     case "processing":
       return 1;
-    case "shipping":
+    case "shipped":
       return 2;
     case "delivered":
       return 3;
+    case "received":
+      return 4;
+    case "completed":
+      return 5;
     default:
       return 0;
   }
