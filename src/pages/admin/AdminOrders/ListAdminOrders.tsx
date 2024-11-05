@@ -8,7 +8,6 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Tab, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
@@ -33,6 +32,7 @@ import { GetallOrderAdminsResponse } from "@/types/order";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import status from "@/utils/status";
+import { formatCurrency } from "@/utils/formatCurrency";
 type FetchError = {
   data?: {
     message?: string;
@@ -230,18 +230,8 @@ export default function ListAdminOrders() {
                               <Tooltip title="Chi tiết đơn hàng">
                                 <IconButton aria-label="VisibilityIcon">
                                   <Link to={`/admin/order/detail/${user.id}`}>
-                                    <Visibility color="info" />
+                                    <Visibility color="primary" />
                                   </Link>
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Cập nhật trạng thái">
-                                <IconButton
-                                  aria-label="update"
-                                  onClick={() =>
-                                    console.log("Update user with ID:", user.id)
-                                  }
-                                >
-                                  <EditIcon color="info" />
                                 </IconButton>
                               </Tooltip>
                             </TableCell>
@@ -255,6 +245,8 @@ export default function ListAdminOrders() {
                               typeof value === "string"
                                 ? formatDate(value)
                                 : "N/A";
+                          } else if (column.id === "total_amount") {
+                            displayValue = formatCurrency(value as number);
                           } else if (column.id === "order_status") {
                             const statusValue =
                               user[column.id as keyof typeof user];

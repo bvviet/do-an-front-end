@@ -1,14 +1,18 @@
 import Confirm from "@/components/Confirm";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import useDateFormatter from "@/hooks/useDateFormatter";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import {
   useCancelOrderUserMutation,
   useGetDetailOrderAdminQuery,
   useUpdateOrderStatusAdminMutation,
 } from "@/services/productApi";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { getOrderStatus } from "@/utils/getOrderStatus";
+import paymentMethods from "@/utils/paymentMethods";
 import {
   Button,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,6 +41,7 @@ const OrderDetailAdmin = () => {
   const id = Number(orderAdminId);
   const disPatch = useDispatch();
   const { openPopup } = useModalContext();
+  const { formatDate } = useDateFormatter();
 
   const { data, isLoading, refetch } = useGetDetailOrderAdminQuery(id);
   const [updateStatus, { isLoading: isLoadingUpdateStatus }] =
@@ -120,8 +125,8 @@ const OrderDetailAdmin = () => {
   return (
     <div className="overflow-x-auto">
       {/* Thêm overflow-x-auto ở đây */}
-      <div className="grid grid-cols-3 gap-8">
-        <div className="col-span-1 bg-gray-200">
+      <div className="grid grid-cols-3 gap-6">
+        <Card className="col-span-1 !bg-gray-100 p-6">
           <h2 className="text-[2rem] font-bold">1. Thông tin khách hàng</h2>
           <div className="flex flex-col gap-3">
             <div>
@@ -144,8 +149,8 @@ const OrderDetailAdmin = () => {
               </span>
             </div>
           </div>
-        </div>
-        <div className="col-span-1 bg-gray-200">
+        </Card>
+        <Card className="col-span-1 !bg-gray-100 p-6">
           <h2 className="text-[2rem] font-bold">2. Thông tin đơn hàng</h2>
           <div className="flex flex-col gap-3">
             <div>
@@ -153,12 +158,12 @@ const OrderDetailAdmin = () => {
               <span>{data?.order_id}</span>
             </div>
             <div>
-              <span className="font-semibold">Phương thức:</span>{" "}
-              <span>{data?.payment_status}</span>
+              <span className="font-semibold">Trạng thái thanh toán:</span>{" "}
+              <span>{paymentMethods(data?.payment_status)}</span>
             </div>
             <div>
               <span className="font-semibold">Ngày mua hàng:</span>{" "}
-              <span>{data?.created_at}</span>
+              <span>{formatDate(data?.created_at)}</span>
             </div>
             <div>
               <span className="font-semibold">Trạng thái:</span>{" "}
@@ -242,8 +247,8 @@ const OrderDetailAdmin = () => {
               </Dialog>
             </>
           </div>
-        </div>
-        <div className="col-span-1 bg-gray-200">
+        </Card>
+        <Card className="col-span-1 !bg-gray-100 p-6">
           <h2 className="text-[2rem] font-bold">3. Thông tin giao hàng</h2>
           <div className="flex flex-col gap-3">
             <div>
@@ -254,7 +259,7 @@ const OrderDetailAdmin = () => {
               <span className="font-semibold">Hình thức:</span> <span>ABC</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
       {/* Khối chi tiết đơn hàng */}
       <div className="mt-16 overflow-hidden">
@@ -295,14 +300,16 @@ const OrderDetailAdmin = () => {
                   <td className="border border-gray-400 p-2">
                     {item.product.name}
                   </td>
-                  <td className="border border-gray-400 p-2 text-center">
-                    {item.price}
+                  <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
+                    {formatCurrency(item.price ?? 0)}
                   </td>
                   <td className="border border-gray-400 p-2 text-center">
                     {item.quantity}
                   </td>
-                  <td className="border border-gray-400 p-2 text-center">
-                    {(Number(item.price) || 0) * (Number(item.quantity) || 0)}
+                  <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
+                    {formatCurrency(
+                      (Number(item.price) || 0) * (Number(item.quantity) || 0),
+                    )}
                   </td>
                 </tr>
               ))}
@@ -315,7 +322,7 @@ const OrderDetailAdmin = () => {
                 >
                   Tổng tiền:
                 </td>
-                <td className="border border-gray-400 p-2 text-center font-bold">
+                <td className="border border-gray-400 p-2 text-center font-bold text-[#ee4d2d]">
                   {data?.total_all_orders}
                 </td>
               </tr>
