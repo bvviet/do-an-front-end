@@ -129,6 +129,21 @@ export const productApi = createApi({
       invalidatesTags: [{ type: "orderShipping" }],
     }),
 
+    // Shipper hủy đơn
+    cancelOrderShipping: builder.mutation<
+      {
+        message: string;
+        status: string;
+      },
+      { orderId: number | null; note: string }
+    >({
+      query: ({ orderId, note }) => ({
+        url: `/admin/orders/update-status/${orderId}?status=cancelled&reason=${note}`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "orderShipping" }],
+    }),
+
     // Order user
     getOrdersUser: builder.query<GetallOrderAdminsResponse, string>({
       query: (status) => ({
@@ -259,6 +274,7 @@ export const {
   useMarkReceivedOrderUserMutation,
   useGetOrdersByStatusShippingQuery,
   useConfirmDeliveryMutation,
+  useCancelOrderShippingMutation,
   useCancelOrderUserMutation,
   useGetOrdersAdminQuery,
   useGetDetailOrderAdminQuery,

@@ -16,6 +16,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
+  useCancelOrderShippingMutation,
   useConfirmDeliveryMutation,
   useGetOrdersByStatusShippingQuery,
 } from "@/services/productApi";
@@ -23,6 +24,8 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import useDateFormatter from "@/hooks/useDateFormatter";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const Shipper: React.FC = () => {
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -30,6 +33,8 @@ const Shipper: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const dispatch = useDispatch();
+  const { formatDate } = useDateFormatter();
+
   const {
     data: ordersShipping,
     error,
@@ -64,21 +69,32 @@ const Shipper: React.FC = () => {
       try {
         await confirmDelivery({ orderId: selectedOrder }).unwrap();
         toast.success("Đơn hàng đã được xác nhận đã giao hàng.");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Lỗi xác nhận đơn hàng.");
       }
     }
     handleCloseDialogs();
   };
-
-  const handleCancelDelivery = () => {
+  const [canCellShipping, { isLoading: isLoadingCanCell }] =
+    useCancelOrderShippingMutation();
+  const handleCancelDelivery = async () => {
+    try {
+      const res = await canCellShipping({
+        orderId: selectedOrder,
+        note: cancelReason,
+      }).unwrap();
+      toast.success(res.message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
+      toast.error("Trạng thái đơn hàng hiện tại không cho phép cập nhật.");
+    }
     handleCloseDialogs();
   };
 
   useEffect(() => {
-    dispatch(setLoading(isLoading));
-  }, [isLoading, refetch, dispatch]);
+    dispatch(setLoading(isLoading || isLoadingCanCell));
+  }, [isLoading, isLoadingCanCell, refetch, dispatch]);
 
   // Kiểm tra xem API có trả về thông điệp "Không có đơn hàng nào cần giao" hay không
   const isNoOrdersMessage =
@@ -132,8 +148,10 @@ const Shipper: React.FC = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Thời gian dự kiến:{" "}
-                    <span style={{ color: "#333" }}>{order.delivery_time}</span>
+                    Thời giao hàng:{" "}
+                    <span style={{ color: "#333" }}>
+                      {formatDate(order.delivery_time)}
+                    </span>
                   </Typography>
                 </Box>
 
@@ -176,14 +194,20 @@ const Shipper: React.FC = () => {
                         Số lượng: {product.quantity}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Giá: {parseInt(product.price).toLocaleString()}đ
+                        Giá:{" "}
+                        <span className="text-[#ee4d2d]">
+                          {formatCurrency(product.price)}
+                        </span>
                       </Typography>
                     </Box>
                   </Box>
                 ))}
 
                 <Typography variant="body2" sx={{ fontWeight: "bold", mt: 2 }}>
-                  Tổng tiền: {order.total_amount.toLocaleString()}đ
+                  Tổng tiền:{" "}
+                  <span className="text-[#ee4d2d]">
+                    {formatCurrency(order.total_amount)}
+                  </span>
                 </Typography>
 
                 <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
@@ -238,7 +262,7 @@ const Shipper: React.FC = () => {
         </Dialog>
 
         {/* Dialog Hủy giao hàng */}
-        <Dialog open={openCancel} onClose={handleCloseDialogs}>
+        <Dialog open={openCancel} onClose={handleCloseDialogs} fullWidth>
           <DialogTitle>Hủy giao hàng</DialogTitle>
           <DialogContent>
             <DialogContentText>Nhập lý do hủy đơn hàng này:</DialogContentText>
