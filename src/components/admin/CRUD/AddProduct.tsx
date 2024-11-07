@@ -10,7 +10,7 @@ import { useAddProductMutation } from "@/services/productApi";
 import { useBrands } from "@/hooks/useBrand";
 import { useSizes } from "@/hooks/useSize";
 import { useColors } from "@/hooks/useColor";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTabContext } from "@/contexts/TabContext";
 
 export default function AddProducts() {
@@ -41,7 +41,16 @@ export default function AddProducts() {
   if (brandsError) {
     toast.error("Không thể tải danh sách thương hiệu");
   }
-
+  useEffect(() => {
+    if (sizes.length > 0 && colors.length > 0) {
+      setProductVariants([{
+        product_size_id: sizes[0]?.id || "",
+        product_color_id: colors[0]?.id || "",
+        quantity: 0,
+        image: null
+      }]);
+    }
+  }, [sizes, colors]); // Chạy khi sizes hoặc colors thay đổi
   const onSubmit: SubmitHandler<AddProduct> = async (data) => {
     const formData = new FormData();
     formData.append("name", data.name);
@@ -101,6 +110,9 @@ export default function AddProducts() {
       return newVariants;
     });
   };
+
+
+
 
   return (
     <div className="h-full rounded-xl bg-white px-2 pb-12">
@@ -235,41 +247,44 @@ export default function AddProducts() {
                 </div>
                 {/* Phần thêm kích thước và màu sắc */}
                 <h2 className="text-[1.5rem] my-4 mt-2 pl-8 pt-2 font-semibold">Thêm biến thể sản phẩm</h2>
-                <div className=" mt-2 px-7 pt-2 grid grid-cols-5">
+                <div className="mt-2 px-7 pt-2 grid grid-cols-5">
                   {productVariants.map((variant, index) => (
                     <div key={index} className="mb-4 border rounded-md p-4">
-                      <Select
-                        value={variant.product_size_id}
-                        onChange={(e) => updateVariant(index, "product_size_id", e.target.value)}
-                        displayEmpty
-                      >
-                        {sizes.map((size) => (
-                          <MenuItem key={size.id} value={size.id}>
-                            {size.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <Select
-                        value={variant.product_color_id}
-                        onChange={(e) => updateVariant(index, "product_color_id", e.target.value)}
-                        displayEmpty
-                      >
-                        {colors.map((color) => (
-                          <MenuItem key={color.id} value={color.id}>
-                            <Box
-                              sx={{
-                                width: 20,
-                                height: 20,
-                                backgroundColor: color.name,
-                                borderRadius: '4px',
-                                marginRight: 1,
-                                display: 'inline-block',
-                              }}
-                            />
-                            {color.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      <div className="flex items-center">
+
+                        <Select
+                          value={variant.product_size_id}
+                          onChange={(e) => updateVariant(index, "product_size_id", e.target.value)}
+                          displayEmpty
+                        >
+                          {sizes.map((size) => (
+                            <MenuItem key={size.id} value={size.id}>
+                              {size.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Select
+                          value={variant.product_color_id}
+                          onChange={(e) => updateVariant(index, "product_color_id", e.target.value)}
+                          displayEmpty
+                        >
+                          {colors.map((color) => (
+                            <MenuItem key={color.id} value={color.id}>
+                              <Box
+                                sx={{
+                                  width: 20,
+                                  height: 20,
+                                  backgroundColor: color.name,
+                                  borderRadius: '4px',
+                                  marginRight: 1,
+                                  display: 'inline-block',
+                                }}
+                              />
+                              {color.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
                       <TextInputs
                         type="number"
                         label="Số lượng"
@@ -277,7 +292,6 @@ export default function AddProducts() {
                         onChange={(e) => updateVariant(index, "quantity", Number(e.target.value))}
                         name={`quantity-${index}`} // Đặt tên duy nhất cho trường
                         placeholder="Nhập số lượng"
-
                       />
                       <input
                         type="file"
@@ -295,17 +309,17 @@ export default function AddProducts() {
                 <div className="flex justify-end gap-6 px-7 items-center">
                   <button
                     type="button"
-                    className=" mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+                    className="text-gray-800 text-[14px] max-lg:text-[12px] leading-[166.667%] font-manrope py-4 px-12 bg-[#34e693] rounded-xl flex items-center justify-center gap-2"
                     onClick={() => addVariant("", "")}
                   >
                     Thêm biến thể
                   </button>
                   <button
                     type="submit"
-                    className="mt-4 rounded bg-green-500 px-4 py-2 text-white"
+                    className="text-black text-[14px] max-lg:text-[12px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
                     disabled={isLoading}
                   >
-                    {isLoading ? "Đang thêm..." : "Thêm sản phẩm"}
+                    {isLoading ? <i className="fas fa-spinner fa-spin"></i> : "Thêm sản phẩm"}
                   </button>
                 </div>
               </form>
