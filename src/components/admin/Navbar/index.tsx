@@ -30,6 +30,12 @@ const arrayNav = [
     link: "/admin/product",
   },
   {
+    id: 7,
+    name: "Thương hiệu",
+    icon: ShoppingCartIcon,
+    link: "/admin/brand",
+  },
+  {
     id: 3,
     name: "Danh mục",
     icon: AccountBoxIcon,

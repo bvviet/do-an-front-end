@@ -42,6 +42,8 @@ import Orders from "./pages/user/Orders";
 import OrderDetail from "./pages/user/OrderDetail";
 import Thanks from "./pages/user/Thanks";
 import Shipper from "./pages/admin/Shipper";
+import BrandTabs from "./components/admin/TabBrand";
+import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
 
 function App() {
   const router = createBrowserRouter([
@@ -110,6 +112,8 @@ function App() {
         { path: "product", element: <LabTabs /> },
         { path: "genre", element: <GenreTabs /> },
         { path: "genre/:id", element: <EditCategory /> },
+        { path: "brand", element: <BrandTabs /> },
+        { path: "brand/:id", element: <EditBrand /> },
         { path: "orders", element: <ListAdminOrders /> },
         { path: "order/detail/:orderAdminId", element: <OrderDetailAdmin /> },
         { path: "statistical", element: <Statistical /> },

@@ -24,7 +24,7 @@ import {
   OrderDetailTypeResponse,
   updateStatusOrderAdminsResponse,
 } from "@/types/order";
-import { GetAllBrandsResponse } from "@/types/brand";
+import { AddIBrand, BrandType, GetAllBrandsResponse, GetDetailBrandsResponse } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
 
@@ -63,7 +63,7 @@ const baseQueryWithForceLogout = async (
 // Tạo API với createApi
 export const productApi = createApi({
   reducerPath: "productApi",
-  tagTypes: ["orderUser", "orderShipping"],
+  tagTypes: ["orderUser", "orderShipping", "Brand"],
   baseQuery: baseQueryWithForceLogout,
   endpoints: (builder) => ({
     getAllProducts: builder.query<getAllProductsResponse, void>({
@@ -207,6 +207,7 @@ export const productApi = createApi({
       query: () => ({
         url: "/admin/brands",
       }),
+      providesTags: [{ type: "Brand" }],
     }),
 
     getAllSize: builder.query<GetSize, void>({
@@ -260,6 +261,32 @@ export const productApi = createApi({
         body: newOrders,
       }),
     }),
+    addBrand: builder.mutation<AddIBrand, FormData>({
+      query: (newBrand) => ({
+        url: `/admin/brands`,
+        method: "POST",
+        body: newBrand,
+      }),
+      invalidatesTags: [{ type: "Brand" }], // Đặt invalidatesTag cho "Brand"
+    }),
+    deleteBrand: builder.mutation<BrandType, number>({
+      query: (brandId) => ({
+        url: `admin/brands/${brandId}`,
+        method: "DELETE",
+      }),
+    }),
+    getDetailBrand: builder.query<GetDetailBrandsResponse, number>({
+      query: (id) => `/admin/brands/${id}`,
+      providesTags: [{ type: "Brand" }],
+    }),
+    updateBrand: builder.mutation<BrandType, { id: number; data: Partial<BrandType> }>({
+      query: ({ id, data }) => ({
+        url: `/admin/brands/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Brand" }],
+    }),
   }),
 });
 
@@ -286,4 +313,8 @@ export const {
   useUpdateOrderStatusAdminMutation,
   useFilterByDateOrdersAdminQuery,
   useCheckoutMutation,
+  useAddBrandMutation,
+  useDeleteBrandMutation,
+  useGetDetailBrandQuery,
+  useUpdateBrandMutation
 } = productApi;
