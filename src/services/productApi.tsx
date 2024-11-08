@@ -27,6 +27,7 @@ import {
 import { GetAllBrandsResponse } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
+import { SearchProductResponse } from "@/types/search";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -72,9 +73,9 @@ export const productApi = createApi({
       }),
     }),
 
-    getDetailProduct: builder.query<ProductDetailType, number>({
-      query: (productId) => ({
-        url: `/products/${productId}`,
+    getDetailProduct: builder.query<ProductDetailType, string>({
+      query: (slug) => ({
+        url: `/products/${slug}`,
       }),
     }),
 
@@ -260,6 +261,13 @@ export const productApi = createApi({
         body: newOrders,
       }),
     }),
+
+    // Search
+    searchProduct: builder.query<SearchProductResponse, string>({
+      query: (keyword) => ({
+        url: `/search?search=${keyword}`,
+      }),
+    }),
   }),
 });
 
@@ -286,4 +294,5 @@ export const {
   useUpdateOrderStatusAdminMutation,
   useFilterByDateOrdersAdminQuery,
   useCheckoutMutation,
+  useSearchProductQuery,
 } = productApi;

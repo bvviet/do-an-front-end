@@ -66,7 +66,7 @@ const OrderDetailAdmin = () => {
       } else if (data?.order_status === "processing") {
         const response = await updateStatus({
           orderId: id,
-          status: "shipped",
+          status: "shipping",
         }).unwrap();
         toast.success(response.message);
         refetch();
@@ -180,7 +180,7 @@ const OrderDetailAdmin = () => {
               disabled={
                 data?.order_status === "cancelled" ||
                 data?.order_status === "delivered" ||
-                data?.order_status === "shipped" ||
+                data?.order_status === "shipping" ||
                 data?.order_status === "completed" ||
                 data?.order_status === "received"
               }
@@ -205,7 +205,7 @@ const OrderDetailAdmin = () => {
                 disabled={
                   data?.order_status === "cancelled" ||
                   data?.order_status === "delivered" ||
-                  data?.order_status === "shipped" ||
+                  data?.order_status === "shipping" ||
                   data?.order_status === "completed" ||
                   data?.order_status === "received"
                 }

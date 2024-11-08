@@ -102,7 +102,7 @@ const order_status = (sta: string | undefined) => {
       return 0;
     case "processing":
       return 1;
-    case "shipped":
+    case "shipping":
       return 2;
     case "delivered":
       return 3;

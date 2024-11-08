@@ -2,11 +2,12 @@ import ProductDetailInfo from "@/components/user/ProductDetailInfor.tsx";
 import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const { id } = useParams();
-  const numericId = id ? parseInt(id, 10) : 0;
+  const { slug } = useParams();
+  const slugProduct = String(slug);
+
   return (
     <div className="container mb-[150px]">
-      <ProductDetailInfo id={numericId} />
+      <ProductDetailInfo id={slugProduct} />
     </div>
   );
 };

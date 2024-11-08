@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
-import { Box, Button, Tab, Tooltip } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import useDateFormatter from "@/hooks/useDateFormatter";
@@ -16,8 +16,9 @@ import { Visibility } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import {
   useFilterByDateOrdersAdminQuery,
+  useGetOrdersAdminQuery,
   // useGetOrdersAdminQuery,
-  useGetOrdersUserQuery,
+  // useGetOrdersUserQuery,
 } from "@/services/productApi";
 import { getOrderStatus } from "@/utils/getOrderStatus";
 
@@ -29,9 +30,9 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/vi"; // Nhập locale tiếng Việt
 import { toast } from "react-toastify";
 import { GetallOrderAdminsResponse } from "@/types/order";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import status from "@/utils/status";
+// import TabContext from "@mui/lab/TabContext";
+// import TabList from "@mui/lab/TabList";
+// import status from "@/utils/status";
 import { formatCurrency } from "@/utils/formatCurrency";
 type FetchError = {
   data?: {
@@ -40,13 +41,7 @@ type FetchError = {
 };
 dayjs.locale("vi");
 interface Column {
-  id:
-    | "id"
-    | "order_status"
-    | "user_id"
-    | "total_amount"
-    | "created_at"
-    | "action";
+  id: "id" | "order_status" | "name" | "total_amount" | "created_at" | "action";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -55,7 +50,7 @@ interface Column {
 const columns: Column[] = [
   { id: "id", label: "Mã đơn hàng", minWidth: 70 },
   { id: "order_status", label: "Tình trạng", minWidth: 180 },
-  { id: "user_id", label: "Khách hàng", minWidth: 210 },
+  { id: "name", label: "Khách hàng", minWidth: 210 },
   { id: "total_amount", label: "Tổng tiền", minWidth: 80 },
   { id: "created_at", label: "Ngày mua hàng", minWidth: 170 },
   { id: "action", label: "Hành động", minWidth: 130 },
@@ -86,7 +81,7 @@ export default function ListAdminOrders() {
     data: ordersStatus,
     isLoading: isLoadingGetStatus,
     refetch,
-  } = useGetOrdersUserQuery(value, {
+  } = useGetOrdersAdminQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -152,9 +147,9 @@ export default function ListAdminOrders() {
 
   console.log({ ordersStatus });
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  // const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+  //   setValue(newValue);
+  // };
   return (
     <>
       <div className="flex">
@@ -178,7 +173,7 @@ export default function ListAdminOrders() {
         </div>
         <div className="w-1/2"></div>
       </div>
-      <TabContext value={value}>
+      {/* <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             {status.map((tus) => (
@@ -186,7 +181,7 @@ export default function ListAdminOrders() {
             ))}
           </TabList>
         </Box>
-      </TabContext>
+      </TabContext> */}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: "555px" }}>
           <Table stickyHeader aria-label="sticky table">
@@ -240,7 +235,9 @@ export default function ListAdminOrders() {
                           const value = user[column.id as keyof typeof user];
                           let displayValue: React.ReactNode;
 
-                          if (column.id === "created_at") {
+                          if (column.id === "name") {
+                            displayValue = user.user?.name || "N/A";
+                          } else if (column.id === "created_at") {
                             displayValue =
                               typeof value === "string"
                                 ? formatDate(value)

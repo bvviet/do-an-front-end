@@ -5,5 +5,6 @@ export interface ICheckOut {
 export interface CheckOut {
   success: boolean;
   message: string;
+  redirect_url: string;
   payment_url: string;
 }

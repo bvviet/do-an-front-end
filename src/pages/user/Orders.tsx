@@ -24,7 +24,7 @@ const Orders = () => {
         return "Chờ xác nhận";
       case "processing":
         return "Đã xác nhận";
-      case "shipped":
+      case "shipping":
         return "Đang vận chuyển";
       case "delivered":
         return "Đã giao hàng";

@@ -10,6 +10,19 @@ export interface OrderItem {
   deleted_at: string | null;
   created_at: string | null;
   updated_at: string | null;
+
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    avatar: string | null;
+    link_fb: string | null;
+    link_tt: string | null;
+    role: string;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export type OrderResponse = {

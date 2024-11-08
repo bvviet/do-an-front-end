@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
 
 interface ProductDetailInfoProps {
-  id: number;
+  id: string;
 }
 
 const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
@@ -48,7 +48,7 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
             </div>
             {/* Images */}
             <Carousel
-              imgs={productDetail?.product_variants}
+              imgs={productDetail?.productVariants}
               SetImage={setImage}
             />
           </div>
@@ -56,10 +56,10 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
           <div className="ml-auto w-full lg:w-[470px]">
             <div>
               <p className="leading-[171.429%] text-[#566363]">
-                {productDetail?.category.name}
+                {productDetail?.category?.name}
               </p>
               <div className="flex flex-col gap-[12px]">
-                <h3 className="text-[2.4rem] font-semibold font-manrope leading-[141.667%] text-[#131717]">
+                <h3 className="font-manrope text-[2.4rem] font-semibold leading-[141.667%] text-[#131717]">
                   {productDetail?.name}
                 </h3>
                 <div className="flex items-center gap-6">
@@ -69,27 +69,26 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
                       5.0 (37)
                     </span>
                   </div>
-                  <div className="border border-solid border-gray-400 h-[25px] w-[1px]"></div>
+                  <div className="h-[25px] w-[1px] border border-solid border-gray-400"></div>
                   <div className="flex items-center gap-6">
                     <span className="text-[1.6rem] leading-[166.667%] text-[#566363]">
-                      <span className="text-black  font-semibold"> 2.1k </span>
+                      <span className="font-semibold text-black"> 2.1k </span>
                       Đánh Giá
                     </span>
-                    <div className="border border-solid border-gray-400 h-[25px] w-[1px]"></div>
+                    <div className="h-[25px] w-[1px] border border-solid border-gray-400"></div>
                     <span className="text-[1.6rem] leading-[166.667%] text-[#566363]">
-                      <span className="text-black  font-semibold"> 11.1k </span>
+                      <span className="font-semibold text-black"> 11.1k </span>
                       Đã bán
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-[12px] p-4 bg-gray-200 rounded-lg mb-5">
+                <div className="mb-5 flex items-center gap-[12px] rounded-lg bg-gray-200 p-4">
                   <span className="text-[2.8rem] font-semibold leading-[166.667%] text-red-600">
                     {price_sale}
                   </span>
-                  <span className="text-[1.8rem]  line-through leading-[166.667%] text-[#929292]">
+                  <span className="text-[1.8rem] leading-[166.667%] text-[#929292] line-through">
                     {price_regular}
                   </span>
-
                 </div>
               </div>
               {/* Form */}

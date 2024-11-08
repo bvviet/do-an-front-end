@@ -5,25 +5,20 @@ import "tippy.js/dist/tippy.css";
 import searchIcon from "../../assets/icons/search.png";
 import loadingIcon from "../../assets/icons/search/loading.png";
 import close from "../../assets/icons/search/closed.png";
-
-interface ResultItem {
-  id: number;
-  name: string;
-}
+import { useSearchProductQuery } from "@/services/productApi";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [valueInput, setValueInput] = useState<string>("");
   const [isActive, setIsActive] = useState(false);
-  const [result, setResult] = useState<ResultItem[] | null>([]);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const tippyRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setResult([
-      { id: 1, name: "a" },
-      { id: 2, name: "b" },
-    ]);
-  }, []);
+  const { data: dataSearch, isLoading } = useSearchProductQuery(valueInput);
+  console.log({ dataSearch });
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -54,7 +49,6 @@ const Search = () => {
 
     updateTippyWidth(); // Initial call to set width
 
-    // Optional: Add a listener to handle resize if needed
     window.addEventListener("resize", updateTippyWidth);
 
     return () => {
@@ -62,7 +56,17 @@ const Search = () => {
     };
   }, [valueInput, isActive]);
 
-  console.log(searchRef.current?.value.length);
+  // Lắng nghe thay đổi URL và ẩn kết quả tìm kiếm khi URL thay đổi
+  useEffect(() => {
+    setIsActive(false);
+    setValueInput("");
+  }, [location]);
+
+  const handleSearchResultClick = () => {
+    navigate("/search-result", {
+      state: { results: dataSearch },
+    });
+  };
 
   return (
     <div className="relative">
@@ -79,13 +83,15 @@ const Search = () => {
             placeholder="Search for anything"
             className="w-[200px] rounded-l-lg border border-white p-[9px] sm:w-[300px] lg:w-[799px]"
           />
-          <div className="absolute right-[5%] top-1/2 h-[16px] w-[16px] -translate-y-1/2 transform">
-            <img
-              src={loadingIcon}
-              alt="Loading Icon"
-              className="h-full w-full animate-spin"
-            />
-          </div>
+          {isLoading && (
+            <div className="absolute right-[5%] top-1/2 h-[16px] w-[16px] -translate-y-1/2 transform">
+              <img
+                src={loadingIcon}
+                alt="Loading Icon"
+                className="h-full w-full animate-spin"
+              />
+            </div>
+          )}
 
           {(valueInput?.length || 0) > 0 && (
             <div
@@ -102,7 +108,7 @@ const Search = () => {
         </button>
       </form>
 
-      {(result?.length || 0) > 0 && isActive && valueInput && (
+      {(dataSearch?.length || 0) > 0 && isActive && valueInput ? (
         <Tippy
           visible={true}
           interactive={true}
@@ -120,45 +126,49 @@ const Search = () => {
                 </h2>
                 <div className="mb-[10px] flex items-center justify-between bg-[#235c60] px-5 py-[5px] text-[1.5rem] font-semibold lg:px-9">
                   <p>Sản phẩm</p>
-                  <a href="#!">Xem tất cả 318 sản phẩm</a>
+                  <a
+                    onClick={handleSearchResultClick}
+                    className="hover:text-[#ccc] cursor-pointer"
+                  >
+                    Xem tất cả {dataSearch?.length} sản phẩm
+                  </a>
                 </div>
-                <div className="flex flex-col gap-6 p-5 lg:p-9">
+                <div
+                  className="flex flex-col gap-6 p-5 lg:p-9"
+                  style={{
+                    maxHeight: "60vh",
+                    overflowY: "auto",
+                  }}
+                >
                   {/* Item */}
-                  <div className="flex gap-[15px]">
-                    <div className="h-[90px] w-[90px]">
-                      <a href="#!">
-                        <img
-                          className="h-full w-full object-contain"
-                          src="https://product.hstatic.net/1000253775/product/160_ao_ba_lo_030-11_f34a2b89f1df47bbb748d92efe5e6e9a_compact.jpg"
-                          alt=""
-                        />
-                      </a>
+                  {dataSearch?.map((search) => (
+                    <div className="flex gap-[15px]" key={search.id}>
+                      <div>
+                        <Link
+                          to={`/detail/${search.slug}`}
+                          className="relative block h-[90px] w-[90px]"
+                        >
+                          <img
+                            className="h-full w-full transform rounded-md object-contain transition-transform duration-300 hover:scale-110"
+                            src={search.img_thumbnail}
+                            alt={search.name}
+                          />
+                        </Link>
+                      </div>
+
+                      <div>
+                        <Link
+                          to={`/detail/${search.slug}`}
+                          className="hover:opacity-50"
+                        >
+                          {search.name}
+                        </Link>
+                        <p className="mt-2 text-[#ee4a4a]">
+                          {formatCurrency(search.price_regular)}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <a href="#!" className="hover:opacity-50">
-                        Áo Tanktop ICONDENIM Sleeveless
-                      </a>
-                      <p className="mt-2 text-[#ee4a4a]">190,000₫</p>
-                    </div>
-                  </div>
-                  {/* Item */}
-                  <div className="flex gap-[15px]">
-                    <div className="h-[90px] w-[90px]">
-                      <a href="#!">
-                        <img
-                          className="h-full w-full object-contain"
-                          src="https://product.hstatic.net/1000253775/product/160_ao_ba_lo_030-11_f34a2b89f1df47bbb748d92efe5e6e9a_compact.jpg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div>
-                      <a href="#!" className="hover:opacity-50">
-                        Áo Tanktop ICONDENIM Sleeveless
-                      </a>
-                      <p className="mt-2 text-[#ee4a4a]">190,000₫</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -166,7 +176,11 @@ const Search = () => {
         >
           <div className="" />
         </Tippy>
-      )}
+      ) : isActive && valueInput ? (
+        <div className="mt-4 text-center text-white">
+          Không có kết quả tìm kiếm nào
+        </div>
+      ) : null}
     </div>
   );
 };
