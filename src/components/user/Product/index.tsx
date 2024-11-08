@@ -47,7 +47,7 @@ const ProductItem: FC<ProductItemProps> = ({
 
       {/* Product Image */}
       <div className="relative">
-        <Link to={`/detail/${product?.id}`} className="">
+        <Link to={`/detail/${product?.slug}`} className="">
           <img
             src={product?.img_thumbnail}
             alt=""

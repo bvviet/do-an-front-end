@@ -82,7 +82,7 @@ export interface ProductDetailType {
   brand: BrandType;
   tags: TagsType[];
   product_images: [];
-  product_variants: ProductVariants[];
+  productVariants: ProductVariants[];
 }
 
 export interface AddProduct {

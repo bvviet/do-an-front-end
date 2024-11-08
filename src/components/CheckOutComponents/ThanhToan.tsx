@@ -53,6 +53,16 @@ const ThanhToan: React.FC = () => {
   };
 
   useEffect(() => {
+    // Kiểm tra nếu URL hiện tại chứa chuỗi "http://localhost:5173/payment/success"
+    if (
+      window.location.href.includes("http://localhost:5173/payment/success")
+    ) {
+      // Điều hướng đến trang "thank you"
+      navigate("/thanks"); // Chỉ dùng đường dẫn tương đối
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     if (carts && Array.isArray(carts)) {
       // Chỉ cập nhật giỏ hàng nếu carts có dữ liệu hợp lệ
       disPatch(setCart(carts));
@@ -63,7 +73,7 @@ const ThanhToan: React.FC = () => {
     <div className="mt-6">
       <div className="mb-6 border-b border-solid border-[#C4D1D0]"></div>
       <div className="mt-6">
-        <label className="flex items-center gap-5 mx-6 max-lg:mx-0 max-lg:text-[14px]">
+        <label className="mx-6 flex items-center gap-5 max-lg:mx-0 max-lg:text-[14px]">
           <input
             type="radio"
             value="1"
@@ -83,7 +93,7 @@ const ThanhToan: React.FC = () => {
 
       <div className="mb-6 border-b border-solid border-[#C4D1D0]"></div>
       <div className="my-6">
-        <label className="flex gap-5 mx-6 max-lg:mx-0 max-lg:text-[14px]">
+        <label className="mx-6 flex gap-5 max-lg:mx-0 max-lg:text-[14px]">
           <input
             type="radio"
             value="0"
@@ -105,14 +115,14 @@ const ThanhToan: React.FC = () => {
       <div className="col-span-12 mt-[10px] lg:w-auto">
         <label
           htmlFor="note"
-          className="text-[1.8rem] max-lg:text-[14px] lg:text-[1.8rem] font-medium"
+          className="text-[1.8rem] font-medium max-lg:text-[14px] lg:text-[1.8rem]"
         >
           Ghi chú
         </label>
         <div>
           <textarea
             id="note"
-            className="flex items-center px-[12px] max-lg:text-[14px] border border-solid border-[#d2d1d6] w-full rounded-xl mt-3 bg-white"
+            className="mt-3 flex w-full items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px] max-lg:text-[14px]"
             placeholder="Nói cho tôi điều bạn muốn"
             rows={3}
             value={note}
@@ -123,14 +133,14 @@ const ThanhToan: React.FC = () => {
       <div className="mt-6 flex justify-between">
         <Link
           to={"#"}
-          className="hover:text-black text-[#566363] text-[16px] max-lg:text-[14px] flex items-center gap-2"
+          className="flex items-center gap-2 text-[16px] text-[#566363] hover:text-black max-lg:text-[14px]"
         >
           <i className="fa-solid fa-chevron-left"></i>
           <p>Quay lại giỏ hàng</p>
         </Link>
         <button
           onClick={handleCheckout}
-          className="text-black text-[18px] max-lg:text-[14px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 rounded-xl bg-[#FFD44D] px-12 py-4 font-manrope text-[18px] leading-[166.667%] text-black max-lg:text-[14px]"
           disabled={isLoading}
         >
           {isLoading ? (

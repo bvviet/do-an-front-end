@@ -3,7 +3,6 @@ import CheckIcon from "@mui/icons-material/Check";
 import ButtonComponent from "../../ButtonComponent";
 import { ProductDetailType } from "@/types/product";
 import { useAddCartMutation } from "@/services/productApi";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
@@ -23,15 +22,14 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
   const [color, setColor] = useState<string>("");
   const [size, setSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-  const { id } = useParams();
-  const productId = Number(id);
+
   const disPatch = useDispatch();
 
   const { data: carts, refetch } = useGetCartQuery();
   const [addCart, { isLoading }] = useAddCartMutation();
 
   const uniqueVariants: uniqueVariantsProps = [];
-  productDetail?.product_variants.forEach((product) => {
+  productDetail?.productVariants?.forEach((product) => {
     const colorName = product.product_color.name;
     const sizeName = product.product_size.name;
     if (
@@ -53,7 +51,7 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
         color,
         size,
         quantity,
-        product_id: productId,
+        product_id: productDetail?.id ?? 0,
       });
       console.log({ res });
 

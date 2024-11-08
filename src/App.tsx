@@ -22,7 +22,7 @@ import Verify from "@/pages/SignIn-Login/Verify";
 import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
-import Statistical from '@/pages/admin/Statistical'
+import Statistical from "@/pages/admin/Statistical";
 
 //import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
@@ -42,6 +42,7 @@ import Orders from "./pages/user/Orders";
 import OrderDetail from "./pages/user/OrderDetail";
 import Thanks from "./pages/user/Thanks";
 import Shipper from "./pages/admin/Shipper";
+import ResultSearch from "./pages/user/ResultSearch";
 import BrandTabs from "./components/admin/TabBrand";
 import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
 
@@ -51,7 +52,7 @@ function App() {
       element: <UserLayout />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/detail/:id", element: <ProductDetail /> },
+        { path: "/detail/:slug", element: <ProductDetail /> },
         { path: "/account", element: <Account /> },
         { path: "/contacts", element: <ContactUser /> },
         { path: "/blog", element: <Blog /> },
@@ -66,7 +67,7 @@ function App() {
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
         { path: "/Cart", element: <CartPage /> },
-        { path: "/thanks", element: < Thanks /> },
+        { path: "/payment/success", element: <Thanks /> },
         {
           path: "/categories/products/:categoriesChildId",
           element: <CategoryProducts />,
@@ -79,10 +80,7 @@ function App() {
           path: "/order/detail/:orderId",
           element: <OrderDetail />,
         },
-        // {
-        //   path: "/order/detail/:orderId",
-        //   element: <OrderDetail />,
-        // },
+        { path: "/search-result", element: <ResultSearch /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,

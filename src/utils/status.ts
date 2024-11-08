@@ -12,7 +12,7 @@ const status = [
     label: "Đã xác nhận",
   },
   {
-    id: "shipped",
+    id: "shipping",
     label: "Đang vận chuyển",
   },
   {

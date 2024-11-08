@@ -81,7 +81,7 @@ const OrderDetail = () => {
         return "Chờ xác nhận";
       case "processing":
         return "Đã xác nhận";
-      case "shipped":
+      case "shipping":
         return "Đang vận chuyển";
       case "delivered":
         return "Đã giao hàng";
@@ -103,7 +103,7 @@ const OrderDetail = () => {
         return "bg-yellow-500";
       case "processing":
         return "bg-[#88C273]";
-      case "shipped":
+      case "shipping":
         return "bg-purple-500";
       case "delivered":
         return "bg-[#48673c]";
@@ -288,7 +288,7 @@ const OrderDetail = () => {
                   disabled={
                     orderDetail?.order_status === "cancelled" ||
                     orderDetail?.order_status === "delivered" ||
-                    orderDetail?.order_status === "shipped" ||
+                    orderDetail?.order_status === "shipping" ||
                     orderDetail?.order_status === "completed" ||
                     orderDetail?.order_status === "received"
                   }
