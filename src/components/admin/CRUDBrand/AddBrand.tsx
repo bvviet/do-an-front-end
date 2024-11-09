@@ -16,11 +16,11 @@ export default function AddBrand() {
         formData.append("name", data.name);
         formData.append("description", data.description);
 
-        if (data.image && (data.image instanceof FileList && data.image.length > 0)) {
-            formData.append("image", data.image[0]); // Thêm ảnh đầu tiên từ FileList
-        } else if (data.image instanceof File) {
-            formData.append("image", data.image); // Thêm ảnh trực tiếp nếu là File
-        }
+        // if (data.image && (data.image instanceof FileList && data.image.length > 0)) {
+        //     formData.append("image", data.image[0]); // Thêm ảnh đầu tiên từ FileList
+        // } else if (data.image instanceof File) {
+        //     formData.append("image", data.image); // Thêm ảnh trực tiếp nếu là File
+        // }
 
         try {
             // Thêm brand mới
@@ -69,7 +69,7 @@ export default function AddBrand() {
                         />
 
                     </div>
-                    <div className="">
+                    {/* <div className="">
                         <label htmlFor="image" className="font-bold leading-[150%] text-[2rem] text-black">
                             Ảnh
                         </label>
@@ -80,7 +80,7 @@ export default function AddBrand() {
                             {...register("image")}
                             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-[14px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                         />
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center justify-end">
                         <button
