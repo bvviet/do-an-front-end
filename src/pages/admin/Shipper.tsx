@@ -45,7 +45,8 @@ const Shipper: React.FC = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const [confirmDelivery] = useConfirmDeliveryMutation();
+  const [confirmDelivery, { isLoading: isLoadingConfirm }] =
+    useConfirmDeliveryMutation();
 
   const handleOpenConfirmDialog = (orderId: number) => {
     setSelectedOrder(orderId);
@@ -68,6 +69,7 @@ const Shipper: React.FC = () => {
     if (selectedOrder) {
       try {
         await confirmDelivery({ orderId: selectedOrder }).unwrap();
+        refetch();
         toast.success("Đơn hàng đã được xác nhận đã giao hàng.");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
@@ -85,6 +87,7 @@ const Shipper: React.FC = () => {
         note: cancelReason,
       }).unwrap();
       toast.success(res.message);
+      refetch();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast.error("Trạng thái đơn hàng hiện tại không cho phép cập nhật.");
@@ -93,8 +96,8 @@ const Shipper: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(setLoading(isLoading || isLoadingCanCell));
-  }, [isLoading, isLoadingCanCell, refetch, dispatch]);
+    dispatch(setLoading(isLoading || isLoadingCanCell || isLoadingConfirm));
+  }, [isLoading, isLoadingCanCell, isLoadingConfirm, refetch, dispatch]);
 
   // Kiểm tra xem API có trả về thông điệp "Không có đơn hàng nào cần giao" hay không
   const isNoOrdersMessage =

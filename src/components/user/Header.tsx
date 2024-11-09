@@ -35,7 +35,9 @@ const Header = () => {
     setAnchorEl(null);
   }, [userInfor]);
 
-  const cartItems = useSelector((state: RootState) => state.carts.cart_items || []);
+  const cartItems = useSelector(
+    (state: RootState) => state.carts.cart_items || [],
+  );
 
   const renderMenu = (
     <Menu
@@ -151,7 +153,7 @@ const Header = () => {
                 <IconButton>
                   <Avatar
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src=""
                     fontSize="large"
                     onClick={handleUserProfileClick}
                     component="svg"

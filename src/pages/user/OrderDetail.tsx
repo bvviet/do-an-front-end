@@ -264,7 +264,7 @@ const OrderDetail = () => {
               </span>
             </div>
             <div className="mt-6 flex justify-end gap-6">
-              <Button variant="outlined">Thanh toán khi nhận hàng</Button>
+              {/* <Button variant="outlined">Thanh toán khi nhận hàng</Button> */}
               {orderDetail?.order_status === "delivered" ? (
                 <Button
                   variant="contained"
