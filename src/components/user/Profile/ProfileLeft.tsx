@@ -23,9 +23,8 @@ const ProfileLeft = () => {
     dispatch(setLoading(isLoading));
   }, [isLoading, dispatch]);
 
-  const urlImage = data?.avatar
-    ? `http://127.0.0.1:8000/storage/${data.avatar}`
-    : "default-avatar-path.jpg";
+  const urlImage =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH87TKQrWcl19xly2VNs0CjBzy8eaKNM-ZpA&s";
   return (
     <aside>
       {/* User */}
@@ -43,11 +42,6 @@ const ProfileLeft = () => {
           <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%]">
             Manage Account
           </h3>
-          <img
-            src={`http://127.0.0.1:8000/storage/${data?.avatar}`}
-            alt="User Avatar"
-          />
-
           <ul>
             <li className="transition-bg flex items-center gap-[10px] py-[5px] leading-[146.667%] duration-500 ease-in-out hover:opacity-55">
               <img src={profile} alt="" />
