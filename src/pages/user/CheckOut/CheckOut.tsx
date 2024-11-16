@@ -3,7 +3,7 @@ import CheckOutComponent from "@/components/CheckOutComponents/CheckOutComponent
 export default function CheckOut() {
   return (
     <>
-      <div className="container my-24">
+      <div className="container mb-24">
         <CheckOutComponent />
       </div>
     </>

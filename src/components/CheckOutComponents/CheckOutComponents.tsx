@@ -1,6 +1,7 @@
 import FormBill from "./FormBill";
 import ItemOrder from "./ItemOrder";
-import Order from "./Order";
+import ThanhToan from "./ThanhToan";
+// import Order from "./Order";
 
 export default function CheckOutComponent() {
   return (
@@ -12,7 +13,7 @@ export default function CheckOutComponent() {
           </div>
           <FormBill />
         </div>
-        <Order />
+        <ThanhToan />
       </div>
     </>
   );

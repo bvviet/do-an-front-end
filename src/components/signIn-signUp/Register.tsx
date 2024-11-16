@@ -69,7 +69,7 @@ export default function Register() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1 container">
+      <div className="grid grid-cols-2 my-12 gap-8 max-sm:grid-cols-1 container">
         <div className="max-sm:hidden max-lg:flex max-lg:items-center">
           <img src="../src/images/Rectangle 20.png" alt="" />
         </div>

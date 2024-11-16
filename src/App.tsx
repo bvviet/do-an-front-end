@@ -68,6 +68,7 @@ function App() {
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
         { path: "/Cart", element: <CartPage /> },
+        { path: "/thanks", element: <Thanks /> },
         { path: "/payment/success", element: <Thanks /> },
         {
           path: "/categories/products/:categoriesChildId",
