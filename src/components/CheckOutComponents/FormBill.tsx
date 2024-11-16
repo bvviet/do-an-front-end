@@ -13,6 +13,7 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { useUserInfor } from '@/hooks/useUserInfor';
 import Confirm from '../Confirm';
+import { useNavigate } from 'react-router-dom';
 const FormBill = () => {
 
   const userInfor = useUserInfor();
@@ -71,7 +72,27 @@ const FormBill = () => {
     dispatch,
     user,
   ]);
-
+  const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  useEffect(() => {
+    if (
+      !userInfoDefault?.detail_address ||
+      !userInfoDefault?.ward ||
+      !userInfoDefault?.district ||
+      !userInfoDefault?.city
+    ) {
+      setShowAlert(true);// Đường dẫn đến trang nhập thông tin
+    }
+  }, [
+    userInfoDefault?.detail_address,
+    userInfoDefault?.ward,
+    userInfoDefault?.district,
+    userInfoDefault?.city,
+  ]);
+  const handleConfirm = () => {
+    setShowAlert(false); // Đóng modal
+    navigate("/profile/addresses/add");
+  };
 
   const handleSetAddressDefault = async (id: number) => {
     try {
@@ -173,6 +194,22 @@ const FormBill = () => {
               </div>
             ))}
 
+          </div>
+        </div>
+      )}
+      {showAlert && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg  w-[320px] text-center">
+            <h2 className="text-[18px] font-bold mb-4">Thông báo</h2>
+            <p className="text-[16px] mb-4">
+              Bạn cần nhập đầy đủ thông tin trước khi tiếp tục thanh toán!
+            </p>
+            <button
+              onClick={handleConfirm}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+            >
+              Đồng ý
+            </button>
           </div>
         </div>
       )}

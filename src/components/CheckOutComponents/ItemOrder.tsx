@@ -12,7 +12,7 @@ export default function ItemOrder() {
 
   return (
     <>
-      <div className="bg-white mt-6 p-6 rounded-md">
+      <div className="bg-white mt-4 p-6 rounded-md">
 
         <h3 className="text-[2rem] lg:text-[2.8rem] font-medium leading-[145.455%]">
           Đơn hàng ({carts?.cart_items?.length} sản phẩm)
@@ -58,7 +58,7 @@ export default function ItemOrder() {
                   </div>
                 </div>
               </div>
-              <div className="border-b border-[#C4D1D0] mb-6  border-solid"></div>
+              <div className="border-b border-[#C4D1D0]   border-solid"></div>
             </div>
           ))}
         </div>

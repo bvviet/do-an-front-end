@@ -2,7 +2,7 @@ import Cart from "@/components/user/Cart";
 
 const CartPage = () => {
   return (
-    <div>
+    <div className="mt-12">
       <Cart />
     </div>
   );
