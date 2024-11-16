@@ -45,6 +45,7 @@ import Shipper from "./pages/admin/Shipper";
 import ResultSearch from "./pages/user/ResultSearch";
 import BrandTabs from "./components/admin/TabBrand";
 import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
+import Filter from "./pages/user/Filter";
 
 function App() {
   const router = createBrowserRouter([
@@ -81,6 +82,7 @@ function App() {
           element: <OrderDetail />,
         },
         { path: "/search-result", element: <ResultSearch /> },
+        { path: "/filter", element: <Filter /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,

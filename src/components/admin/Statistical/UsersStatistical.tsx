@@ -4,7 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 
 interface UserSpending {
   name: string;
-  amount: number;
+  total_spent: string;
 }
 
 interface BarChartProps {
@@ -23,7 +23,9 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       },
     },
     xAxis: {
-      categories: data.map((user) => user.name),
+      categories: data
+        .map((user) => user?.name?.split(" ").pop())
+        .filter((name) => name !== undefined),
       title: {
         text: "Khách hàng",
         style: {
@@ -52,7 +54,7 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       },
     },
     tooltip: {
-      valuePrefix: "$",
+      valuePrefix: "đ",
       style: {
         fontSize: "14px",
       },
@@ -71,7 +73,7 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       {
         name: "Tổng số tiền",
         type: "bar",
-        data: data.map((user) => user.amount),
+        data: data.map((user) => parseFloat(user?.total_spent)),
       },
     ],
   };
