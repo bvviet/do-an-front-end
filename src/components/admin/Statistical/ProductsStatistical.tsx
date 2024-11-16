@@ -4,7 +4,8 @@ import HighchartsReact from "highcharts-react-official";
 
 interface UserSpending {
   name: string;
-  amount: number;
+  total_quantity: string;
+  total_revenue: string;
 }
 
 interface BarChartProps {
@@ -71,7 +72,7 @@ const ProductsStatistical: React.FC<BarChartProps> = ({ data }) => {
       {
         name: "Tổng số lượng",
         type: "bar",
-        data: data.map((user) => user.amount),
+        data: data.map((user) => Number(user.total_quantity)),
       },
     ],
   };

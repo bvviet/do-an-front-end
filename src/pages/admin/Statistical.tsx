@@ -10,51 +10,12 @@ import TabList from "@mui/lab/TabList";
 import { Tab } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import RevenueStatistical from "@/components/admin/Statistical/RevenueStatistical";
+import {
+  useGetStatisticalOrdersQuery,
+  useGetStatisticalProductsQuery,
+  useGetStatisticalUsersQuery,
+} from "@/services/productApi";
 
-const orders = [
-  {
-    id: 1,
-    customerName: "Quần bò rách",
-    orderDate: "2024-10-30T14:00:00Z",
-    value: 150000,
-  },
-  {
-    id: 2,
-    customerName: "Áo gucci",
-    orderDate: "2024-10-29T09:30:00Z",
-    value: 200000,
-  },
-  {
-    id: 3,
-    customerName: "Quần jean nam streetwear",
-    orderDate: "2024-10-31T12:15:00Z",
-    value: 100000,
-  },
-  {
-    id: 4,
-    customerName: "Áo Phông Nam Nữ Dio",
-    orderDate: "2024-10-28T16:45:00Z",
-    value: 250000,
-  },
-  {
-    id: 5,
-    customerName: "Áo sơ mi nam tay dài JBAGY Pastel",
-    orderDate: "2024-10-27T11:00:00Z",
-    value: 300000,
-  },
-];
-
-const userData = [
-  { name: "Khách hàng 1", amount: 1200 },
-  { name: "Khách hàng 2", amount: 950 },
-  { name: "Khách hàng 3", amount: 770 },
-];
-
-const productData = [
-  { name: "Áo Phông Nam Nữ Dio", amount: 1200 },
-  { name: "Áo sơ mi nam tay dài JBAGY Pastel", amount: 950 },
-  { name: "Áo gucci", amount: 770 },
-];
 
 const revenueData = [
   { month: "Tháng 1", total: 1500000 },
@@ -69,11 +30,9 @@ const Statistical: React.FC = () => {
 
   // Format start_date và end_date
   const start_date = dateRange[0]
-    ? dayjs(dateRange[0]).format("YYYY-MM-DD HH:mm:ss")
+    ? dayjs(dateRange[0]).format("DD-MM-YYYY")
     : "";
-  const end_date = dateRange[1]
-    ? dayjs(dateRange[1]).format("YYYY-MM-DD HH:mm:ss")
-    : "";
+  const end_date = dateRange[1] ? dayjs(dateRange[1]).format("DD-MM-YYYY") : "";
 
   const handleDateFilter = (range: DateRange<Dayjs>) => {
     setDateRange(range);
@@ -86,6 +45,31 @@ const Statistical: React.FC = () => {
     setValue(newValue);
   };
 
+  // Tính ngày mặc định là tháng trước
+  const defaultStartDate = dayjs()
+    .subtract(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  const defaultEndDate = dayjs().format("YYYY-MM-DD");
+
+  // Nếu không có start_date hoặc end_date từ người dùng, sử dụng giá trị mặc định
+  const { data: userData } = useGetStatisticalUsersQuery({
+    start_date: start_date || defaultStartDate,
+    end_date: end_date || defaultEndDate,
+  });
+
+  const { data: productsData } = useGetStatisticalProductsQuery({
+    start_date: start_date || defaultStartDate,
+    end_date: end_date || defaultEndDate,
+  });
+
+  const { data: ordersData } = useGetStatisticalOrdersQuery({
+    start_date: start_date || defaultStartDate,
+    end_date: end_date || defaultEndDate,
+  });
+
+  console.log({ ordersData });
+
   return (
     <div>
       <DateFilter onFilter={handleDateFilter} />
@@ -97,9 +81,15 @@ const Statistical: React.FC = () => {
           <Tab label="5 đơn hàng mới nhất" value="orders" />
         </TabList>
         {value === "total" && <RevenueStatistical revenueData={revenueData} />}
-        {value === "users" && <UsersStatistical data={userData} />}
-        {value === "orders" && <OrdersStatistical orders={orders} topN={5} />}
-        {value === "products" && <ProductsStatistical data={productData} />}
+        {value === "users" && (
+          <UsersStatistical data={userData?.top_customers || []} />
+        )}
+
+        {value === "orders" && <OrdersStatistical orders={ordersData || []} />}
+
+        {value === "products" && (
+          <ProductsStatistical data={productsData || []} />
+        )}
       </TabContext>
       <p>
         Thống kê từ ngày: {start_date} đến {end_date}
