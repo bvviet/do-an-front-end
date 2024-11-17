@@ -199,7 +199,7 @@ export const productApi = createApi({
       void
     >({
       query: () => ({
-        url: "/admin/orders/delivery",
+        url: "/admin/orders/ready-to-deliver/?status=shipping",
       }),
       providesTags: [{ type: "orderShipping" }],
     }),
@@ -387,5 +387,5 @@ export const {
   useGetStatisticalUsersQuery,
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
-  useFilterProductsQuery
+  useFilterProductsQuery,
 } = productApi;

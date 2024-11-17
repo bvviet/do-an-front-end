@@ -17,7 +17,7 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       type: "bar",
     },
     title: {
-      text: "Top 3 khác hàng mua hàng nhiều nhất",
+      text: "Top 3 khách hàng mua hàng nhiều nhất",
       style: {
         fontSize: "24px",
       },
@@ -41,7 +41,7 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
     yAxis: {
       min: 0,
       title: {
-        text: "Số tiền (vnđ)",
+        text: "Số tiền (VNĐ)",
         align: "high",
         style: {
           fontSize: "18px",
@@ -51,10 +51,15 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
         style: {
           fontSize: "14px",
         },
+        formatter: function () {
+          return `${this.value?.toLocaleString("vi-VN")} đ`;
+        },
       },
     },
     tooltip: {
-      valuePrefix: "đ",
+      formatter: function () {
+        return `<b>${this.x}</b>: ${this.y?.toLocaleString("vi-VN")} đ`;
+      },
       style: {
         fontSize: "14px",
       },
@@ -63,6 +68,9 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       bar: {
         dataLabels: {
           enabled: true,
+          formatter: function () {
+            return `${this.y?.toLocaleString("vi-VN")} đ`;
+          },
           style: {
             fontSize: "14px",
           },
