@@ -77,7 +77,7 @@ const Statistical: React.FC = () => {
         <TabList onChange={handleChange} aria-label="lab API tabs example">
           <Tab label="Tổng doanh thu" value="total" />
           <Tab label="3 khách hàng mua nhiều nhất" value="users" />
-          <Tab label="3 sản phẩm bán chạy nhất" value="products" />
+          <Tab label="5 sản phẩm bán chạy nhất" value="products" />
           <Tab label="5 đơn hàng mới nhất" value="orders" />
         </TabList>
         {value === "total" && <RevenueStatistical revenueData={revenueData} />}

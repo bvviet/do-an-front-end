@@ -18,7 +18,7 @@ const ProductsStatistical: React.FC<BarChartProps> = ({ data }) => {
       type: "bar",
     },
     title: {
-      text: "Top 3 sản phẩm bán chạy nhất",
+      text: "Top 5 sản phẩm bán chạy nhất",
       style: {
         fontSize: "24px",
       },

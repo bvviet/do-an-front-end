@@ -34,7 +34,9 @@ const OrdersStatistical: React.FC<OrdersStatisticalProps> = ({ orders }) => {
   console.log({ orders });
 
   const chartData = {
-    labels: orders.map((order) => `${order.order_code} - (${order.created_at})`),
+    labels: orders.map(
+      (order) => `${order.order_code} - (${order.created_at})`,
+    ),
     datasets: [
       {
         label: "Giá trị đơn hàng (vnđ)",
@@ -45,7 +47,7 @@ const OrdersStatistical: React.FC<OrdersStatisticalProps> = ({ orders }) => {
             .join("");
           return parseFloat(amountWithoutDot);
         }),
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
+        backgroundColor: "rgb(90, 173, 224)",
       },
     ],
   };
