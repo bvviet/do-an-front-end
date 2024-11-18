@@ -28,6 +28,7 @@ import { AddIBrand, BrandType, GetAllBrandsResponse, GetDetailBrandsResponse } f
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
 import { SearchProductResponse } from "@/types/search";
+import { AddVoucherBase, IVoucher } from "@/types/voucher";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -293,6 +294,29 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: "Brand" }],
     }),
+    addVoucher: builder.mutation<AddVoucherBase, string>({
+      query: (voucherJson) => ({
+        url: `/admin/voucher`,
+        method: "POST",
+        body: JSON.parse(voucherJson),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deleteVoucher: builder.mutation<IVoucher, number>({
+      query: (id) => ({
+        url: `admin/voucher/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateVoucher: builder.mutation<void, { id: number; data: Partial<AddVoucherBase> }>({
+      query: ({ id, data }) => ({
+        url: `/admin/voucher/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -323,5 +347,8 @@ export const {
   useAddBrandMutation,
   useDeleteBrandMutation,
   useGetDetailBrandQuery,
-  useUpdateBrandMutation
+  useUpdateBrandMutation,
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useUpdateVoucherMutation
 } = productApi;

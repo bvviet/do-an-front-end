@@ -191,6 +191,7 @@ const ThanhToan: React.FC = () => {
                           className={`block border rounded-lg p-4 cursor-pointer mb-6  gap-4 bg-red-100 ${selectedVoucher === voucher ? "border-red-500" : "border-gray-300"
                             }`}
                         >
+                          <span>{voucher.name} {voucher.code}</span>
                           <div className="flex items-center justify-between ">
                             <p className="text-[18px] font-semibold">Giảm {voucher.discount_value}%</p>
                             <input
