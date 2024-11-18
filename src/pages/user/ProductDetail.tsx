@@ -6,7 +6,7 @@ const ProductDetail = () => {
   const slugProduct = String(slug);
 
   return (
-    <div className="container mb-[150px]">
+    <div className="container mb-[150px] mt-[70px]">
       <ProductDetailInfo id={slugProduct} />
     </div>
   );

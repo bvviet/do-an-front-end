@@ -18,7 +18,6 @@ const Search = () => {
   const navigate = useNavigate();
 
   const { data: dataSearch, isLoading } = useSearchProductQuery(valueInput);
-  console.log({ dataSearch });
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -47,7 +46,7 @@ const Search = () => {
       }
     };
 
-    updateTippyWidth(); // Initial call to set width
+    updateTippyWidth();
 
     window.addEventListener("resize", updateTippyWidth);
 
@@ -128,7 +127,7 @@ const Search = () => {
                   <p>Sản phẩm</p>
                   <a
                     onClick={handleSearchResultClick}
-                    className="hover:text-[#ccc] cursor-pointer"
+                    className="cursor-pointer hover:text-[#ccc]"
                   >
                     Xem tất cả {dataSearch?.length} sản phẩm
                   </a>

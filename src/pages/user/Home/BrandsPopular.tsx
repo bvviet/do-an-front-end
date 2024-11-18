@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BaseSection from "./BaseSection";
 import CategoriesItem from "./Category/CategoriesItem";
 
@@ -9,39 +8,15 @@ import louis from "../../../assets/icons/louis.png";
 // import LousisVuitton from "../../../assets/icons/LousisVuitton.png";
 
 const BrandsPopular = () => {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
-  const handleCategoryClick = (category: string) => {
-    setActiveCategory((prevCategory) =>
-      prevCategory === category ? null : category,
-    );
-  };
   return (
-    <BaseSection title="Explore from popular brands" typeProduct={false}>
-      <CategoriesItem
-        title="Nike Brand"
-        urlImage={nike}
-        isActive={activeCategory === "nike"}
-        onClick={() => handleCategoryClick("nike")}
-      />
-      <CategoriesItem
-        title="Adidas Brand"
-        urlImage={adidas}
-        isActive={activeCategory === "nike"}
-        onClick={() => handleCategoryClick("nike")}
-      />
-      <CategoriesItem
-        title="Puma Brand"
-        urlImage={puma}
-        isActive={activeCategory === "nike"}
-        onClick={() => handleCategoryClick("nike")}
-      />
-      <CategoriesItem
-        title="Louis Vuitton Brand"
-        urlImage={louis}
-        isActive={activeCategory === "nike"}
-        onClick={() => handleCategoryClick("nike")}
-      />
+    <BaseSection
+      title="Khám phá các thương hiệu nổi tiếng."
+      typeProduct={false}
+    >
+      <CategoriesItem title="Nike Brand" urlImage={nike} />
+      <CategoriesItem title="Adidas Brand" urlImage={adidas} />
+      <CategoriesItem title="Puma Brand" urlImage={puma} />
+      <CategoriesItem title="Louis Vuitton Brand" urlImage={louis} />
     </BaseSection>
   );
 };

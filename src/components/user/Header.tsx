@@ -19,6 +19,8 @@ const Header = () => {
     null,
   );
   const { openOverlay } = useOverlayContext();
+  console.log({ openOverlay });
+
   const { logOut } = useLogout();
   const userInfor = useUserInfor();
 

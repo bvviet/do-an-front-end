@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateFilter from "@/components/admin/Statistical/DateFilter";
 import UsersStatistical from "@/components/admin/Statistical/UsersStatistical";
 import { DateRange } from "@mui/x-date-pickers-pro/models";
@@ -13,9 +13,11 @@ import RevenueStatistical from "@/components/admin/Statistical/RevenueStatistica
 import {
   useGetStatisticalOrdersQuery,
   useGetStatisticalProductsQuery,
+  useGetStatisticalTimeQuery,
   useGetStatisticalUsersQuery,
 } from "@/services/productApi";
-
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const revenueData = [
   { month: "Tháng 1", total: 1500000 },
@@ -27,7 +29,7 @@ const revenueData = [
 
 const Statistical: React.FC = () => {
   const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([null, null]);
-
+  const dispatch = useDispatch();
   // Format start_date và end_date
   const start_date = dateRange[0]
     ? dayjs(dateRange[0]).format("DD-MM-YYYY")
@@ -53,22 +55,59 @@ const Statistical: React.FC = () => {
   const defaultEndDate = dayjs().format("YYYY-MM-DD");
 
   // Nếu không có start_date hoặc end_date từ người dùng, sử dụng giá trị mặc định
-  const { data: userData } = useGetStatisticalUsersQuery({
-    start_date: start_date || defaultStartDate,
-    end_date: end_date || defaultEndDate,
-  });
+  const { data: timeData, isLoading: isLoadingTime } =
+    useGetStatisticalTimeQuery({
+      start_date: start_date || defaultStartDate,
+      end_date: end_date || defaultEndDate,
+    });
+  console.log({ timeData });
 
-  const { data: productsData } = useGetStatisticalProductsQuery({
-    start_date: start_date || defaultStartDate,
-    end_date: end_date || defaultEndDate,
-  });
+  const { data: userData, isLoading: isLoadingUsers } =
+    useGetStatisticalUsersQuery({
+      start_date: start_date || defaultStartDate,
+      end_date: end_date || defaultEndDate,
+    });
 
-  const { data: ordersData } = useGetStatisticalOrdersQuery({
-    start_date: start_date || defaultStartDate,
-    end_date: end_date || defaultEndDate,
-  });
+  const { data: productsData, isLoading: isLoadingProducts } =
+    useGetStatisticalProductsQuery({
+      start_date: start_date || defaultStartDate,
+      end_date: end_date || defaultEndDate,
+    });
 
-  console.log({ ordersData });
+  const { data: ordersData, isLoading: isLoadingOrders } =
+    useGetStatisticalOrdersQuery({
+      start_date: start_date || defaultStartDate,
+      end_date: end_date || defaultEndDate,
+    });
+  useEffect(() => {
+    if (
+      isLoadingTime ||
+      isLoadingUsers ||
+      isLoadingProducts ||
+      isLoadingOrders
+    ) {
+      dispatch(
+        setLoading(
+          isLoadingTime ||
+            isLoadingUsers ||
+            isLoadingProducts ||
+            isLoadingOrders,
+        ),
+      );
+    }
+  }, [
+    dispatch,
+    isLoadingTime,
+    isLoadingUsers,
+    isLoadingProducts,
+    isLoadingOrders,
+  ]);
+  console.log({
+    isLoadingTime,
+    isLoadingUsers,
+    isLoadingProducts,
+    isLoadingOrders,
+  });
 
   return (
     <div>
@@ -80,7 +119,7 @@ const Statistical: React.FC = () => {
           <Tab label="5 sản phẩm bán chạy nhất" value="products" />
           <Tab label="5 đơn hàng mới nhất" value="orders" />
         </TabList>
-        {value === "total" && <RevenueStatistical revenueData={revenueData} />}
+        {value === "total" && <RevenueStatistical revenueData={timeData} />}
         {value === "users" && (
           <UsersStatistical data={userData?.top_customers || []} />
         )}

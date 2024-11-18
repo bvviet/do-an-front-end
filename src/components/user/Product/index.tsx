@@ -19,7 +19,6 @@ const ProductItem: FC<ProductItemProps> = ({
   newProduct,
   product,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showSticker, setShowSticker] = useState<boolean>(false);
   console.log({ SanPham: product });
 
@@ -35,13 +34,13 @@ const ProductItem: FC<ProductItemProps> = ({
       {/* Best Seller */}
       {bestSeller && (
         <div className="absolute left-[26px] top-[22px] z-10 w-fit rounded-[5px] bg-black px-[10px] py-[6px] text-[1.4rem] leading-[171.429%] text-white">
-          Best Seller
+          Siêu giảm giá
         </div>
       )}
 
       {newProduct && (
         <div className="absolute left-[26px] top-[22px] z-10 w-fit rounded-[5px] bg-black px-[10px] py-[6px] text-[1.4rem] leading-[171.429%] text-white">
-          New Product
+          Sản phẩm mới
         </div>
       )}
 
@@ -103,12 +102,9 @@ const ProductItem: FC<ProductItemProps> = ({
           </p>
         )}
       </div>
-      <ButtonComponent
-        title="Thêm giỏ hàng"
-        width="100%"
-        onClick={() => setIsLoading(!isLoading)}
-        loading={isLoading}
-      />
+      <Link to={`/detail/${product.slug}`}>
+        <ButtonComponent title="Xem chi tiết" width="100%" onClick={() => {}} />
+      </Link>
     </article>
   );
 };

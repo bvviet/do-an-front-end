@@ -323,6 +323,21 @@ export const productApi = createApi({
     }),
 
     // Thống kê
+    getStatisticalTime: builder.query<
+      {
+        total_revenue: string;
+        start_date: string;
+        end_date: string;
+      },
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `admin/statistical/revenue`,
+        params: { start_date, end_date },
+      }),
+      providesTags: [{ type: "statisticalUsers" }],
+    }),
+
     getStatisticalUsers: builder.query<
       GetStatisticalUsersResponse,
       { start_date: string; end_date: string }
@@ -388,4 +403,5 @@ export const {
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
   useFilterProductsQuery,
+  useGetStatisticalTimeQuery,
 } = productApi;
