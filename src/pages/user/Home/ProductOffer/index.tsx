@@ -54,14 +54,21 @@ const ProductOffers = () => {
           />
           {/* Display the first product if available */}
           {productOffer && productOffer.length > 0 && (
-            <ProductItem product={productOffer[productOffer.length - 1]} />
+            <ProductItem
+              bestSeller={true}
+              product={productOffer[productOffer.length - 1]}
+            />
           )}
         </div>
         <div className="mt-[30px] grid grid-cols-1 gap-[30px] sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {productOffer
             ?.slice(0, visibleCount)
             .map((product) => (
-              <ProductItem key={product.id} product={product} />
+              <ProductItem
+                key={product.id}
+                product={product}
+                bestSeller={true}
+              />
             ))}
         </div>
         <div className="mt-[60px] flex items-center justify-center lg:mt-[75px]">
@@ -69,7 +76,7 @@ const ProductOffers = () => {
             onClick={handleShowMore}
             className="rounded-md bg-[#005D63] px-[35px] py-[15px] text-center"
           >
-            {showHide ? "VIEW MORE" : "HIDE"}
+            {showHide ? "Xem Thêm" : "Ẩn Bớt"}
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import SliceShow from "@/components/user/SliceShow.tsx";
-import BestSellers from "./BestSellers/BestSellers";
+// import BestSellers from "./BestSellers/BestSellers";
 import BlogHomePage from "./BlogHomePage.tsx";
 import BrandsPopular from "./BrandsPopular";
 import Category from "./Category";
@@ -12,22 +12,22 @@ import { useGetAllProductsQuery } from "@/services/productApi.tsx";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setLoading } from "@/redux/slices/loadingSlice.ts";
+import ProductsAll from "./ProductsAll.tsx";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { data: products, isLoading, refetch } = useGetAllProductsQuery();
-  console.log({ products });
+  const { data: products, isLoading } = useGetAllProductsQuery();
   useEffect(() => {
     dispatch(setLoading(isLoading));
-    refetch()
-  }, [dispatch, isLoading, refetch]);
+  }, [dispatch, isLoading]);
   return (
     <>
       <SliceShow />
       <div className="container">
         <Category />
+        <ProductsAll products={products} />
         <ProductNew products={products} />
-        <BestSellers />
+        {/* <BestSellers /> */}
       </div>
       <ProductOffers />
       <div className="container">

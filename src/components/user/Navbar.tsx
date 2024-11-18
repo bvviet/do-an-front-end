@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
   const { data: category } = useGetAllCategoriesQuery();
 
   return (
-    <div className="mt-[28px] px-8 sm:px-0 lg:flex flex-wrap">
+    <div className="mt-[28px] flex-wrap px-8 sm:px-0 lg:flex">
       {category?.categories?.map(
         (item: {
           id: React.Key | null | undefined;
