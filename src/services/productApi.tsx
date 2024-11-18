@@ -32,7 +32,7 @@ import {
 } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
-import { SearchProductResponse } from "@/types/search";
+
 import { AddVoucherBase, IVoucher } from "@/types/voucher";
 import { FilterProductResponse, SearchProductResponse } from "@/types/search";
 import {
@@ -346,7 +346,8 @@ export const productApi = createApi({
         url: `/admin/voucher/${id}`,
         method: "PUT",
         body: data,
-
+      })
+    }),
     // Thống kê
     getStatisticalUsers: builder.query<
       GetStatisticalUsersResponse,
@@ -379,7 +380,7 @@ export const productApi = createApi({
       }),
     }),
   }),
-});
+})
 
 export const {
   useGetAllProductsQuery,
@@ -411,9 +412,9 @@ export const {
   useUpdateBrandMutation,
   useAddVoucherMutation,
   useDeleteVoucherMutation,
-  useUpdateVoucherMutation
+  useUpdateVoucherMutation,
   useGetStatisticalUsersQuery,
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
-  useFilterProductsQuery,
+  useFilterProductsQuery
 } = productApi;
