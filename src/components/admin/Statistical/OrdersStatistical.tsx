@@ -10,33 +10,44 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 interface Order {
   id: number;
-  customerName: string;
-  orderDate: string;
-  value: number; // Giá trị đơn hàng
+  order_code: string;
+  total_amount: string;
+  created_at: string;
 }
 
-interface TopOrdersBarChartProps {
-  orders: Order[];
-  topN: number; // Số lượng đơn hàng muốn hiển thị
+interface OrdersStatisticalProps {
+  orders: Order[]; // orders là một mảng kiểu Order
 }
 
-const OrdersStatistical: React.FC<TopOrdersBarChartProps> = ({ orders, topN }) => {
-  // Sắp xếp đơn hàng và lấy topN
-  const topOrders = orders
-    .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
-    .slice(0, topN);
+const OrdersStatistical: React.FC<OrdersStatisticalProps> = ({ orders }) => {
+  console.log({ orders });
 
   const chartData = {
-    labels: topOrders.map(order => order.customerName),
+    labels: orders.map(
+      (order) => `${order.order_code} - (${order.created_at})`,
+    ),
     datasets: [
       {
         label: "Giá trị đơn hàng (vnđ)",
-        data: topOrders.map(order => order.value),
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
+        data: orders.map((order) => {
+          const amountWithoutDot = order.total_amount
+            .replace("đ", "")
+            .split(".")
+            .join("");
+          return parseFloat(amountWithoutDot);
+        }),
+        backgroundColor: "rgb(90, 173, 224)",
       },
     ],
   };

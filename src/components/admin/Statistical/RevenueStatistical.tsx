@@ -31,7 +31,7 @@ const RevenueStatistical: React.FC<RevenueChartProps> = ({ revenueData }) => {
       {
         label: "Tổng Doanh Thu",
         data: revenueData.map((data) => data.total), // Giá trị doanh thu
-        backgroundColor: "rgba(86, 72, 185, 0.5)", // Màu sắc cho cột
+        backgroundColor: "rgb(90, 173, 224)", // Màu sắc cho cột
       },
     ],
   };

@@ -24,7 +24,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: [authApi.reducerPath],
+  blacklist: [authApi.reducerPath, productApi.reducerPath],
 };
 
 // Kết hợp các reducer lại với nhau

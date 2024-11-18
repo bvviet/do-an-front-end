@@ -24,11 +24,22 @@ import {
   OrderDetailTypeResponse,
   updateStatusOrderAdminsResponse,
 } from "@/types/order";
-import { AddIBrand, BrandType, GetAllBrandsResponse, GetDetailBrandsResponse } from "@/types/brand";
+import {
+  AddIBrand,
+  BrandType,
+  GetAllBrandsResponse,
+  GetDetailBrandsResponse,
+} from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
 import { SearchProductResponse } from "@/types/search";
 import { AddVoucherBase, IVoucher } from "@/types/voucher";
+import { FilterProductResponse, SearchProductResponse } from "@/types/search";
+import {
+  GetStatisticalOrdersResponse,
+  GetStatisticalProductsResponse,
+  GetStatisticalUsersResponse,
+} from "@/types/statistical";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -65,7 +76,7 @@ const baseQueryWithForceLogout = async (
 // Tạo API với createApi
 export const productApi = createApi({
   reducerPath: "productApi",
-  tagTypes: ["orderUser", "orderShipping", "Brand"],
+  tagTypes: ["orderUser", "orderShipping", "Brand", "statisticalUsers"],
   baseQuery: baseQueryWithForceLogout,
   endpoints: (builder) => ({
     getAllProducts: builder.query<getAllProductsResponse, void>({
@@ -182,7 +193,7 @@ export const productApi = createApi({
         url: `/user/orders/mark-as-received/${orderId}`,
         method: "PATCH",
       }),
-      invalidatesTags: [{ type: "orderUser" }],
+      invalidatesTags: [{ type: "orderUser" }, { type: "statisticalUsers" }],
     }),
 
     // Đơn hàng đang giao
@@ -191,7 +202,7 @@ export const productApi = createApi({
       void
     >({
       query: () => ({
-        url: "/admin/orders/delivery",
+        url: "/admin/orders/ready-to-deliver/?status=shipping",
       }),
       providesTags: [{ type: "orderShipping" }],
     }),
@@ -262,6 +273,22 @@ export const productApi = createApi({
         url: `/search?search=${keyword}`,
       }),
     }),
+
+    // Filter
+    filterProducts: builder.query<
+      FilterProductResponse,
+      { categories: number[]; minPrice: number; maxPrice: number }
+    >({
+      query: ({ categories, minPrice, maxPrice }) => ({
+        url: `/filter`,
+        params: {
+          "categories[]": categories,
+          minPrice,
+          maxPrice,
+        },
+      }),
+    }),
+
     getAllBrand: builder.query<GetAllBrandsResponse, void>({
       query: () => ({
         url: "/admin/brands",
@@ -286,7 +313,10 @@ export const productApi = createApi({
       query: (id) => `/admin/brands/${id}`,
       providesTags: [{ type: "Brand" }],
     }),
-    updateBrand: builder.mutation<BrandType, { id: number; data: Partial<BrandType> }>({
+    updateBrand: builder.mutation<
+      BrandType,
+      { id: number; data: Partial<BrandType> }
+    >({
       query: ({ id, data }) => ({
         url: `/admin/brands/${id}`,
         method: "PUT",
@@ -294,6 +324,7 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: "Brand" }],
     }),
+
     addVoucher: builder.mutation<AddVoucherBase, string>({
       query: (voucherJson) => ({
         url: `/admin/voucher`,
@@ -315,6 +346,36 @@ export const productApi = createApi({
         url: `/admin/voucher/${id}`,
         method: "PUT",
         body: data,
+
+    // Thống kê
+    getStatisticalUsers: builder.query<
+      GetStatisticalUsersResponse,
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `admin/statistical/user`,
+        params: { start_date, end_date },
+      }),
+      providesTags: [{ type: "statisticalUsers" }],
+    }),
+
+    getStatisticalProducts: builder.query<
+      GetStatisticalProductsResponse,
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `admin/statistical/product`,
+        params: { start_date, end_date },
+      }),
+    }),
+
+    getStatisticalOrders: builder.query<
+      GetStatisticalOrdersResponse,
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `admin/statistical/order`,
+        params: { start_date, end_date },
       }),
     }),
   }),
@@ -351,4 +412,8 @@ export const {
   useAddVoucherMutation,
   useDeleteVoucherMutation,
   useUpdateVoucherMutation
+  useGetStatisticalUsersQuery,
+  useGetStatisticalProductsQuery,
+  useGetStatisticalOrdersQuery,
+  useFilterProductsQuery,
 } = productApi;

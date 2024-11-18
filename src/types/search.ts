@@ -1,3 +1,5 @@
+import { ProductType } from "./product";
+
 export type SearchProductResponse = {
   id: number;
   name: string;
@@ -19,3 +21,5 @@ export type SearchProductResponse = {
   updated_at: string;
   deleted_at: boolean;
 }[];
+
+export type FilterProductResponse = ProductType[];

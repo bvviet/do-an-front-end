@@ -34,15 +34,40 @@ function SliceShow() {
     },
   ];
   return (
-    <div className="slider-container ml-auto mr-auto w-[89%]">
+    <div className="slider-container ml-auto mr-auto">
+      <style>
+        {`
+          .slick-prev, .slick-next {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            transition: background-color 0.3s ease;
+          }
+
+          .slick-prev:hover, .slick-next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+          }
+
+          .slick-prev {
+            left: 10px;
+          }
+
+          .slick-next {
+            right: 10px;
+          }
+        `}
+      </style>
       <Slider {...settings}>
         {sliceArray.map((item) => (
-          <div className="relative h-[180px] cursor-pointer sm:h-[600px]" key={item.id}>
-            <img
-              className="h-full w-full rounded-[25px]"
-              src={item.src}
-              alt=""
-            />
+          <div
+            className="relative h-[180px] cursor-pointer sm:h-[530px]"
+            key={item.id}
+          >
+            <img className="h-full w-full" src={item.src} alt="" />
             <div className="z-2 absolute top-0 flex object-cover"></div>
           </div>
         ))}
