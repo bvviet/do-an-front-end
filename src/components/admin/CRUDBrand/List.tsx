@@ -10,7 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { toast } from "react-toastify";
 import { useDeleteBrandMutation, useGetAllBrandQuery } from "@/services/productApi";
-import Confirm from "@/components/Confirm";
+import CFButton from "../CfButton";
 interface Column {
     id: "name" | "id" | "";
     label: string;
@@ -95,9 +95,9 @@ export default function ListBrand() {
                                                             aria-label="delete"
                                                             onClick={() =>
                                                                 openPopup(
-                                                                    <Confirm
-                                                                        title="Are you sure?"
-                                                                        description="Do you really want to delete this product?"
+                                                                    <CFButton
+                                                                       title="Are you sure you want to delete this item?"
+                                                                       
                                                                         handleDelete={() => handleDelete(brand.id)}
                                                                     />
                                                                 )

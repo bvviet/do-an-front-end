@@ -40,6 +40,8 @@ import Shipper from "./pages/admin/Shipper";
 import ResultSearch from "./pages/user/ResultSearch";
 import BrandTabs from "./components/admin/TabBrand";
 import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
+import VoucherTabs from "./components/admin/TabVoucher";
+import EditVoucherComponent from "./components/admin/CRUDVoucher/EditVoucher";
 import Filter from "./pages/user/Filter";
 
 function App() {
@@ -114,6 +116,19 @@ function App() {
         { path: "order/detail/:orderAdminId", element: <OrderDetailAdmin /> },
         { path: "statistical", element: <Statistical /> },
         { path: "shipper", element: <Shipper /> },
+        { path: "voucher", element: <VoucherTabs /> },
+        { path: "voucher/:id", element: <EditVoucherComponent /> },
+
+        // {
+        //   path: "products",
+        //   element: <CrudLayout />,
+        //   children: [
+        //     { path: "list", element: <ListProducts /> },
+        //     { path: "add", element: <AddProducts /> },
+        //     { path: "edit", element: <AddProducts /> },
+        //   ],
+        // },
+
       ],
     },
   ]);

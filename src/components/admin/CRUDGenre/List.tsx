@@ -18,13 +18,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import Search from "./Components/Search";
 import LinkProducts from "./Components/Button";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
-import Confirm from "@/components/Confirm";
-
 import { toast } from "react-toastify";
 import { useDeleteCategoryMutation } from "@/services/authApi"; // Hook để thực hiện xóa danh mục
 import { ICategory } from "@/types/genre"; // Kiểu dữ liệu cho danh mục
 import useCategories from "@/hooks/useGenre";
 import { Link } from "react-router-dom";
+import CFButton from "../CfButton";
 
 interface Column {
   id: "name" | "id" | "action" | "image" | "slug" | "children";
@@ -129,9 +128,8 @@ export default function ListCategory() {
                                 aria-label="delete"
                                 onClick={() =>
                                   openPopup(
-                                    <Confirm
-                                      title="Are you sure?"
-                                      description="Do you really want to delete this category?"
+                                    <CFButton
+                                      title="Are you sure you want to delete this item?"
                                       handleDelete={() => handleDelete(category.id)}
                                     />
                                   )

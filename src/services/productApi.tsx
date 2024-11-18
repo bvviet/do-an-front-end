@@ -32,12 +32,15 @@ import {
 } from "@/types/brand";
 import { GetColor, GetSize } from "@/types/tags";
 import { CheckOut } from "@/types/Checkout";
+
+import { AddVoucherBase, IVoucher } from "@/types/voucher";
 import { FilterProductResponse, SearchProductResponse } from "@/types/search";
 import {
   GetStatisticalOrdersResponse,
   GetStatisticalProductsResponse,
   GetStatisticalUsersResponse,
 } from "@/types/statistical";
+
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_URL,
@@ -322,6 +325,29 @@ export const productApi = createApi({
       invalidatesTags: [{ type: "Brand" }],
     }),
 
+    addVoucher: builder.mutation<AddVoucherBase, string>({
+      query: (voucherJson) => ({
+        url: `/admin/voucher`,
+        method: "POST",
+        body: JSON.parse(voucherJson),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deleteVoucher: builder.mutation<IVoucher, number>({
+      query: (id) => ({
+        url: `admin/voucher/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateVoucher: builder.mutation<void, { id: number; data: Partial<AddVoucherBase> }>({
+      query: ({ id, data }) => ({
+        url: `/admin/voucher/${id}`,
+        method: "PUT",
+        body: data,
+      })
+    }),
     // Thống kê
     getStatisticalTime: builder.query<
       {
@@ -369,7 +395,7 @@ export const productApi = createApi({
       }),
     }),
   }),
-});
+})
 
 export const {
   useGetAllProductsQuery,
@@ -399,9 +425,13 @@ export const {
   useDeleteBrandMutation,
   useGetDetailBrandQuery,
   useUpdateBrandMutation,
+  useAddVoucherMutation,
+  useDeleteVoucherMutation,
+  useUpdateVoucherMutation,
   useGetStatisticalUsersQuery,
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
   useFilterProductsQuery,
   useGetStatisticalTimeQuery,
+  useFilterProductsQuery
 } = productApi;

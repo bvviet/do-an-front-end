@@ -12,13 +12,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import Search from "./Components/Search";
 import LinkProducts from "./Components/Button";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
-import Confirm from "@/components/Confirm";
 import axios from "axios";
 import { ProductType } from "@/types/product";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { toast } from "react-toastify";
 import { useDeleteProductMutation } from "@/services/productApi";
+import CFButton from "../CfButton";
 
 interface Column {
   id: "id" | "name" | "price" | "category" | "img" | "action" | "";
@@ -133,9 +133,8 @@ export default function ListProducts() {
                               aria-label="delete"
                               onClick={() =>
                                 openPopup(
-                                  <Confirm
-                                    title="Are you sure?"
-                                    description="Do you really want to delete this product?"
+                                  <CFButton
+                                    title="Are you sure you want to delete this item?"
                                     handleDelete={() => handleDelete(product.id)}
                                   />
                                 )

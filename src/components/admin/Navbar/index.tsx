@@ -59,6 +59,12 @@ const arrayNav = [
     icon: AccountBoxIcon,
     link: "/admin/shipper",
   },
+  {
+    id: 8,
+    name: "Voucher",
+    icon: AccountBoxIcon,
+    link: "/admin/voucher",
+  },
   
 ];
 
