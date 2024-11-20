@@ -1,10 +1,11 @@
 import useFormatCurrency from "@/hooks/useFormatCurrency";
-import { FC } from "react";
+import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
 interface CartRightProps {
   totalPrice?: number;
 }
+
 const CartRight: FC<CartRightProps> = ({ totalPrice = 0 }) => {
   // Sử dụng custom hook để format giá trị tổng
   const formattedTotalPrice = useFormatCurrency(totalPrice);
@@ -12,6 +13,7 @@ const CartRight: FC<CartRightProps> = ({ totalPrice = 0 }) => {
   // Tính tổng tiền (totalPrice + shipping)
   const totalAmount = totalPrice;
   const formattedTotalAmount = useFormatCurrency(totalAmount);
+
   return (
     <div>
       <h2 className="text-[22px] font-bold max-lg:text-[16px]">Tạm tính</h2>
@@ -47,4 +49,5 @@ const CartRight: FC<CartRightProps> = ({ totalPrice = 0 }) => {
     </div>
   );
 };
-export default CartRight;
+
+export default React.memo(CartRight);

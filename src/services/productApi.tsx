@@ -40,6 +40,7 @@ import {
   GetStatisticalProductsResponse,
   GetStatisticalUsersResponse,
 } from "@/types/statistical";
+import { getFavoriteResponse } from "@/types/favorites";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -341,12 +342,15 @@ export const productApi = createApi({
         method: "DELETE",
       }),
     }),
-    updateVoucher: builder.mutation<void, { id: number; data: Partial<AddVoucherBase> }>({
+    updateVoucher: builder.mutation<
+      void,
+      { id: number; data: Partial<AddVoucherBase> }
+    >({
       query: ({ id, data }) => ({
         url: `/admin/voucher/${id}`,
         method: "PUT",
         body: data,
-      })
+      }),
     }),
     // Thống kê
     getStatisticalTime: builder.query<
@@ -394,8 +398,30 @@ export const productApi = createApi({
         params: { start_date, end_date },
       }),
     }),
+
+    // Favorite
+    createFavorite: builder.mutation<{ message: string }, number>({
+      query: (product_id) => ({
+        url: "/favourites",
+        method: "POST",
+        body: { product_id },
+      }),
+    }),
+
+    getFavorites: builder.query<getFavoriteResponse, void>({
+      query: () => ({
+        url: "/favourites",
+      }),
+    }),
+
+    deleteFavorite: builder.mutation<{ message: string }, number>({
+      query: (favoriteId) => ({
+        url: `/favourites/${favoriteId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
-})
+});
 
 export const {
   useGetAllProductsQuery,
@@ -431,7 +457,9 @@ export const {
   useGetStatisticalUsersQuery,
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
-  useFilterProductsQuery,
   useGetStatisticalTimeQuery,
-  useFilterProductsQuery
+  useFilterProductsQuery,
+  useCreateFavoriteMutation,
+  useGetFavoritesQuery,
+  useDeleteFavoriteMutation,
 } = productApi;

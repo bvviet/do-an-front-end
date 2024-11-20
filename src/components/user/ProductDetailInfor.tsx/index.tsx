@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Carousel from "./Carousel";
 import start from "../../../assets/icons/start.png";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import FormDetail from "./FormDetail";
 import Comment from "./Comment";
 import Reviews from "./ReviewList";
@@ -30,7 +30,6 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
 
   const price_regular = useFormatCurrency(productDetail?.price_regular ?? 0);
   const price_sale = useFormatCurrency(productDetail?.price_sale ?? 0);
-  console.log({ productDetail });
 
   return (
     <div className="">
@@ -112,4 +111,4 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
   );
 };
 
-export default ProductDetailInfo;
+export default React.memo(ProductDetailInfo);

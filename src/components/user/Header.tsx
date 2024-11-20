@@ -40,6 +40,7 @@ const Header = () => {
   const cartItems = useSelector(
     (state: RootState) => state.carts.cart_items || [],
   );
+  const favorite = useSelector((state: RootState) => state.favorite.items);
 
   const renderMenu = (
     <Menu
@@ -138,8 +139,11 @@ const Header = () => {
           {userInfor ? (
             <div className="flex gap-4 sm:gap-[18px]">
               <Tooltip title="Sản phẩm yêu thích" arrow>
-                <Link to={"#!"} className="flex items-center gap-1">
-                  <Badge badgeContent={3} color="secondary">
+                <Link to={"/favorites"} className="flex items-center gap-1">
+                  <Badge
+                    badgeContent={(favorite || []).length}
+                    color="secondary"
+                  >
                     <img src={heartIcon} alt="Favorites" />
                   </Badge>
                 </Link>

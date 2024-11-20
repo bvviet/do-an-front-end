@@ -45,12 +45,12 @@ const ThanhToan: React.FC = () => {
           window.location.href = response.payment_url;
         }, 2000);
         refetch();
-        disPatch(setCart([])); // Đặt giỏ hàng về trống sau khi thanh toán thành công
+        disPatch(setCart([]));
         navigate("/thanks");
       } else {
         toast.success("Cảm ơn bạn đã mua hàng");
         refetch();
-        disPatch(setCart([])); // Đặt giỏ hàng về trống sau khi thanh toán thành công
+        disPatch(setCart([]));
         navigate("/thanks");
       }
     } catch (error) {

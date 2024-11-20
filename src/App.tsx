@@ -43,6 +43,7 @@ import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
 import VoucherTabs from "./components/admin/TabVoucher";
 import EditVoucherComponent from "./components/admin/CRUDVoucher/EditVoucher";
 import Filter from "./pages/user/Filter";
+import Favorites from "./pages/user/Favorites";
 
 function App() {
   const router = createBrowserRouter([
@@ -71,6 +72,7 @@ function App() {
         },
         { path: "/search-result", element: <ResultSearch /> },
         { path: "/filter", element: <Filter /> },
+        { path: "/favorites", element: <Favorites /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,
@@ -128,7 +130,6 @@ function App() {
         //     { path: "edit", element: <AddProducts /> },
         //   ],
         // },
-
       ],
     },
   ]);
