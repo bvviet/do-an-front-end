@@ -1,7 +1,7 @@
 import { Box, IconButton } from "@mui/material";
 import QuantitySelector from "./QuantitySelector";
 import { Delete, Favorite } from "@mui/icons-material";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Confirm from "@/components/Confirm";
@@ -53,7 +53,7 @@ const CartLeft = () => {
         {carts?.cart_items?.map((cart, index) => {
           // Chuyển đổi giá trị price_regular sang số
           //const price = formatCurrency(cart.price_regular);
-          const priceSale = formatCurrency(cart.total)
+          const priceSale = formatCurrency(cart.total);
           // const totalPrice = formatCurrency(
           //   (typeof cart.price_regular === "string"
           //     ? parseFloat(cart.price_regular)
@@ -87,8 +87,10 @@ const CartLeft = () => {
                     <div className="my-3 flex items-center gap-6">
                       <p className="my-2 text-[#566363]">Cart ID: {cart.id}</p>
                       <div>
-                        <span className="text-red-600">{formatCurrency(cart.price)}</span>
-                        {" "}x{""} {cart.quantity}
+                        <span className="text-red-600">
+                          {formatCurrency(cart.price)}
+                        </span>{" "}
+                        x{""} {cart.quantity}
                       </div>
                     </div>
                     <div>
@@ -102,17 +104,19 @@ const CartLeft = () => {
                         refetch={refetch}
                       />
                       <div>
-                        <p>Màu :
+                        <p>
+                          Màu :
                           <Box
                             sx={{
                               width: 20,
                               height: 20,
                               backgroundColor: cart.color,
-                              borderRadius: '4px',
+                              borderRadius: "4px",
                               marginRight: 1,
-                              display: 'inline-block',
+                              display: "inline-block",
                             }}
-                          /></p>
+                          />
+                        </p>
                         <p>Size: {cart.size}</p>
                       </div>
                       <div className="flex gap-8">
@@ -152,4 +156,4 @@ const CartLeft = () => {
   );
 };
 
-export default CartLeft;
+export default React.memo(CartLeft);

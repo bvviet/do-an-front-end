@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Slider from "react-slick";
-import { CSSProperties } from "react";
+import React, { CSSProperties } from "react";
 import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
 
 interface ArrowProps {
@@ -231,4 +231,4 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage, imgs }) => {
   );
 };
 
-export default Carousel;
+export default React.memo(Carousel);

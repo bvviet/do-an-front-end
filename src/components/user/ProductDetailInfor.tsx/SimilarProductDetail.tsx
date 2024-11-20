@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import BaseSection from "../../../pages/user/Home/BaseSection";
 import ProductItem from "../Product";
 import { useGetCategoryProductsQuery } from "@/services/authApi";
@@ -49,4 +49,4 @@ const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
     </div>
   );
 };
-export default SimilarProductDetail;
+export default React.memo(SimilarProductDetail);
