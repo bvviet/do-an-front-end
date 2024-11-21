@@ -21,24 +21,19 @@ ChartJS.register(
 );
 
 interface RevenueStatisticalProps {
-  revenueData: {
-    total_revenue: string | undefined;
-    start_date: string | undefined;
-    end_date: string | undefined;
+  revenueData?: {
+    total_revenue: string;
+    start_date: string;
+    end_date: string;
   };
 }
 
 const RevenueStatistical: FC<RevenueStatisticalProps> = ({ revenueData }) => {
   // Chuyển đổi doanh thu từ chuỗi sang số
-  const totalRevenue = parseInt(
-    revenueData?.total_revenue?.replace("đ", "").replace(/,/g, "") || "0",
-    10,
-  );
+  const totalRevenue = revenueData?.total_revenue;
 
   // Định dạng doanh thu kiểu tiền Việt với dấu chấm
-  const formattedRevenue = totalRevenue
-    .toLocaleString("vi-VN") // Tự động thêm dấu chấm
-    .concat(" đ"); // Thêm chữ "đ" ở cuối
+  const formattedRevenue = totalRevenue;
 
   // Cấu hình dữ liệu biểu đồ
   const chartData = {

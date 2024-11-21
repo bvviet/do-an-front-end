@@ -102,9 +102,18 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
         />
       </div>
       {/* Comment Form */}
-      <Comment />
+      {productDetail?.id ? (
+        <Comment productId={productDetail.id} />
+      ) : (
+        <p>Loading...</p>
+      )}
+
       {/* Comment */}
-      <Reviews />
+      {productDetail?.id ? (
+        <Reviews productId={productDetail.id} />
+      ) : (
+        <p>Loading...</p>
+      )}
       {/* Similar Product */}
       <SimilarProductDetail categoriesId={productDetail?.category_id ?? 5} />
     </div>

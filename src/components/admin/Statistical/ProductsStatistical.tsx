@@ -9,7 +9,7 @@ interface UserSpending {
 }
 
 interface BarChartProps {
-  data: UserSpending[];
+  data?: UserSpending[];
 }
 
 const ProductsStatistical: React.FC<BarChartProps> = ({ data }) => {
@@ -24,7 +24,7 @@ const ProductsStatistical: React.FC<BarChartProps> = ({ data }) => {
       },
     },
     xAxis: {
-      categories: data.map((user) => user.name),
+      categories: (data || []).map((user) => user.name),
       title: {
         text: "Sản phẩm",
         style: {
@@ -72,7 +72,7 @@ const ProductsStatistical: React.FC<BarChartProps> = ({ data }) => {
       {
         name: "Tổng số lượng",
         type: "bar",
-        data: data.map((user) => Number(user.total_quantity)),
+        data: (data || []).map((user) => Number(user.total_quantity)),
       },
     ],
   };

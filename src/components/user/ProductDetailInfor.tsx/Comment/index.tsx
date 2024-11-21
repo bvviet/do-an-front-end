@@ -1,9 +1,13 @@
-import React from "react";
+import React, { FC } from "react";
 import groupStart from "../../../../assets/icons/start.png";
 import FormComment from "./FormComment";
 import ReviewItem from "./ReviewItem";
 
-const Comment = () => {
+interface CommentProps {
+  productId: number;
+}
+
+const Comment: FC<CommentProps> = ({ productId }) => {
   return (
     <div className="grid grid-cols-1 gap-[40px] lg:grid-cols-2 lg:gap-[60px]">
       {/* Left */}
@@ -30,7 +34,7 @@ const Comment = () => {
       </div>
       {/* Right */}
       <div className="">
-        <FormComment />
+        <FormComment productId={productId} />
       </div>
     </div>
   );

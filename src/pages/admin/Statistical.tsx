@@ -15,17 +15,11 @@ import {
   useGetStatisticalProductsQuery,
   useGetStatisticalTimeQuery,
   useGetStatisticalUsersQuery,
+  useWeekStatisticalQuery,
 } from "@/services/productApi";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
-
-const revenueData = [
-  { month: "Tháng 1", total: 1500000 },
-  { month: "Tháng 2", total: 2000000 },
-  { month: "Tháng 3", total: 2500000 },
-  { month: "Tháng 4", total: 3000000 },
-  { month: "Tháng 5", total: 3500000 },
-];
+import WeekChart from "@/components/admin/Statistical/WeekChart";
 
 const Statistical: React.FC = () => {
   const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([null, null]);
@@ -60,7 +54,6 @@ const Statistical: React.FC = () => {
       start_date: start_date || defaultStartDate,
       end_date: end_date || defaultEndDate,
     });
-  console.log({ timeData });
 
   const { data: userData, isLoading: isLoadingUsers } =
     useGetStatisticalUsersQuery({
@@ -79,35 +72,28 @@ const Statistical: React.FC = () => {
       start_date: start_date || defaultStartDate,
       end_date: end_date || defaultEndDate,
     });
+
+  const { data: revenueData, isLoading: isLoadingWeek } =
+    useWeekStatisticalQuery(undefined);
+
   useEffect(() => {
-    if (
-      isLoadingTime ||
-      isLoadingUsers ||
-      isLoadingProducts ||
-      isLoadingOrders
-    ) {
-      dispatch(
-        setLoading(
-          isLoadingTime ||
-            isLoadingUsers ||
-            isLoadingProducts ||
-            isLoadingOrders,
-        ),
-      );
-    }
+    dispatch(
+      setLoading(
+        isLoadingTime ||
+          isLoadingUsers ||
+          isLoadingProducts ||
+          isLoadingOrders ||
+          isLoadingWeek,
+      ),
+    );
   }, [
     dispatch,
     isLoadingTime,
     isLoadingUsers,
     isLoadingProducts,
     isLoadingOrders,
+    isLoadingWeek,
   ]);
-  console.log({
-    isLoadingTime,
-    isLoadingUsers,
-    isLoadingProducts,
-    isLoadingOrders,
-  });
 
   return (
     <div>
@@ -118,6 +104,7 @@ const Statistical: React.FC = () => {
           <Tab label="3 khách hàng mua nhiều nhất" value="users" />
           <Tab label="5 sản phẩm bán chạy nhất" value="products" />
           <Tab label="5 đơn hàng mới nhất" value="orders" />
+          <Tab label="Doanh thu tuần qua" value="week" />
         </TabList>
         {value === "total" && <RevenueStatistical revenueData={timeData} />}
         {value === "users" && (
@@ -126,13 +113,15 @@ const Statistical: React.FC = () => {
 
         {value === "orders" && <OrdersStatistical orders={ordersData || []} />}
 
-        {value === "products" && (
-          <ProductsStatistical data={productsData || []} />
-        )}
+        {value === "products" && <ProductsStatistical data={productsData} />}
+        {value === "week" && <WeekChart data={revenueData} />}
       </TabContext>
-      <p>
-        Thống kê từ ngày: {start_date} đến {end_date}
-      </p>
+      {value !== "week" && (
+        <p>
+          Thống kê từ ngày: {start_date ? start_date : defaultStartDate} đến{" "}
+          {end_date ? end_date : defaultEndDate}
+        </p>
+      )}
     </div>
   );
 };
