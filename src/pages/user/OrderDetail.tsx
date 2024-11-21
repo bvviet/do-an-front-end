@@ -25,6 +25,7 @@ import HorizontalStepperWithError from "./Stepper";
 import useDateFormatter from "@/hooks/useDateFormatter";
 import Confirm from "@/components/Confirm";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const OrderDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -155,9 +156,9 @@ const OrderDetail = () => {
             <Typography variant="h5" gutterBottom>
               Thông tin mua hàng
             </Typography>
-            <Typography variant="body1">
+            {/* <Typography variant="body1">
               <strong>Đơn hàng ID:</strong> 1
-            </Typography>
+            </Typography> */}
             <Typography variant="body1">
               <strong>Ngày đặt hàng:</strong>
               {formatDate(orderDetail?.created_at)}
@@ -178,7 +179,7 @@ const OrderDetail = () => {
             <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
               Địa chỉ giao hàng
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
               {orderDetail?.address.detail_address} -{orderDetail?.address.ward}{" "}
               - {orderDetail?.address.district} - {orderDetail?.address.city}
             </Typography>
@@ -198,7 +199,7 @@ const OrderDetail = () => {
           ""
         )}
         {/* Item Group */}
-        <div className="flex flex-col gap-10 rounded-md bg-slate-100 p-8">
+        <div className="flex flex-col gap-10 rounded-md bg-white p-8">
           {/* Item */}
           {orderDetail?.order_items?.map((orderItem, index) => (
             <div
@@ -206,14 +207,14 @@ const OrderDetail = () => {
               className="gap-6 border-b-2 border-solid border-b-[#ccc] pb-6"
             >
               <div className="flex items-center">
-                <div className="h-[150px] w-[10%]">
+                <div className="h-[100px] w-[10%]">
                   <img
                     src={orderItem.img_thumbnail}
                     alt=""
                     className="h-full w-full rounded object-cover"
                   />
                 </div>
-                <div className="flex w-[75%] flex-col gap-2">
+                <div className="flex w-[75%] flex-col gap-2 ml-6">
                   <Link to={"/#!"}>
                     <h3 className="font-medium">{orderItem.product_name}</h3>
                   </Link>
@@ -222,10 +223,10 @@ const OrderDetail = () => {
                 </div>
                 <div className="flex gap-3">
                   <span className="font-medium text-[#636261aa] line-through">
-                    {orderItem.price_sale}
+                    {formatCurrency(orderItem.price_sale)}
                   </span>
                   <span className="font-medium text-[#ee4d2d]">
-                    {orderItem.price_regular}
+                    {formatCurrency(orderItem.price_regular)}
                   </span>
                 </div>
               </div>
@@ -259,8 +260,8 @@ const OrderDetail = () => {
           <div className="ml-auto">
             <div className="flex justify-end">
               Số tiền phải trả:
-              <span className="font-medium text-[#ee4d2d]">
-                {orderDetail?.total_amount}
+              <span className="ml-2 font-medium text-[#ee4d2d]">
+                {formatCurrency(Number(orderDetail?.total_amount))}
               </span>
             </div>
             <div className="mt-6 flex justify-end gap-6">

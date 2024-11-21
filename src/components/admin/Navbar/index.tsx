@@ -1,6 +1,12 @@
 import Logo from "@/components/Logo";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import DiscountIcon from "@mui/icons-material/Discount";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import PublicIcon from "@mui/icons-material/Public";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useState } from "react";
 import {
   Avatar,
@@ -32,40 +38,39 @@ const arrayNav = [
   {
     id: 7,
     name: "Thương hiệu",
-    icon: ShoppingCartIcon,
+    icon: PublicIcon,
     link: "/admin/brand",
   },
   {
     id: 3,
     name: "Danh mục",
-    icon: AccountBoxIcon,
+    icon: FormatListBulletedIcon,
     link: "/admin/genre",
   },
   {
     id: 4,
     name: "Quản lý đơn hàng",
-    icon: AccountBoxIcon,
+    icon: ReceiptLongIcon,
     link: "/admin/orders",
-  },
-  {
-    id: 5,
-    name: "Thống kê",
-    icon: AccountBoxIcon,
-    link: "/admin/statistical",
   },
   {
     id: 6,
     name: "Shipper",
-    icon: AccountBoxIcon,
+    icon: LocalShippingIcon,
     link: "/admin/shipper",
   },
   {
     id: 8,
     name: "Voucher",
-    icon: AccountBoxIcon,
+    icon: DiscountIcon,
     link: "/admin/voucher",
   },
-  
+  {
+    id: 5,
+    name: "Thống kê",
+    icon: BarChartIcon,
+    link: "/admin/statistical",
+  },
 ];
 
 const NavbarAdmin = () => {
@@ -81,7 +86,7 @@ const NavbarAdmin = () => {
   const { data: user } = useGetUsersQuery();
 
   return (
-    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-white text-[1.5rem]">
+    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-[1.5rem] text-white">
       {/* Logo */}
       <div>
         <Logo />
@@ -89,7 +94,6 @@ const NavbarAdmin = () => {
 
       {/* Menu */}
       <div className="mt-6 flex-grow">
-        <span className="mt-9 font-bold text-slate-400">Menu</span>
         <ul className="mt-[20px] flex flex-col gap-[20px] p-6">
           {arrayNav.map((nav) => (
             <Link to={nav.link} key={nav.id}>
@@ -99,10 +103,11 @@ const NavbarAdmin = () => {
                 onClick={() => setActiveNavbar(nav.id)}
               >
                 <div
-                  className={`${activeNavbar === nav.id
-                    ? "rounded-[10px] bg-white text-main"
-                    : "hover:opacity-70"
-                    } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
+                  className={`${
+                    activeNavbar === nav.id
+                      ? "rounded-[10px] bg-white text-main"
+                      : "hover:opacity-70"
+                  } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
                 >
                   <nav.icon />
                   <span>{nav.name}</span>

@@ -1,8 +1,10 @@
 import NavbarAdmin from "@/components/admin/Navbar";
 import { RootState } from "@/redux/store";
 import { LinearProgress, styled } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const FixedLinearProgress = styled(LinearProgress)({
   position: "fixed",
   top: 0,
@@ -11,7 +13,31 @@ const FixedLinearProgress = styled(LinearProgress)({
   zIndex: 1000,
 });
 const AdminLayout = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const loading = useSelector((state: RootState) => state.loading.isLoading);
+
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.userInfo?.role,
+  );
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (isAuthenticated !== "admin") {
+        toast.error("Bạn không phải admin để vào.");
+        navigate("/");
+      }
+      setIsLoading(false);
+    };
+
+    if (isLoading) {
+      checkAuth();
+    }
+  }, [isAuthenticated, navigate, isLoading]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="overflow-hidden bg-[#F5F5F5]">
       {/* Thêm overflow-hidden */}

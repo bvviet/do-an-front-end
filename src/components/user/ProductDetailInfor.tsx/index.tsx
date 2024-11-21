@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Carousel from "./Carousel";
 import start from "../../../assets/icons/start.png";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import FormDetail from "./FormDetail";
 import Comment from "./Comment";
 import Reviews from "./ReviewList";
@@ -30,7 +30,6 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
 
   const price_regular = useFormatCurrency(productDetail?.price_regular ?? 0);
   const price_sale = useFormatCurrency(productDetail?.price_sale ?? 0);
-  console.log({ productDetail });
 
   return (
     <div className="">
@@ -39,10 +38,10 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
           {/* Left */}
           <div className="">
             {/* Image */}
-            <div className="mb-[18px] flex h-[300px] w-full items-center justify-center lg:h-[570px]">
+            <div className="mb-[18px] flex h-[300px] w-full items-center justify-center rounded-lg border-[1px] border-solid border-[#ccc] lg:h-[570px]">
               <img
                 className="flex h-[100%] w-[100%] rounded-md object-cover"
-                src={`${productDetail?.img_thumbnail}`}
+                src={`${productDetail?.img_thumbnail ? productDetail?.img_thumbnail : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"}`}
                 alt=""
               />
             </div>
@@ -103,13 +102,22 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
         />
       </div>
       {/* Comment Form */}
-      <Comment />
+      {productDetail?.id ? (
+        <Comment productId={productDetail.id} />
+      ) : (
+        <p>Loading...</p>
+      )}
+
       {/* Comment */}
-      <Reviews />
+      {productDetail?.id ? (
+        <Reviews productId={productDetail.id} />
+      ) : (
+        <p>Loading...</p>
+      )}
       {/* Similar Product */}
-      <SimilarProductDetail categoriesId={productDetail?.category_id ?? 0} />
+      <SimilarProductDetail categoriesId={productDetail?.category_id ?? 5} />
     </div>
   );
 };
 
-export default ProductDetailInfo;
+export default React.memo(ProductDetailInfo);

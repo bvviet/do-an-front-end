@@ -1,12 +1,21 @@
 import StickerAddFavorite from "./StickerAddFavorite";
-import heartWhite from "../../../assets/icons/heartWhite.svg";
 import star from "../../../assets/icons/start.png";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import ButtonComponent from "@/components/ButtonComponent";
 import { ProductType } from "@/types/product";
 import useFormatCurrency from "@/hooks/useFormatCurrency";
+import {
+  useCreateFavoriteMutation,
+  useGetFavoritesQuery,
+} from "@/services/productApi";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { RootState } from "@/redux/store";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { removeFavorite, setFavorite } from "@/redux/slices/favorites";
 
 interface ProductItemProps {
   bestSeller?: boolean;
@@ -14,15 +23,22 @@ interface ProductItemProps {
   product: ProductType;
 }
 
+export interface ErrorType {
+  data: {
+    message: string;
+  };
+  status: string;
+}
+
 const ProductItem: FC<ProductItemProps> = ({
   bestSeller,
   newProduct,
   product,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showSticker, setShowSticker] = useState<boolean>(false);
-  console.log({ SanPham: product });
-
+  const [isGet, setIsGet] = useState<boolean>(false);
+  const favorite = useSelector((state: RootState) => state.favorite);
+  const disPatch = useDispatch();
   const truncateString = (str: string, num: number) => {
     return str.length > num ? str.slice(0, num) + "..." : str;
   };
@@ -30,18 +46,50 @@ const ProductItem: FC<ProductItemProps> = ({
   const price_regular = useFormatCurrency(product?.price_regular);
   const price_sale = useFormatCurrency(product?.price_sale);
 
+  const [createFavorite, { isLoading }] = useCreateFavoriteMutation();
+  const { refetch, error } = useGetFavoritesQuery(undefined, {
+    skip: !isGet,
+  });
+  if (
+    (error as ErrorType)?.data?.message === "Không có sản phẩm yêu thích nào"
+  ) {
+    disPatch(removeFavorite());
+  }
+
+  console.log({ error });
+  const handleCreateFavorite = async (productId: number) => {
+    setIsGet(true);
+    try {
+      const response = await createFavorite(productId).unwrap();
+      console.log("Thêm yêu thích:", response);
+
+      const refetchedFavorites = await refetch();
+      console.log("Dữ liệu sau khi refetch:", refetchedFavorites);
+
+      disPatch(setFavorite(refetchedFavorites?.data?.data));
+      // disPatch(removeFavorite());
+      toast.success(response.message);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    disPatch(setLoading(isLoading));
+  }, [disPatch, isLoading]);
+
   return (
     <article className="relative max-w-[370px]">
       {/* Best Seller */}
       {bestSeller && (
         <div className="absolute left-[26px] top-[22px] z-10 w-fit rounded-[5px] bg-black px-[10px] py-[6px] text-[1.4rem] leading-[171.429%] text-white">
-          Best Seller
+          Siêu giảm giá
         </div>
       )}
 
       {newProduct && (
         <div className="absolute left-[26px] top-[22px] z-10 w-fit rounded-[5px] bg-black px-[10px] py-[6px] text-[1.4rem] leading-[171.429%] text-white">
-          New Product
+          Sản phẩm mới
         </div>
       )}
 
@@ -69,9 +117,15 @@ const ProductItem: FC<ProductItemProps> = ({
       <div className="mb-[4px] mt-[20px] flex items-center justify-between text-[1.4rem] leading-[171.429%] text-[#566363]">
         <p className="max-w-xs truncate">{product?.category?.name}</p>
         <Tooltip title="Thêm vào yêu thích" arrow>
-          <button onClick={() => setShowSticker(true)}>
-            <img src={heartWhite} alt="Heart Icon" />
-          </button>
+          <IconButton onClick={() => handleCreateFavorite(product.id)}>
+            <FavoriteIcon
+              color={
+                favorite?.items?.some((item) => item.product_id === product.id)
+                  ? "error"
+                  : "inherit"
+              }
+            />
+          </IconButton>
         </Tooltip>
       </div>
 
@@ -103,12 +157,9 @@ const ProductItem: FC<ProductItemProps> = ({
           </p>
         )}
       </div>
-      <ButtonComponent
-        title="Thêm giỏ hàng"
-        width="100%"
-        onClick={() => setIsLoading(!isLoading)}
-        loading={isLoading}
-      />
+      <Link to={`/detail/${product.slug}`}>
+        <ButtonComponent title="Xem chi tiết" width="100%" onClick={() => {}} />
+      </Link>
     </article>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Slider from "react-slick";
-import { CSSProperties } from "react";
+import React, { CSSProperties } from "react";
 import { useModalContext } from "../../../contexts/ModelPopUp/ModelProvider";
 
 interface ArrowProps {
@@ -16,7 +16,8 @@ const SampleNextArrow: React.FC<ArrowProps> = (props) => {
       className={className}
       style={{
         ...style,
-        background: "#ccc",
+        background: "",
+        color: "#000",
         marginLeft: "20px",
       }}
       onClick={onClick}
@@ -31,7 +32,7 @@ const SamplePrevArrow: React.FC<ArrowProps> = (props) => {
       className={className}
       style={{
         ...style,
-        color: "#ccc",
+        color: "#000",
         marginRight: "20px",
       }}
       onClick={onClick}
@@ -85,7 +86,7 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage, imgs }) => {
     ],
   };
 
-  const imgChild = imgs?.slice(0, 5)??[];
+  const imgChild = imgs?.slice(0, 5) ?? [];
 
   console.log({ imgChild });
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -100,57 +101,128 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage, imgs }) => {
       <Slider {...settings}>
         {/* Example images */}
         <div
-          onClick={() => openPopup(<img src={imgChild[0]?.image} />)}
+          onClick={() =>
+            openPopup(
+              <img
+                src={
+                  imgChild[0]?.image
+                    ? imgChild[0]?.image
+                    : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+                }
+                className="mx-auto"
+              />,
+            )
+          }
           className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={imgChild[0]?.image}
-            className="h-full w-[90%] object-cover"
+            src={
+              imgChild[0]?.image
+                ? imgChild[0]?.image
+                : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+            }
+            className="mx-auto h-full w-[90%] object-cover"
             alt="Image 1"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={imgChild[1]?.image} />)}
+          onClick={() =>
+            openPopup(
+              <img
+                src={
+                  imgChild[1]?.image
+                    ? imgChild[1]?.image
+                    : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+                }
+              />,
+            )
+          }
           className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={imgChild[1]?.image}
-            className="h-full w-[90%] object-cover"
+            src={
+              imgChild[1]?.image
+                ? imgChild[1]?.image
+                : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+            }
+            className="mx-auto h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={imgChild[2]?.image} />)}
+          onClick={() =>
+            openPopup(
+              <img
+                src={
+                  imgChild[2]?.image
+                    ? imgChild[2]?.image
+                    : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+                }
+              />,
+            )
+          }
           className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={imgChild[2]?.image}
-            className="h-full w-[90%] object-cover"
+            src={
+              imgChild[2]?.image
+                ? imgChild[2]?.image
+                : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+            }
+            className="mx-auto h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={imgChild[3]?.image} />)}
+          onClick={() =>
+            openPopup(
+              <img
+                src={
+                  imgChild[3]?.image
+                    ? imgChild[3]?.image
+                    : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+                }
+              />,
+            )
+          }
           className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={imgChild[3]?.image}
-            className="h-full w-[90%] object-cover"
+            src={
+              imgChild[3]?.image
+                ? imgChild[3]?.image
+                : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+            }
+            className="mx-auto h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
         <div
-          onClick={() => openPopup(<img src={imgChild[4]?.image} />)}
+          onClick={() =>
+            openPopup(
+              <img
+                src={
+                  imgChild[4]?.image
+                    ? imgChild[4]?.image
+                    : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+                }
+              />,
+            )
+          }
           className="h-[100px] w-[100px] cursor-pointer"
           onMouseEnter={handleImageClick}
         >
           <img
-            src={imgChild[4]?.image}
-            className="h-full w-[90%] object-cover"
+            src={
+              imgChild[4]?.image
+                ? imgChild[4]?.image
+                : "https://placehold.co/276x350?text=%22Kh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%22"
+            }
+            className="mx-auto h-full w-[90%] object-cover"
             alt="Image 2"
           />
         </div>
@@ -159,4 +231,4 @@ const Carousel: React.FC<CarouselProps> = ({ SetImage, imgs }) => {
   );
 };
 
-export default Carousel;
+export default React.memo(Carousel);

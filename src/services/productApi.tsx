@@ -40,6 +40,8 @@ import {
   GetStatisticalProductsResponse,
   GetStatisticalUsersResponse,
 } from "@/types/statistical";
+import { getFavoriteResponse } from "@/types/favorites";
+import { CreateCommentResponse, GetCommentsResponse } from "@/types/comment";
 
 // Cấu hình baseQuery với fetchBaseQuery
 const baseQuery = fetchBaseQuery({
@@ -76,7 +78,13 @@ const baseQueryWithForceLogout = async (
 // Tạo API với createApi
 export const productApi = createApi({
   reducerPath: "productApi",
-  tagTypes: ["orderUser", "orderShipping", "Brand", "statisticalUsers"],
+  tagTypes: [
+    "orderUser",
+    "orderShipping",
+    "Brand",
+    "statisticalUsers",
+    "Comments",
+  ],
   baseQuery: baseQueryWithForceLogout,
   endpoints: (builder) => ({
     getAllProducts: builder.query<getAllProductsResponse, void>({
@@ -167,7 +175,7 @@ export const productApi = createApi({
     }),
 
     // Order user
-    getOrdersUser: builder.query<GetallOrderAdminsResponse, string>({
+    getOrdersUser: builder.query({
       query: (status) => ({
         url: `/user/orders?status=${status}`,
       }),
@@ -350,14 +358,32 @@ export const productApi = createApi({
         method: "DELETE",
       }),
     }),
-    updateVoucher: builder.mutation<void, { id: number; data: Partial<AddVoucherBase> }>({
+    updateVoucher: builder.mutation<
+      void,
+      { id: number; data: Partial<AddVoucherBase> }
+    >({
       query: ({ id, data }) => ({
         url: `/admin/voucher/${id}`,
         method: "PUT",
         body: data,
-      })
+      }),
     }),
     // Thống kê
+    getStatisticalTime: builder.query<
+      {
+        total_revenue: string;
+        start_date: string;
+        end_date: string;
+      },
+      { start_date: string; end_date: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: `admin/statistical/revenue`,
+        params: { start_date, end_date },
+      }),
+      providesTags: [{ type: "statisticalUsers" }],
+    }),
+
     getStatisticalUsers: builder.query<
       GetStatisticalUsersResponse,
       { start_date: string; end_date: string }
@@ -388,8 +414,87 @@ export const productApi = createApi({
         params: { start_date, end_date },
       }),
     }),
+
+    weekStatistical: builder.query({
+      query: () => ({
+        url: "admin/statistical/revenue",
+      }),
+    }),
+
+    // Favorite
+    createFavorite: builder.mutation<{ message: string }, number>({
+      query: (product_id) => ({
+        url: "/favourites",
+        method: "POST",
+        body: { product_id },
+      }),
+    }),
+
+    getFavorites: builder.query<getFavoriteResponse, void>({
+      query: () => ({
+        url: "/favourites",
+      }),
+    }),
+
+    deleteFavorite: builder.mutation<{ message: string }, number>({
+      query: (favoriteId) => ({
+        url: `/favourites/${favoriteId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    // Comment
+    createComment: builder.mutation<
+      CreateCommentResponse,
+      { rating: number; content: string; productId: number }
+    >({
+      query: ({ rating, content, productId }) => ({
+        url: `products/${productId}/comments`,
+        method: "POST",
+        body: { rating, content },
+      }),
+      invalidatesTags: (result, error, { productId }) => [
+        { type: "Comments", id: productId }, // Invalidates tag khi tạo bình luận
+      ],
+    }),
+
+    getComments: builder.query<GetCommentsResponse, { productId: number }>({
+      query: ({ productId }) => ({
+        url: `/get/comments/${productId}`,
+      }),
+      providesTags: (result, error, { productId }) => [
+        { type: "Comments", id: productId }, // Cung cấp tag cho bình luận của sản phẩm
+      ],
+    }),
+
+    deleteComments: builder.mutation<
+      { message: string },
+      { commentId: number; productId: number } // Nhận cả commentId và productId
+    >({
+      query: ({ commentId }) => ({
+        url: `/products/${commentId}/comments`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, { productId }) => [
+        { type: "Comments", id: productId }, // Dùng trực tiếp productId đã truyền vào
+      ],
+    }),
+
+    updateComment: builder.mutation<
+      CreateCommentResponse,
+      { rating: number; content: string; productId: number }
+    >({
+      query: ({ rating, content, productId }) => ({
+        url: `products/${productId}/comments`,
+        method: "PATCH",
+        body: { rating, content },
+      }),
+      invalidatesTags: (result, error, { productId }) => [
+        { type: "Comments", id: productId },
+      ],
+    }),
   }),
-})
+});
 
 export const {
   useGetAllProductsQuery,
@@ -426,5 +531,14 @@ export const {
   useGetStatisticalUsersQuery,
   useGetStatisticalProductsQuery,
   useGetStatisticalOrdersQuery,
-  useFilterProductsQuery
+  useGetStatisticalTimeQuery,
+  useWeekStatisticalQuery,
+  useFilterProductsQuery,
+  useCreateFavoriteMutation,
+  useGetFavoritesQuery,
+  useDeleteFavoriteMutation,
+  useCreateCommentMutation,
+  useGetCommentsQuery,
+  useDeleteCommentsMutation,
+  useUpdateCommentMutation,
 } = productApi;

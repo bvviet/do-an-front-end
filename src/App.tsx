@@ -23,13 +23,8 @@ import SetPassword from "@/components/signIn-signUp/SetPassword";
 import AdminLayout from "@/layouts/AdminLayout";
 import ListAuth from "@/pages/admin/Auth/ListAuth";
 import Statistical from "@/pages/admin/Statistical";
-
-//import ListPrd from "./pages/admin/CRUD/ListProduct";
 import LabTabs from "./components/admin/Tab";
 import GenreTabs from "./components/admin/TabGenre";
-// import CrudLayout from "@/layouts/CrudProduct";
-// import ListProducts from "@/components/admin/CRUD/List";
-// import AddProducts from "@/components/admin/CRUD/AddProduct";
 import Register from "@/components/signIn-signUp/Register";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import EditCategory from "./components/admin/CRUDGenre/EditGenre";
@@ -49,6 +44,7 @@ import VoucherTabs from "./components/admin/TabVoucher";
 import EditVoucherComponent from "./components/admin/CRUDVoucher/EditVoucher";
 import Filter from "./pages/user/Filter";
 import EditProducts from "./components/admin/CRUD/EditProduct";
+import Favorites from "./pages/user/Favorites";
 
 function App() {
   const router = createBrowserRouter([
@@ -63,30 +59,21 @@ function App() {
         { path: "/blogDetail", element: <BlogDetail /> },
         { path: "/about", element: <About /> },
         { path: "/faq", element: <FAQs /> },
-        { path: "/checkout", element: <CheckOut /> },
         { path: "/login", element: <Login /> },
         { path: "/sign-up", element: <Register /> },
         { path: "/dangky", element: <SignUp /> },
         { path: "/forgot", element: <ForgotPassword /> },
         { path: "/otp", element: <Verify /> },
         { path: "/set-password", element: <SetPassword /> },
-        { path: "/Cart", element: <CartPage /> },
         { path: "/thanks", element: <Thanks /> },
         { path: "/payment/success", element: <Thanks /> },
         {
           path: "/categories/products/:categoriesChildId",
           element: <CategoryProducts />,
         },
-        {
-          path: "/orders",
-          element: <Orders />,
-        },
-        {
-          path: "/order/detail/:orderId",
-          element: <OrderDetail />,
-        },
         { path: "/search-result", element: <ResultSearch /> },
         { path: "/filter", element: <Filter /> },
+        { path: "/favorites", element: <Favorites /> },
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedLayout />,
@@ -104,6 +91,16 @@ function App() {
                 },
               ],
             },
+            {
+              path: "/orders",
+              element: <Orders />,
+            },
+            {
+              path: "/order/detail/:orderId",
+              element: <OrderDetail />,
+            },
+            { path: "/checkout", element: <CheckOut /> },
+            { path: "/Cart", element: <CartPage /> },
           ],
         },
       ],
@@ -125,16 +122,6 @@ function App() {
         { path: "shipper", element: <Shipper /> },
         { path: "voucher", element: <VoucherTabs /> },
         { path: "voucher/:id", element: <EditVoucherComponent /> },
-
-        // {
-        //   path: "products",
-        //   element: <CrudLayout />,
-        //   children: [
-        //     { path: "list", element: <ListProducts /> },
-        //     { path: "add", element: <AddProducts /> },
-        //     { path: "edit", element: <AddProducts /> },
-        //   ],
-        // },
       ],
     },
   ]);

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import ButtonComponent from "../../ButtonComponent";
 import { ProductDetailType } from "@/types/product";
@@ -195,4 +195,4 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
     </div>
   );
 };
-export default FormDetail;
+export default React.memo(FormDetail);

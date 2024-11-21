@@ -4,6 +4,7 @@ import authReducer from "./slices/authSlice";
 import loadingReducer from "./slices/loadingSlice";
 import { authApi } from "@/services/authApi";
 import cartReducer from "./slices/CartSlice";
+import favoriteReducer from "./slices/favorites";
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   categories: categoryReducer,
   loading: loadingReducer,
   carts: cartReducer,
+  favorite: favoriteReducer,
 });
 
 // Kết hợp reducer với redux-persist

@@ -19,6 +19,8 @@ const Header = () => {
     null,
   );
   const { openOverlay } = useOverlayContext();
+  console.log({ openOverlay });
+
   const { logOut } = useLogout();
   const userInfor = useUserInfor();
 
@@ -38,6 +40,7 @@ const Header = () => {
   const cartItems = useSelector(
     (state: RootState) => state.carts.cart_items || [],
   );
+  const favorite = useSelector((state: RootState) => state.favorite.items);
 
   const renderMenu = (
     <Menu
@@ -99,12 +102,12 @@ const Header = () => {
           <div className="my-[8px] h-[1px] w-full bg-[#0000000d]" />
           <ul>
             <li>
-              <a
-                href="#!"
+              <Link
+                to="/admin"
                 className="block py-[10px] font-medium hover:text-[#444]"
               >
-                Cài đặt
-              </a>
+                Trang Admin
+              </Link>
             </li>
             <li>
               <a
@@ -136,8 +139,11 @@ const Header = () => {
           {userInfor ? (
             <div className="flex gap-4 sm:gap-[18px]">
               <Tooltip title="Sản phẩm yêu thích" arrow>
-                <Link to={"#!"} className="flex items-center gap-1">
-                  <Badge badgeContent={3} color="secondary">
+                <Link to={"/favorites"} className="flex items-center gap-1">
+                  <Badge
+                    badgeContent={(favorite || []).length}
+                    color="secondary"
+                  >
                     <img src={heartIcon} alt="Favorites" />
                   </Badge>
                 </Link>

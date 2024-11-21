@@ -1,10 +1,10 @@
-
+import { Link } from "react-router-dom";
 
 const Logo = () => {
     return (
-        <a href="/">
+        <Link to="/">
             <span className="font-itim text-[34px] font-semibold">Top Deal</span>
-        </a>
+        </Link>
     );
 };
 export default Logo;

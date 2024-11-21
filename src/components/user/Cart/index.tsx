@@ -1,12 +1,17 @@
 import { useGetCartQuery } from "@/services/authApi";
 import CartLeft from "./CartLeft";
 import CartRight from "./CartRight";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const Cart = () => {
-  const { data: carts } = useGetCartQuery(undefined, {
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
-  });
+  const disPatch = useDispatch();
+
+  const { data: carts, isLoading } = useGetCartQuery();
+  useEffect(() => {
+    disPatch(setLoading(isLoading));
+  }, [disPatch, isLoading]);
 
   return (
     <div className="container mx-auto">
