@@ -17,7 +17,7 @@ interface FormData {
 }
 
 export default function AddCategory() {
-  const { control, handleSubmit, reset } = useForm<FormData>();
+  const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
   const [addCategory, { isLoading, error }] = useAddCategoryMutation();
   const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
   const { setValue } = useTabContext(); // Lấy setValue từ TabContext
@@ -70,10 +70,16 @@ export default function AddCategory() {
                           message: "Không được ít hơn 3 kí tự.",
                         },
                       }}
+                      error={errors.name}
                     />
+                    {error && (
+                      <p className="text-red-500">
+                        {isErrorMessage(error)}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col">
-                    <label>Chọn danh mục cha</label>
+                    <label className="text-[20px] font-bold text-black">Chọn danh mục cha</label>
                     <Controller
                       name="parent_id"
                       control={control}
@@ -141,11 +147,7 @@ export default function AddCategory() {
                     {isLoading ? <CircularProgress size={16} sx={{ color: "white" }} /> : 'Lưu thay đổi'}
                   </button>
                 </div>
-                {error && (
-                  <p className="text-red-500">
-                    {isErrorMessage(error)}
-                  </p>
-                )}
+
               </div>
             </div>
           </div>
@@ -156,10 +158,18 @@ export default function AddCategory() {
 }
 
 // Hàm để xử lý thông điệp lỗi
-const isErrorMessage = (error: FetchBaseQueryError | SerializedError) => {
+const isErrorMessage = (error: FetchBaseQueryError | SerializedError): string => {
+  // Nếu là FetchBaseQueryError
   if ('status' in error) {
-    return `Lỗi: ${error.status}, ${JSON.stringify(error.data)}`;
-  } else {
+    const data = error.data as { error?: string; message?: string }; // Ép kiểu
+    return data?.error || data?.message || "Đã xảy ra lỗi không xác định";
+  }
+
+  // Nếu là SerializedError
+  if ('message' in error) {
     return error.message || "Đã xảy ra lỗi không xác định";
   }
+
+  // Trường hợp không khớp kiểu
+  return "Đã xảy ra lỗi không xác định";
 };

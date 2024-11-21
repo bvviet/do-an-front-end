@@ -48,6 +48,7 @@ import EditBrand from "./components/admin/CRUDBrand/UpdateBrand";
 import VoucherTabs from "./components/admin/TabVoucher";
 import EditVoucherComponent from "./components/admin/CRUDVoucher/EditVoucher";
 import Filter from "./pages/user/Filter";
+import EditProducts from "./components/admin/CRUD/EditProduct";
 
 function App() {
   const router = createBrowserRouter([
@@ -113,6 +114,7 @@ function App() {
       children: [
         { path: "lists", element: <ListAuth /> },
         { path: "product", element: <LabTabs /> },
+        { path: "product/:slug", element: <EditProducts /> },
         { path: "genre", element: <GenreTabs /> },
         { path: "genre/:id", element: <EditCategory /> },
         { path: "brand", element: <BrandTabs /> },
