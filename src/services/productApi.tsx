@@ -106,7 +106,16 @@ export const productApi = createApi({
         body: newProduct,
       }),
     }),
-
+    editProduct: builder.mutation<AddProduct, { slug: string; updatedProduct: FormData }>({
+      query: ({ slug, updatedProduct }) => {
+        updatedProduct.append('_method', 'PUT'); // Thêm _method vào FormData nếu backend yêu cầu
+        return {
+          url: `/admin/products/${slug}`,
+          method: "POST", // Giữ POST nếu backend yêu cầu POST
+          body: updatedProduct,
+        };
+      },
+    }),
     addCart: builder.mutation<
       CartAddResponse,
       { product_id: number; quantity: number; color: string; size: string }
@@ -491,6 +500,7 @@ export const {
   useGetAllProductsQuery,
   useGetDetailProductQuery,
   useAddCartMutation,
+  useEditProductMutation,
   useDeleteCartMutation,
   useUpdateQuantityCartMutation,
   useGetOrdersUserQuery,

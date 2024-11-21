@@ -117,8 +117,7 @@ export default function ListProducts() {
                       value = product.name;
                     } else if (column.id === "price") {
                       value = formatCurrency(product.price_regular);
-                    } else if (column.id === "category") {
-                      value = product.category.name;
+
                     } else if (column.id === "img") {
                       value = (
                         <img src={product.img_thumbnail} alt={product.name} style={{ width: '100px', height: 'auto' }} />
@@ -144,7 +143,7 @@ export default function ListProducts() {
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Edit product">
-                            <Link to={`/admin/products/${product.id}`}>
+                            <Link to={`/admin/product/${product.slug}`}>
                               <IconButton aria-label="edit">
                                 <EditIcon color="primary" />
                               </IconButton>
