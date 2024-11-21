@@ -1,5 +1,3 @@
-import FormField from "@/components/FormField";
-import TextInputs from "@/components/FormInputs/TextInputs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AddProduct } from "@/types/product";

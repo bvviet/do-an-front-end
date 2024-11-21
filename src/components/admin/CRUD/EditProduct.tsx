@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import { LinearProgress, MenuItem, Select, Box, TextField, FormControlLabel, Switch, Button, Tooltip, IconButton } from "@mui/material";
+import { LinearProgress, MenuItem, Select, Box, TextField, FormControlLabel, Switch, Tooltip, IconButton } from "@mui/material";
 import axios from "axios";
 import { useBrands } from "@/hooks/useBrand";
 import DeleteIcon from "@mui/icons-material/Delete";

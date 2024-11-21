@@ -13,19 +13,18 @@ const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
   categoriesId,
 }) => {
   const [visibleCount, setVisibleCount] = useState(6);
-  const { data: products, isLoading } =
-    useGetCategoryProductsQuery(categoriesId);
+  const { data, isLoading } = useGetCategoryProductsQuery(categoriesId);
   const dispatch = useDispatch();
 
-  const productCategory = products?.category.products;
-  // Đảm bảo rằng showHide kiểm tra productCategory một cách chính xác
-  const showHide = visibleCount < (productCategory?.length || 0);
+  // Kiểm tra sản phẩm trong response
+  const products = data?.products || [];
+  console.log(products);
+
+  const showHide = visibleCount < products.length;
 
   const handleShowMore = () => {
     setVisibleCount((prevCount) =>
-      prevCount + 6 > (productCategory?.length || 0)
-        ? prevCount
-        : prevCount + 6,
+      prevCount + 6 > products.length ? prevCount : prevCount + 6
     );
   };
 
@@ -42,11 +41,12 @@ const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
         handleShowMore={handleShowMore}
         showHide={showHide}
       >
-        {productCategory
-          ?.slice(0, visibleCount)
-          .map((product) => <ProductItem key={product.id} product={product} />)}
+        {products.slice(0, visibleCount).map((product) => (
+          <ProductItem key={product.id} product={product} />
+        ))}
       </BaseSection>
     </div>
   );
 };
+
 export default React.memo(SimilarProductDetail);
