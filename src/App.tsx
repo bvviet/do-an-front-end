@@ -120,16 +120,6 @@ function App() {
         { path: "shipper", element: <Shipper /> },
         { path: "voucher", element: <VoucherTabs /> },
         { path: "voucher/:id", element: <EditVoucherComponent /> },
-
-        // {
-        //   path: "products",
-        //   element: <CrudLayout />,
-        //   children: [
-        //     { path: "list", element: <ListProducts /> },
-        //     { path: "add", element: <AddProducts /> },
-        //     { path: "edit", element: <AddProducts /> },
-        //   ],
-        // },
       ],
     },
   ]);

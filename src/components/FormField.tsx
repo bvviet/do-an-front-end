@@ -19,6 +19,7 @@ interface FormFieldProps<T extends FieldValues> {
   rules?: Record<string, any>;
   error?: { message?: string };
   options?: Option[];
+  content?: string;
 }
 
 const FormField = <T extends FieldValues>({

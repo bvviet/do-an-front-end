@@ -102,12 +102,12 @@ const Header = () => {
           <div className="my-[8px] h-[1px] w-full bg-[#0000000d]" />
           <ul>
             <li>
-              <a
-                href="#!"
+              <Link
+                to="/admin"
                 className="block py-[10px] font-medium hover:text-[#444]"
               >
-                Cài đặt
-              </a>
+                Trang Admin
+              </Link>
             </li>
             <li>
               <a
