@@ -125,7 +125,7 @@ const Header = () => {
   );
 
   return (
-    <header className="sticky top-0 z-50 bg-[#005D63] py-[20px] text-white sm:py-[28px]">
+    <header className="sticky top-0 z-50 bg-[#A6AEBF] py-[20px] text-[#1A1A1D] sm:py-[28px]">
       <div className="container">
         {/* Desktop */}
         <div className="flex items-center justify-between">

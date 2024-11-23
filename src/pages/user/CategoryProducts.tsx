@@ -35,7 +35,7 @@ const CategoryProducts = () => {
     <div className="container">
       <BaseSection
         typeProduct={true}
-        title={`${products?.message} `}
+        title={`Sản phẩm thuộc ${products?.message.split(":")[1]} `}
         description="Browse our new products and make your day more beautiful and glorious."
         handleShowMore={handleShowMore}
         showHide={showHide}

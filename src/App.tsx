@@ -44,6 +44,7 @@ import VoucherTabs from "./components/admin/TabVoucher";
 import EditVoucherComponent from "./components/admin/CRUDVoucher/EditVoucher";
 import Filter from "./pages/user/Filter";
 import Favorites from "./pages/user/Favorites";
+import BannerAdmin from "./pages/admin/Banner";
 
 function App() {
   const router = createBrowserRouter([
@@ -120,6 +121,7 @@ function App() {
         { path: "shipper", element: <Shipper /> },
         { path: "voucher", element: <VoucherTabs /> },
         { path: "voucher/:id", element: <EditVoucherComponent /> },
+        { path: "banners", element: <BannerAdmin /> },
       ],
     },
   ]);

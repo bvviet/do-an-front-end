@@ -115,7 +115,7 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
         <p>Loading...</p>
       )}
       {/* Similar Product */}
-      <SimilarProductDetail categoriesId={productDetail?.category_id ?? 5} />
+      <SimilarProductDetail relatedProducts={productDetail?.related_products} />
     </div>
   );
 };

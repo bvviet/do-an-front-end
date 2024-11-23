@@ -20,41 +20,48 @@ import {
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link } from "react-router-dom";
 import { useGetUsersQuery } from "@/services/authApi";
+import DomainIcon from "@mui/icons-material/Domain";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const arrayNav = [
   {
     id: 1,
+    name: "Dashboard",
+    icon: DomainIcon,
+    link: "/admin/dashboard",
+  },
+  {
+    id: 2,
     name: "Người dùng",
     icon: AccountBoxIcon,
     link: "/admin/lists",
   },
   {
-    id: 2,
+    id: 3,
     name: "Sản phẩm",
     icon: ShoppingCartIcon,
     link: "/admin/product",
   },
   {
-    id: 7,
+    id: 4,
     name: "Thương hiệu",
     icon: PublicIcon,
     link: "/admin/brand",
   },
   {
-    id: 3,
+    id: 5,
     name: "Danh mục",
     icon: FormatListBulletedIcon,
     link: "/admin/genre",
   },
   {
-    id: 4,
+    id: 6,
     name: "Quản lý đơn hàng",
     icon: ReceiptLongIcon,
     link: "/admin/orders",
   },
   {
-    id: 6,
+    id: 7,
     name: "Shipper",
     icon: LocalShippingIcon,
     link: "/admin/shipper",
@@ -66,10 +73,16 @@ const arrayNav = [
     link: "/admin/voucher",
   },
   {
-    id: 5,
+    id: 9,
     name: "Thống kê",
     icon: BarChartIcon,
     link: "/admin/statistical",
+  },
+  {
+    id: 10,
+    name: "Banner",
+    icon: BarChartIcon,
+    link: "/admin/banners",
   },
 ];
 
@@ -86,7 +99,7 @@ const NavbarAdmin = () => {
   const { data: user } = useGetUsersQuery();
 
   return (
-    <div className="flex h-full flex-col rounded-r-lg bg-main p-7 text-[1.5rem] text-white">
+    <div className="flex h-[100vh] flex-col overflow-y-auto rounded-r-lg bg-main p-7 text-[1.5rem] text-white">
       {/* Logo */}
       <div>
         <Logo />

@@ -26,7 +26,16 @@ export interface GetCategoriesItemResponse {
   created_at: string;
   updated_at: string;
   deleted_at: boolean;
-  children: [];
+  children: {
+    created_at: string;
+    deleted_at: null;
+    id: number;
+    image: string;
+    name: string;
+    parent_id: number;
+    slug: string;
+    updated_at: string;
+  }[];
 }
 
 export interface GetAllCategoriesResponse {
