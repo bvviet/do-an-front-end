@@ -4,11 +4,12 @@ import { toast } from "react-toastify";
 import { TextField, Select, MenuItem, FormControlLabel, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAddVoucherMutation } from "@/services/productApi";
+import { useTabContext } from "@/contexts/TabContext";
 
 export default function AddVoucherComponent() {
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<AddVoucherBase>();
     const [addVoucher, { isLoading }] = useAddVoucherMutation();
-
+    const { setValue } = useTabContext();
     // Khai báo state applicableIds để lưu mảng các ID sản phẩm
     const [applicableIds, setApplicableIds] = useState<number[]>([]);
 
@@ -25,6 +26,8 @@ export default function AddVoucherComponent() {
             await addVoucher(voucherDataJson).unwrap(); // Sử dụng voucherData trực tiếp
             toast.success("Thêm voucher thành công!");
             reset(); // Reset form sau khi thêm thành công
+            setValue("1");
+            reset();
         } catch (error) {
             console.error(error);
             toast.error("Đã xảy ra lỗi khi thêm voucher.");
@@ -178,7 +181,7 @@ export default function AddVoucherComponent() {
                         {isLoading ? (
                             <i className="fas fa-spinner fa-spin"></i>
                         ) : (
-                            "Thêm thương hiệu"
+                            "Thêm mã giảm giá"
                         )}
                     </button>
 

@@ -493,6 +493,10 @@ export const productApi = createApi({
         { type: "Comments", id: productId },
       ],
     }),
+    getAllVoucher: builder.query({
+      query: ({ page, limit }: { page: number; limit: number }) =>
+        `voucher?page=${page}&limit=${limit}`,
+    }),
   }),
 });
 
@@ -541,4 +545,5 @@ export const {
   useGetCommentsQuery,
   useDeleteCommentsMutation,
   useUpdateCommentMutation,
+  useGetAllVoucherQuery
 } = productApi;

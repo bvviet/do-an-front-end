@@ -1,69 +1,49 @@
-import { IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from "@mui/material";
-import Search from "../CRUD/Components/Search";
-import LinkProducts from "../CRUD/Components/Button";
+import {
+    IconButton,
+    LinearProgress,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { toast } from "react-toastify";
-import axios from "axios";
-import { IVoucher } from "@/types/voucher";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import CFButton from "../CfButton";
-import { useDeleteVoucherMutation } from "@/services/productApi";
+import { useDeleteVoucherMutation, useGetAllVoucherQuery } from "@/services/productApi";
+import Search from "../CRUD/Components/Search";
+import LinkProducts from "../CRUD/Components/Button";
+import { IVoucher } from "@/types/voucher";
 
-interface Column {
-    id: "name" | "id" | "discount" | "usage" | "code" | "applicable" | "productId" | "";
-    label: string;
-    minWidth?: number;
-    align?: "right" | "center";
-}
-
-const columns: Column[] = [
+const columns = [
     { id: "id", label: "ID", minWidth: 100, align: "center" },
-    { id: "name", label: "Name", minWidth: 170, align: "center" },
-    { id: "discount", label: "Discount", minWidth: 100, align: "center" },
-    { id: "usage", label: "Usage", minWidth: 100, align: "center" },
-    { id: "code", label: "Code", minWidth: 100, align: "center" },
-    { id: "applicable", label: "Applicable", minWidth: 100, align: "center" },
-    { id: "productId", label: "ProductId", minWidth: 150, align: "center" },
+    { id: "name", label: "Tên", minWidth: 150, align: "center" },
+    { id: "discount", label: "Giảm giá", minWidth: 100, align: "center" },
+    { id: "minimum_order_value", label: "Đơn tối thiểu", minWidth: 120, align: "center" },
+    { id: "code", label: "Mã", minWidth: 100, align: "center" },
+    { id: "applicable", label: "Áp dụng", minWidth: 100, align: "center" },
+    { id: "productId", label: "Id sản phẩm", minWidth: 150, align: "center" },
     { id: "", label: "", minWidth: 150, align: "center" },
 ];
 
 export default function ListVoucher() {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(50);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const { openPopup } = useModalContext();
-    const [loading, setLoading] = useState(false);
-    const [vouchers, setVouchers] = useState<IVoucher[]>([]);
-    const [deleteVoucher] = useDeleteVoucherMutation()
-    const [pagination, setPagination] = useState({
-        currentPage: 1,
-        lastPage: 1,
-        total: 0, // Tổng số bản ghi (thông tin này cần phải trả về từ API)
+    const [deleteVoucher] = useDeleteVoucherMutation();
+    const { data, error, isLoading, refetch } = useGetAllVoucherQuery({
+        page: page + 1,
+        limit: rowsPerPage,
     });
-
-    const fetchVouchersByPage = async (page: number) => {
-        try {
-            setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/voucher?page=${page}&limit=${rowsPerPage}`);
-            setVouchers(response.data.data);  // Lấy dữ liệu voucher
-            setPagination({
-                currentPage: response.data.current_page,
-                lastPage: response.data.last_page,
-                total: response.data.total, // Tổng số bản ghi
-            });
-        } catch (error) {
-            console.error("Lỗi khi tải voucher:", error);
-            toast.error("Không thể tải danh sách voucher.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchVouchersByPage(page + 1); // Lấy voucher ở trang hiện tại
-    }, [page, rowsPerPage]); // Khi trang hoặc số lượng dòng thay đổi
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
@@ -71,124 +51,133 @@ export default function ListVoucher() {
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(+event.target.value);
-        setPage(0); // Khi thay đổi số dòng mỗi trang, quay về trang đầu tiên
+        setPage(0); // Quay lại trang đầu khi thay đổi số dòng trên mỗi trang
     };
 
-    const handleDelete = async (brandID: number) => {
+    const handleDelete = async (voucherId: number) => {
         try {
-            await deleteVoucher(brandID).unwrap();
+            await deleteVoucher(voucherId).unwrap();
             toast.success("Voucher đã được xóa thành công.");
-            fetchVouchersByPage(page)
+            refetch()
         } catch (err) {
-
-            const error = err as { status?: number; data?: { message?: string } };
-            const errorMessage = error.data?.message || "Failed to delete category. Please try again.";
+            const error = err as { data?: { message?: string } };
+            const errorMessage = error.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.";
             toast.error(errorMessage);
-            console.error("Failed to delete category:", error); // Log lỗi
         }
     };
 
-    if (loading) return <LinearProgress />;
+    if (isLoading) return <LinearProgress />;
+    if (error) return <Typography color="error">Có lỗi xảy ra: {JSON.stringify(error)}</Typography>;
+
+    const vouchers = data?.vouchers || [];
+    const totalAvailableVouchers = data?.total_available_vouchers || 0;
 
     return (
-        <>
-            <Paper sx={{ width: "100%", borderRadius: "10px" }}>
-                <TableContainer className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]" style={{ borderRadius: "10px" }}>
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center" colSpan={6}>
-                                    <Search />
+        <Paper sx={{ width: "100%", borderRadius: "10px" }}>
+            <TableContainer className="max-h-[600px]" style={{ borderRadius: "10px" }}>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center" colSpan={6}>
+                                <Search />
+                            </TableCell>
+                            <TableCell align="center" colSpan={2}>
+                                <LinkProducts />
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            {columns.map((column) => (
+                                <TableCell key={column.id} style={{ top: 57, minWidth: column.minWidth }}>
+                                    {column.label}
                                 </TableCell>
-                                <TableCell align="center" colSpan={2}>
-                                    <LinkProducts />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell key={column.id} align={column.align} style={{ top: 57, minWidth: column.minWidth }}>
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {Array.isArray(vouchers) && vouchers.length > 0 ? (
-                                vouchers.map((voucher) => (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={voucher.id}>
-                                        {columns.map((column) => {
-                                            let value;
-                                            if (column.id === "id") {
-                                                value = voucher.id;
-                                            } else if (column.id === "name") {
-                                                value = voucher.name;
-                                            } else if (column.id === "discount") {
-                                                value = `${Math.round(parseFloat(voucher.discount_value))}%`;
-                                            } else if (column.id === "usage") {
-                                                value = voucher.usage_limit;
-                                            } else if (column.id === "code") {
-                                                value = voucher.code;
-                                            } else if (column.id === "applicable") {
-                                                value = voucher.applicable_type;
-                                            } else if (column.id === "productId") {
-                                                const applicableIds = JSON.parse(voucher.applicable_ids);
-                                                value = Array.isArray(applicableIds) ? applicableIds.join(", ") : "";
-                                            } else if (column.id === "") {
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {vouchers.length > 0 ? (
+                            vouchers.map((voucher: IVoucher) => (
+                                <TableRow hover role="checkbox" tabIndex={-1} key={voucher.id}>
+                                    {columns.map((column) => {
+                                        let value;
+                                        if (column.id === "id") value = voucher.id;
+                                        else if (column.id === "name") value = voucher.name;
+                                        else if (column.id === "discount")
+                                            value = `${Math.round(parseFloat(voucher.discount_value))}%`;
+                                        else if (column.id === "minimum_order_value") {
+                                            // Chuyển voucher.minimum_order_value thành số
+                                            const minimumOrderValue = parseFloat(voucher.minimum_order_value.toString());
+
+                                            // Kiểm tra xem số có hợp lệ không
+                                            if (!isNaN(minimumOrderValue)) {
+                                                // Định dạng số theo kiểu tiền tệ
+                                                const formattedValue = new Intl.NumberFormat('vi-VN').format(minimumOrderValue);
+
+                                                // Thêm đơn vị "VND" và áp dụng màu đỏ cho chữ
                                                 value = (
-                                                    <>
-                                                        <Tooltip title="Delete Voucher">
-                                                            <IconButton
-                                                                aria-label="delete"
-                                                                onClick={() =>
-                                                                    openPopup(
-                                                                        <CFButton
-                                                                            title="Are you sure you want to delete this item?"
-                                                                            handleDelete={() => handleDelete(voucher.id)}
-                                                                        />
-                                                                    )
-                                                                }
-                                                            >
-                                                                <DeleteIcon color="error" />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Tooltip title="Edit Voucher">
-                                                            <Link to={`/admin/voucher/${voucher.id}`}>
-                                                                <IconButton aria-label="edit">
-                                                                    <EditIcon color="primary" />
-                                                                </IconButton>
-                                                            </Link>
-                                                        </Tooltip>
-                                                    </>
+                                                    <span className="text-red-600">
+                                                        {formattedValue} <span>&#8363;</span>
+                                                    </span>
                                                 );
+                                            } else {
+                                                value = "Không hợp lệ"; // Nếu giá trị không hợp lệ
                                             }
-                                            return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {value}
-                                                </TableCell>
+                                        }
+                                        else if (column.id === "code") value = voucher.code;
+                                        else if (column.id === "applicable") value = voucher.applicable_type;
+                                        else if (column.id === "productId") {
+                                            const applicableIds = JSON.parse(voucher.applicable_ids);
+                                            value = Array.isArray(applicableIds) ? applicableIds.join(", ") : "";
+                                        } else if (column.id === "") {
+                                            value = (
+                                                <>
+                                                    <Tooltip title="Delete Voucher">
+                                                        <IconButton
+                                                            aria-label="delete"
+                                                            onClick={() =>
+                                                                openPopup(
+                                                                    <CFButton
+                                                                        title="Bạn có chắc chắn muốn xóa không?"
+                                                                        handleDelete={() => handleDelete(voucher.id)}
+                                                                    />
+                                                                )
+                                                            }
+                                                        >
+                                                            <DeleteIcon color="error" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="Edit Voucher">
+                                                        <Link to={`/admin/voucher/${voucher.id}`}>
+                                                            <IconButton aria-label="edit">
+                                                                <EditIcon color="primary" />
+                                                            </IconButton>
+                                                        </Link>
+                                                    </Tooltip>
+                                                </>
                                             );
-                                        })}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={7} align="center">
-                                        <Typography color="error">Không có voucher nào để hiển thị.</Typography>
-                                    </TableCell>
+                                        }
+                                        return <TableCell key={column.id} >{value}</TableCell>;
+                                    })}
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 50]}
-                    component="div"
-                    count={pagination.total} // Tổng số bản ghi từ API
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
-        </>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={8} align="center">
+                                    <Typography color="error">Không có voucher nào để hiển thị.</Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 50]}
+                component="div"
+                count={totalAvailableVouchers}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </Paper>
     );
 }
