@@ -217,7 +217,7 @@ export const authApi = createApi({
     }),
 
     getAllCategories: builder.query<GetAllCategoriesResponse, void>({
-      query: () => "/categories",
+      query: () => "/get-categories",
     }),
 
     deleteCategory: builder.mutation<CategoriesResponse, string>({

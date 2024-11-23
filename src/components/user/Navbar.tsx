@@ -2,7 +2,6 @@
 import React, { useState, ReactNode, useRef, useEffect } from "react";
 import dropDownIcon from "../../assets/icons/dropdown.svg";
 import dropDownActiveIcon from "../../assets/icons/dropdownActive.svg";
-import shopIcon from "../../assets/icons/cart.svg";
 import { useGetAllCategoriesQuery } from "@/services/authApi";
 import { Link } from "react-router-dom";
 
@@ -61,11 +60,11 @@ const Navbar: React.FC = () => {
                     <React.Fragment key={index}>
                       <div className="flex items-center gap-4 px-[24px] py-[8px]">
                         <img
-                          src={shopIcon}
+                          src={`${subItem.image}`}
                           alt=""
-                          className="w-[15px] sm:w-[20px]"
+                          className="w-[15px] sm:w-[25px]"
                         />
-                        <li className="leading-[175%] text-white hover:text-[#FFD44D]">
+                        <li className="leading-[175%] text-[#1A1A19] hover:text-[#FFD44D]">
                           <Link
                             className="text-[1.4rem] font-normal sm:text-[1.6rem]"
                             to={`/categories/products/${subItem.id}`}
@@ -133,7 +132,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ label, children }) => {
           color: "#000",
           position: "absolute",
           left: "0",
-          backgroundColor: "#005D63",
+          backgroundColor: "#A6AEBF",
           boxShadow: "0px 12px 34px 0px rgba(0, 87, 78, 0.05)",
           zIndex: 10,
           borderRadius: "2px",
@@ -142,7 +141,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ label, children }) => {
           visibility: open ? "visible" : "hidden",
           overflow: "hidden",
           transition: "all 0.7s ease",
-          border: "1px solid #45868c",
+          border: "1px solid #A6AEBF",
         }}
       >
         {children}

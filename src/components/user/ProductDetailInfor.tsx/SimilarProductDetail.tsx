@@ -1,51 +1,56 @@
-import React, { FC, useEffect, useState } from "react";
-import BaseSection from "../../../pages/user/Home/BaseSection";
+import React from "react";
 import ProductItem from "../Product";
-import { useGetCategoryProductsQuery } from "@/services/authApi";
-import { useDispatch } from "react-redux";
-import { setLoading } from "@/redux/slices/loadingSlice";
+import Slider from "react-slick";
+import { ProductType } from "@/types/product";
 
-interface SimilarProductDetailProps {
-  categoriesId: number;
-}
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        infinite: true,
+        dots: true,
+      },
+    },
+    {
+      breakpoint: 820,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        initialSlide: 2,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
 
-const SimilarProductDetail: FC<SimilarProductDetailProps> = ({
-  categoriesId,
+const SimilarProductDetail = ({
+  relatedProducts,
+}: {
+  relatedProducts: ProductType[];
 }) => {
-  const [visibleCount, setVisibleCount] = useState(6);
-  const { data, isLoading } = useGetCategoryProductsQuery(categoriesId);
-  const dispatch = useDispatch();
-
-  // Kiểm tra sản phẩm trong response
-  const products = data?.products || [];
-  console.log(products);
-
-  const showHide = visibleCount < products.length;
-
-  const handleShowMore = () => {
-    setVisibleCount((prevCount) =>
-      prevCount + 6 > products.length ? prevCount : prevCount + 6
-    );
-  };
-
-  useEffect(() => {
-    dispatch(setLoading(isLoading));
-  }, [dispatch, isLoading]);
-
   return (
-    <div className="container">
-      <BaseSection
-        typeProduct={true}
-        title={`Sản phẩm thuộc cùng thể loại `}
-        description="Browse our new products and make your day more beautiful and glorious."
-        handleShowMore={handleShowMore}
-        showHide={showHide}
-      >
-        {products.slice(0, visibleCount).map((product) => (
+    <>
+      <h2 className="text-[30px] mb-10 font-bold">Sản phẩm cùng thể loại</h2>
+      <Slider {...settings}>
+        {relatedProducts?.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}
-      </BaseSection>
-    </div>
+      </Slider>
+    </>
   );
 };
 
