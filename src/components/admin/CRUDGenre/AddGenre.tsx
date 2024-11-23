@@ -12,12 +12,12 @@ import { toast } from "react-toastify";
 // Định nghĩa kiểu dữ liệu cho các trường của form
 interface FormData {
   name: string;
-  parent_id: number;
+  parent_id: number | "";
   image: FileList | null;
 }
 
 export default function AddCategory() {
-  const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+  const { control, handleSubmit, reset, formState: { errors }, getValues } = useForm<FormData>();
   const [addCategory, { isLoading, error }] = useAddCategoryMutation();
   const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
   const { setValue } = useTabContext(); // Lấy setValue từ TabContext
@@ -48,14 +48,14 @@ export default function AddCategory() {
   };
 
   return (
-    <div className="h-auto rounded-xl bg-white px-2 pb-12">
+    <div className="h-[600px] flex items-center justify-center my-auto rounded-xl  bg-white px-2 pb-12">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex-no-wrap flex items-start">
           <div className="w-full">
             <div className="px-2">
               <div className="py-7">
                 <div className="flex flex-col items-center gap-8 ">
-                  <div className="w-[340px]">
+                  <div className="w-[440px]">
                     <FormField
                       label="Tên danh mục"
                       name="name"
@@ -78,13 +78,14 @@ export default function AddCategory() {
                       </p>
                     )}
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col w-[440px]">
                     <label className="text-[20px] font-bold text-black">Chọn danh mục cha</label>
                     <Controller
                       name="parent_id"
                       control={control}
+                      defaultValue="" // Đặt giá trị mặc định là rỗng (Không chọn)
                       render={({ field }) => (
-                        <Select {...field} displayEmpty sx={{ width: "340px" }}>
+                        <Select {...field} displayEmpty sx={{ width: "440px" }}>
                           <MenuItem value="">
                             <em>Không chọn</em>
                           </MenuItem>
@@ -101,17 +102,20 @@ export default function AddCategory() {
                       )}
                     />
                   </div>
-                  <div className="">
-                    <label className="text-[2rem] text-black font-semibold mb-2 block">Upload file</label>
+                  <div className="w-[440px]">
+                    <label className="text-[2rem]  text-black font-bold mb-2 block">Upload file</label>
                     <input name="image" accept=".jpeg,.jpg,.png,.svg,.webp"
                       onChange={(e) => {
                         const file = e.target.files;
                         if (file) {
-                          reset({ image: file });
+                          reset({
+                            ...getValues(), // Giữ nguyên các giá trị hiện tại của form
+                            image: file,    // Cập nhật giá trị cho trường `image`
+                          });
                         }
                       }} type="file"
-                      className="w-[340px] text-gray-400 font-semibold text-xl bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-6 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
-                    <p className="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+                      className="w-[440px] text-gray-400 font-semibold text-xl bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-6 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+                    <p className="text-[12px] text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
                   </div>
                   {/* <div>
                     <label className="block font-medium text-gray-700 text-3xl">
@@ -131,23 +135,15 @@ export default function AddCategory() {
                   </div> */}
                 </div>
 
-                <div className="flex w-full flex-col flex-wrap items-center justify-center gap-x-4 gap-y-4 px-7 md:justify-end lg:flex-row lg:justify-end">
-                  <button
-                    type="button"
-                    className="w-full transform rounded border border-solid border-indigo-700 bg-white px-6 py-4 text-xl font-medium text-indigo-700 duration-300 ease-in-out hover:bg-indigo-700 hover:text-white lg:max-w-[95px]"
-                    onClick={() => reset()} // Reset form
-                  >
-                    Hủy
-                  </button>
+                <div className="flex justify-end gap-6 px-7 mt-12 items-center">
                   <button
                     type="submit"
-                    className="w-full transform rounded bg-indigo-700 px-6 py-4 text-xl font-medium text-white duration-300 ease-in-out hover:bg-indigo-600 lg:max-w-[144px]"
+                    className="text-black text-[14px] max-lg:text-[12px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
                     disabled={isLoading}
                   >
-                    {isLoading ? <CircularProgress size={16} sx={{ color: "white" }} /> : 'Lưu thay đổi'}
+                    {isLoading ? <i className="fas fa-spinner fa-spin"></i> : "Thêm danh mục"}
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
