@@ -53,4 +53,5 @@ const SimilarProductDetail = ({
     </>
   );
 };
+
 export default React.memo(SimilarProductDetail);

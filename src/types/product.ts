@@ -46,6 +46,8 @@ export interface ProductType {
   is_show_home: boolean;
   category_id: number;
   brand_id: number;
+  brand_name: string;
+  category_name: string;
   created_at: string;
   updated_at: string;
   deleted_at: string;
@@ -75,6 +77,8 @@ export interface ProductDetailType {
   is_show_home: boolean;
   category_id: number;
   brand_id: number;
+  brand_name: string;
+  category_name: string;
   created_at: string;
   updated_at: string;
   deleted_at: boolean | null;
@@ -92,6 +96,8 @@ export interface AddProduct {
   description: string;
   content: string;
   user_manual: string;
+  brand_name: string;
+  category_name: string;
   view: number;
   is_active: number;
   is_new: number;

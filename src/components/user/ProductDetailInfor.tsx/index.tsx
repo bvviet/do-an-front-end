@@ -55,7 +55,7 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
           <div className="ml-auto w-full lg:w-[470px]">
             <div>
               <p className="leading-[171.429%] text-[#566363]">
-                {productDetail?.category?.name}
+                {productDetail?.category_name}
               </p>
               <div className="flex flex-col gap-[12px]">
                 <h3 className="font-manrope text-[2.4rem] font-semibold leading-[141.667%] text-[#131717]">
