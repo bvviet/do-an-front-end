@@ -29,14 +29,14 @@ import { useSelector } from "react-redux";
 
 interface Column {
   id:
-    | "name"
-    | "id"
-    | "discount"
-    | "usage"
-    | "code"
-    | "applicable"
-    | "productId"
-    | "";
+  | "name"
+  | "id"
+  | "discount"
+  | "usage"
+  | "code"
+  | "applicable"
+  | "productId"
+  | "";
   label: string;
   minWidth?: number;
   align?: "right" | "center";
@@ -55,7 +55,7 @@ const columns: Column[] = [
 
 export default function ListVoucher() {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const { openPopup } = useModalContext();
   const [loading, setLoading] = useState(false);
   const [vouchers, setVouchers] = useState<IVoucher[]>([]);
@@ -81,7 +81,7 @@ export default function ListVoucher() {
       setPagination({
         currentPage: response.data.current_page,
         lastPage: response.data.last_page,
-        total: response.data.total, // Tổng số bản ghi
+        total: response.data.total_available_vouchers, // Tổng số bản ghi
       });
     } catch (error) {
       console.error("Lỗi khi tải voucher:", error);
