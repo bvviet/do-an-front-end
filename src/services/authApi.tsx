@@ -213,7 +213,7 @@ export const authApi = createApi({
     }),
 
     getCategories: builder.query<CategoriesResponse, void>({
-      query: () => "/categories",
+      query: () => "/admin/categories",
     }),
 
     getAllCategories: builder.query<GetAllCategoriesResponse, void>({

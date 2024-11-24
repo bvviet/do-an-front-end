@@ -24,8 +24,8 @@ import axios from "axios";
 import { IVoucher } from "@/types/voucher";
 import CFButton from "../CfButton";
 import { useDeleteVoucherMutation } from "@/services/productApi";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 interface Column {
   id:
@@ -65,7 +65,6 @@ export default function ListVoucher() {
     lastPage: 1,
     total: 0, // Tổng số bản ghi (thông tin này cần phải trả về từ API)
   });
-
   const token = useSelector((state: RootState) => state.auth.access_token);
   const fetchVouchersByPage = async (page: number) => {
     try {
@@ -74,13 +73,11 @@ export default function ListVoucher() {
         `http://127.0.0.1:8000/api/voucher?page=${page}&limit=${rowsPerPage}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
           },
         },
       );
-      setVouchers(response.data.vouchers);
-      console.log(response);
-
+      setVouchers(response.data.vouchers); // Lấy dữ liệu voucher
       setPagination({
         currentPage: response.data.current_page,
         lastPage: response.data.last_page,

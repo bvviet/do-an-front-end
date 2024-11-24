@@ -115,7 +115,7 @@ export default function AddProducts() {
 
 
   return (
-    <div className="h-full rounded-xl bg-white px-2 pb-12">
+    <div className="h-full rounded-xl bg-white px-2 py-12">
       <div className="flex-no-wrap flex items-start">
         <div className="w-full">
           <div className="px-2">
