@@ -17,7 +17,7 @@ const UsersStatistical: React.FC<BarChartProps> = ({ data }) => {
       type: "bar",
     },
     title: {
-      text: "Top 3 khách hàng mua hàng nhiều nhất",
+      text: "Top 5 khách hàng mua hàng nhiều nhất",
       style: {
         fontSize: "24px",
       },

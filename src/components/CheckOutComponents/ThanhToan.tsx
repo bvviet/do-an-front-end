@@ -5,12 +5,13 @@ import { IVoucher } from "@/types/voucher";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { formatCurrency } from "@/utils/formatCurrency";
 import ItemOrder from "./ItemOrder";
+import { RootState } from "@/redux/store";
 type RadioValue = "1" | "0" | null;
 
 const ThanhToan: React.FC = () => {
@@ -78,16 +79,19 @@ const ThanhToan: React.FC = () => {
     }
   }, [disPatch, carts]);
 
-
-
+  const token = useSelector((state: RootState) => state.auth.access_token);
 
   // Gọi API để lấy voucher
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/voucher/")
+      .get("http://127.0.0.1:8000/api/voucher", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // Truy cập mảng vouchers từ thuộc tính `data`
-        const vouchersData = response.data.data || []; // Đảm bảo vouchersData là mảng
+        const vouchersData = response.data.vouchers || []; // Đảm bảo vouchersData là mảng
         setVouchers(vouchersData);
       })
       .catch((error) => {
@@ -104,13 +108,14 @@ const ThanhToan: React.FC = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
-
-  const subtotal = (carts?.total_price && selectedVoucher?.discount_value)
-    ? (parseFloat(carts?.total_price.toString()) * parseFloat(selectedVoucher?.discount_value.toString())) / 100
-    : 0;
+  const subtotal =
+    carts?.total_price && selectedVoucher?.discount_value
+      ? (parseFloat(carts?.total_price.toString()) *
+          parseFloat(selectedVoucher?.discount_value.toString())) /
+        100
+      : 0;
   const total = carts?.total_price ? carts.total_price - subtotal : 0;
   console.log("toorngh tíadf", subtotal);
-
 
   if (isLoading)
     return (
@@ -128,7 +133,7 @@ const ThanhToan: React.FC = () => {
           <ItemOrder />
         </div>
         <div className="bg-white">
-          <div className=" px-6 pb-12 col-span-12 lg:w-auto">
+          <div className="col-span-12 px-6 pb-12 lg:w-auto">
             <label
               htmlFor="note"
               className="text-[1.8rem] font-medium max-lg:text-[14px] lg:text-[1.8rem]"
@@ -147,25 +152,28 @@ const ThanhToan: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className=" border-b border-solid border-[#C4D1D0]"></div>
+        <div className="border-b border-solid border-[#C4D1D0]"></div>
 
-        <div className="  bg-white py-7 pl-7 pr-7">
+        <div className="bg-white py-7 pl-7 pr-7">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 font-medium text-[18px]">
-              <i className="fa-solid fa-ticket text-red-600" style={{ transform: "rotate(120deg)" }}></i>
+            <div className="flex items-center gap-3 text-[18px] font-medium">
+              <i
+                className="fa-solid fa-ticket text-red-600"
+                style={{ transform: "rotate(120deg)" }}
+              ></i>
               Chiết khấu của TopDeal
             </div>
-            <button onClick={togglePopup} className="text-[14px] font-medium text-[#05a]">
+            <button
+              onClick={togglePopup}
+              className="text-[14px] font-medium text-[#05a]"
+            >
               Chọn Voucher
             </button>
-
           </div>
           {selectedVoucher && (
-            <div className="flex items-center justify-between text-[14px] font-normal mt-3">
+            <div className="mt-3 flex items-center justify-between text-[14px] font-normal">
               <p className="ml-11">Voucher và khuyến mãi</p>
-              <p className="text-red-600">
-                Đã quy đổi 1
-              </p>
+              <p className="text-red-600">Đã quy đổi 1</p>
             </div>
           )}
           {isPopupOpen && (
@@ -177,23 +185,32 @@ const ThanhToan: React.FC = () => {
                 >
                   <CloseIcon />
                 </button>
-                <h2 className="mb-4 text-[20px] font-medium">Chọn TopDeal Voucher</h2>
+                <h2 className="mb-4 text-[20px] font-medium">
+                  Chọn TopDeal Voucher
+                </h2>
                 <div className="my-2 h-[1px] w-full bg-slate-300"></div>
                 <div>
-                  <p className="text-[18px] font-medium mb-6">TopDeal</p>
+                  <p className="mb-6 text-[18px] font-medium">TopDeal</p>
                 </div>
-                <div className="space-y-4 max-h-[300px] overflow-y-auto">
+                <div className="max-h-[300px] space-y-4 overflow-y-auto">
                   <div>
                     {Array.isArray(vouchers) && vouchers.length > 0 ? (
                       vouchers.map((voucher) => (
                         <label
                           key={voucher.id}
-                          className={`block border rounded-lg p-4 cursor-pointer mb-6  gap-4 bg-red-100 ${selectedVoucher === voucher ? "border-red-500" : "border-gray-300"
-                            }`}
+                          className={`mb-6 block cursor-pointer gap-4 rounded-lg border bg-red-100 p-4 ${
+                            selectedVoucher === voucher
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          }`}
                         >
-                          <span>{voucher.name} {voucher.code}</span>
-                          <div className="flex items-center justify-between ">
-                            <p className="text-[18px] font-semibold">Giảm {voucher.discount_value}%</p>
+                          <span>
+                            {voucher.name} {voucher.code}
+                          </span>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[18px] font-semibold">
+                              Giảm {voucher.discount_value}%
+                            </p>
                             <input
                               type="radio"
                               name="voucher"
@@ -203,14 +220,18 @@ const ThanhToan: React.FC = () => {
                             />
                           </div>
                           <p className="text-[16px]">
-                            Đối với đơn hàng có giá trị trên {formatCurrency(voucher.minimum_order_value)}, giảm tối đa 1230K
+                            Đối với đơn hàng có giá trị trên{" "}
+                            {formatCurrency(voucher.minimum_order_value)}, giảm
+                            tối đa 1230K
                           </p>
-                          <span className="text-red-500 text-[14px]">
+                          <span className="text-[14px] text-red-500">
                             Hết hạn sau 12 giờ
                           </span>
 
-                          <div className="border-dashed border border-gray-300 my-2"></div>
-                          <p className="text-[14px]">Áp dụng cho một số sản phẩm nhất định</p>
+                          <div className="my-2 border border-dashed border-gray-300"></div>
+                          <p className="text-[14px]">
+                            Áp dụng cho một số sản phẩm nhất định
+                          </p>
                         </label>
                       ))
                     ) : (
@@ -218,7 +239,10 @@ const ThanhToan: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <button onClick={togglePopup} className="mt-4 w-full rounded-lg bg-red-600 p-3 text-white hover:bg-red-700">
+                <button
+                  onClick={togglePopup}
+                  className="mt-4 w-full rounded-lg bg-red-600 p-3 text-white hover:bg-red-700"
+                >
                   Xác nhận
                 </button>
               </div>
@@ -233,23 +257,23 @@ const ThanhToan: React.FC = () => {
           </div>
           <div className="text-end font-manrope text-[16px] font-medium leading-[171.429%] max-lg:text-[14px]">
             <p>{formatCurrency(carts?.total_price ?? 0)}</p>
-            <p className="text-red-600">{subtotal ? formatCurrency(-subtotal) : "-0"}</p>
+            <p className="text-red-600">
+              {subtotal ? formatCurrency(-subtotal) : "-0"}
+            </p>
             <p>Miễn phí</p>
           </div>
         </div>
-        <div className=" bg-white p-6">
+        <div className="bg-white p-6">
           <div className="flex justify-between font-manrope text-[20px] font-bold leading-[171.429%] text-red-600">
             <p className="">Tổng tiền</p>
             <p className="">{formatCurrency(total)}</p>
           </div>
-
         </div>
       </div>
-      <div className="bg-white rounded-b-lg">
-
+      <div className="rounded-b-lg bg-white">
         <div className="mb-6 border-b border-solid border-[#C4D1D0]"></div>
-        <div className=" px-6 ">
-          <label className=" flex items-center gap-5 max-lg:mx-0 max-lg:text-[14px]">
+        <div className="px-6">
+          <label className="flex items-center gap-5 max-lg:mx-0 max-lg:text-[14px]">
             <input
               type="radio"
               value="1"
@@ -267,9 +291,9 @@ const ThanhToan: React.FC = () => {
           </label>
         </div>
 
-        <div className="mb-6  border-b border-solid border-[#C4D1D0]"></div>
-        <div className="my-6 px-6 ">
-          <label className=" flex gap-5 max-lg:mx-0 max-lg:text-[14px]">
+        <div className="mb-6 border-b border-solid border-[#C4D1D0]"></div>
+        <div className="my-6 px-6">
+          <label className="flex gap-5 max-lg:mx-0 max-lg:text-[14px]">
             <input
               type="radio"
               value="0"
@@ -289,7 +313,7 @@ const ThanhToan: React.FC = () => {
 
         <div className="mb-6 border-b border-solid border-[#C4D1D0]"></div>
 
-        <div className="mt-6  p-6 flex justify-between">
+        <div className="mt-6 flex justify-between p-6">
           <Link
             to={"#"}
             className="flex items-center gap-2 text-[16px] text-[#566363] hover:text-black max-lg:text-[14px]"

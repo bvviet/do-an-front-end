@@ -80,7 +80,7 @@ const Search = () => {
             value={valueInput}
             type="text"
             placeholder="Search for anything"
-            className="w-[200px] rounded-l-lg border border-[#565650] p-[9px] placeholder-gray-500 sm:w-[300px] lg:w-[799px]"
+            className="w-[200px] rounded-l-lg border border-[#fff] p-[9px] placeholder-white sm:w-[300px] lg:w-[799px]"
           />
           {isLoading && (
             <div className="absolute right-[5%] top-1/2 h-[16px] w-[16px] -translate-y-1/2 transform">
@@ -115,7 +115,7 @@ const Search = () => {
           render={(attrs) => (
             <div
               ref={tippyRef}
-              className="rounded-lg bg-[#A6AEBF] text-[#1A1A19] shadow-lg"
+              className="rounded-lg bg-[#005d63] text-white shadow-lg"
               tabIndex={-1}
               {...attrs}
             >
@@ -123,7 +123,7 @@ const Search = () => {
                 <h2 className="mb-[10px] text-center text-[1.8rem] font-semibold">
                   Kết quả tìm kiếm
                 </h2>
-                <div className="mb-[10px] flex items-center justify-between bg-[#A6AEBF] px-5 py-[5px] text-[1.5rem] font-semibold lg:px-9">
+                <div className="mb-[10px] flex items-center justify-between bg-[#005d63] px-5 py-[5px] text-[1.5rem] font-semibold lg:px-9">
                   <p>Sản phẩm</p>
                   <a
                     onClick={handleSearchResultClick}

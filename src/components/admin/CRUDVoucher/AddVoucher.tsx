@@ -178,7 +178,7 @@ export default function AddVoucherComponent() {
                         {isLoading ? (
                             <i className="fas fa-spinner fa-spin"></i>
                         ) : (
-                            "Thêm thương hiệu"
+                            "Thêm Voucher"
                         )}
                     </button>
 

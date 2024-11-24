@@ -109,7 +109,7 @@ export default function ListAdminOrders() {
     }
   }, [ordersByDate, ordersStatus, value]);
 
-  console.log({ orders });
+  console.log(orders);
 
   const handleDateChange = (newValue: [Dayjs | null, Dayjs | null]) => {
     setSelectedDateRange(newValue);
@@ -211,6 +211,8 @@ export default function ListAdminOrders() {
                 </TableRow>
               ) : (
                 orders?.orders
+                  .slice()
+                  .reverse()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((user) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={user.id}>

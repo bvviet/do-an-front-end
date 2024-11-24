@@ -216,7 +216,7 @@ export default function EditCategory() {
               className="text-black text-[14px]  max-lg:text-[12px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
               disabled={isUpdating}
             >
-              {isUpdating ? <i className="fas fa-spinner fa-spin"></i> : "Thêm sản phẩm"}
+              {isUpdating ? <i className="fas fa-spinner fa-spin"></i> : "Cập nhật"}
             </button>
           </div>
         </div>

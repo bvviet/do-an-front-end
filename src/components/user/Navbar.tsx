@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
                           alt=""
                           className="w-[15px] sm:w-[25px]"
                         />
-                        <li className="leading-[175%] text-[#1A1A19] hover:text-[#FFD44D]">
+                        <li className="leading-[175%] text-white hover:text-[#FFD44D]">
                           <Link
                             className="text-[1.4rem] font-normal sm:text-[1.6rem]"
                             to={`/categories/products/${subItem.id}`}
@@ -132,7 +132,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ label, children }) => {
           color: "#000",
           position: "absolute",
           left: "0",
-          backgroundColor: "#A6AEBF",
+          backgroundColor: "#005d63",
           boxShadow: "0px 12px 34px 0px rgba(0, 87, 78, 0.05)",
           zIndex: 10,
           borderRadius: "2px",
@@ -141,7 +141,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ label, children }) => {
           visibility: open ? "visible" : "hidden",
           overflow: "hidden",
           transition: "all 0.7s ease",
-          border: "1px solid #A6AEBF",
+          border: "1px solid #005d63",
         }}
       >
         {children}
