@@ -14,13 +14,22 @@ const banners = [
     id: 1,
     name: "Banner 1",
     link: "https://placehold.co/276x350?text=%22No%20Image%22",
-    imgUrl: "https://placehold.co/276x350?text=%22No%20Image%22",
+    imgUrl:
+      "https://file.hstatic.net/1000003969/collection/sale-700x400_29ba8c40bf7444049d70e09a3bd1296e.jpg",
   },
   {
     id: 2,
     name: "Banner 2",
     link: "https://placehold.co/276x350?text=%22No%20Image%22",
-    imgUrl: "https://placehold.co/276x350?text=%22No%20Image%22",
+    imgUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7dW37mmtPxg8rSz95wY58QG6qUQ0h4sN-TOVZK2ig3sB60uX1wVwZZ5VrWi2t_KAGP4k&usqp=CAU",
+  },
+  {
+    id: 3,
+    name: "Banner 2",
+    link: "https://placehold.co/276x350?text=%22No%20Image%22",
+    imgUrl:
+      "https://jobs.kidsplaza.vn/wp-content/uploads/2023/05/mo-ta-cong-viec-sale-online-2.jpg",
   },
 ];
 
@@ -71,7 +80,7 @@ const BannerAdmin = () => {
             <p className="font-semibold underline">{banner.link}</p>
           </Link>
           <div className="flex items-center justify-center gap-2">
-            <IconButton>
+            <IconButton >
               <DeleteOutlineIcon color="error" />
             </IconButton>
             <IconButton onClick={handleOpenDialogEdit}>

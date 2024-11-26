@@ -75,7 +75,7 @@ const FormComment: FC<FormCommentProps> = ({ productId }) => {
     <div className="ml-auto w-full lg:w-[470px]">
       <div className="mb-[5px] lg:mb-[30px]">
         <h4 className="text-[2rem] font-bold leading-[150%]">
-          How would you rate this?
+          Bạn đánh giá điều này như thế nào?
         </h4>
         <Rating
           name="half-rating"
@@ -89,9 +89,9 @@ const FormComment: FC<FormCommentProps> = ({ productId }) => {
         {/* Description */}
         <div className="my-[20px] flex flex-col gap-[12px] lg:my-[30px]">
           <FormField<dataForm>
-            label="Write a review"
+            label="Viết đánh giá"
             name="comment"
-            placeholder="Tell us what do you think"
+            placeholder="Hãy cho chúng tôi biết bạn nghĩ gì"
             Component={TextareaInputs}
             control={control}
             error={errors["comment"]}

@@ -55,7 +55,7 @@ const columns: Column[] = [
 
 export default function ListVoucher() {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const { openPopup } = useModalContext();
   const [loading, setLoading] = useState(false);
   const [vouchers, setVouchers] = useState<IVoucher[]>([]);
@@ -93,7 +93,7 @@ export default function ListVoucher() {
 
   useEffect(() => {
     fetchVouchersByPage(page + 1); // Lấy voucher ở trang hiện tại
-  }, [page, rowsPerPage]); // Khi trang hoặc số lượng dòng thay đổi
+  }, [page, rowsPerPage, token]); // Khi trang hoặc số lượng dòng thay đổi
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);

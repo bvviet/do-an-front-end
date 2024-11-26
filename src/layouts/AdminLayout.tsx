@@ -3,7 +3,7 @@ import { RootState } from "@/redux/store";
 import { LinearProgress, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const FixedLinearProgress = styled(LinearProgress)({
   position: "fixed",
@@ -15,6 +15,10 @@ const FixedLinearProgress = styled(LinearProgress)({
 const AdminLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
   const loading = useSelector((state: RootState) => state.loading.isLoading);
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   const navigate = useNavigate();
   const isAuthenticated = useSelector(

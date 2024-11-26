@@ -54,10 +54,12 @@ const Favorites = () => {
   }, [isLoadingDelete, isLoadingGet, disPatch]);
 
   return (
-    <div className="container mx-auto mb-[100px] p-6">
+    <div className="container mx-auto mb-[100px] mt-[50px] p-6">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-800">Wish List</h1>
-        <p className="text-lg text-gray-500">3 items in your wishlist</p>
+        <h1 className="text-[2rem] font-bold text-gray-800">
+          Danh sách yêu thích
+        </h1>
+        <p className="text-gray-500">3 items in your wishlist</p>
       </div>
 
       <div className="grid grid-cols-1 gap-[40px] sm:grid-cols-2 lg:grid-cols-3">
@@ -110,7 +112,7 @@ const Favorites = () => {
 
           <div
             key={favorite.id}
-            className="group relative rounded-lg border border-solid border-[#0000003a] p-5 shadow-sm shadow-indigo-500/20"
+            className="group relative rounded-lg border border-solid border-[#afaeae3a] p-5 shadow-sm shadow-indigo-500/20"
           >
             <Link to={"#"} className="relative block h-[250px] w-full">
               <img

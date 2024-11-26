@@ -86,6 +86,7 @@ export interface ProductDetailType {
   brand: BrandType;
   tags: TagsType[];
   product_images: [];
+  related_products: [];
   productVariants: ProductVariants[];
 }
 
