@@ -93,7 +93,7 @@ export default function ListVoucher() {
 
   useEffect(() => {
     fetchVouchersByPage(page + 1); // Lấy voucher ở trang hiện tại
-  }, [page, rowsPerPage]); // Khi trang hoặc số lượng dòng thay đổi
+  }, [page, rowsPerPage, token]); // Khi trang hoặc số lượng dòng thay đổi
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);

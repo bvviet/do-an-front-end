@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import signUpIcon from "/public/icons/sign-up.svg";
 
 export default function Register() {
   const [messagesPassWord, setMessagesPassWord] = useState<string>("");
@@ -61,7 +62,7 @@ export default function Register() {
     } catch (err) {
       toast.error(
         (err as { data?: { message?: string } }).data?.message ||
-        "Đã xảy ra lỗi không xác định.",
+          "Đã xảy ra lỗi không xác định.",
       );
       console.error("Đăng ký thất bại:", err);
     }
@@ -69,19 +70,22 @@ export default function Register() {
 
   return (
     <>
-      <div className="grid grid-cols-2 my-12 gap-8 max-sm:grid-cols-1 container">
-        <div className="max-sm:hidden max-lg:flex max-lg:items-center">
-          <img src="../src/images/Rectangle 20.png" alt="" />
+      <div className="container my-12 grid grid-cols-2 items-center gap-[50px] max-sm:grid-cols-1">
+        <div className="max-lg:flex max-lg:items-center max-sm:hidden">
+          <img src={signUpIcon} alt="" />
         </div>
-        <div className="flex h-full max-lg:w-full w-[470px] flex-col justify-center border-2 border-black  max-sm:w-full">
+        <div className="flex h-full w-[470px] flex-col justify-center border-2 border-black max-lg:w-full max-sm:w-full">
           <div className="">
-            <p className="login font-manrope max-sm:text-[32px] text-[40px] font-semibold">
-              Sign Up
+            <p className="login font-manrope text-[40px] font-semibold max-sm:text-[32px]">
+              Đăng ký
             </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              onKeyPress={(e) => e.key === "Enter" && handleSubmit(onSubmit)()}
+            >
               <div className="mt-[3rem]">
                 <FormField<signType>
-                  label="User Name"
+                  label="Tên"
                   name="name"
                   placeholder=""
                   type="text"
@@ -103,7 +107,7 @@ export default function Register() {
               </div>
               <div className="mt-[3rem]">
                 <FormField<signType>
-                  label="Password"
+                  label="Mật khẩu"
                   name="password"
                   placeholder=""
                   type="password"
@@ -114,7 +118,7 @@ export default function Register() {
               </div>
               <div className="mt-[3rem]">
                 <FormField<signType>
-                  label="Confirm Password"
+                  label="Xác nhận mật khẩu"
                   name="confirmPassword"
                   placeholder=""
                   type="password"
@@ -158,7 +162,7 @@ export default function Register() {
             </span>
             <div className="flex justify-center gap-6 max-xl:mb-12">
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300 max-xl:px-16 max-sm:px-20">
                   <img
                     className="h-6 w-6"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
@@ -168,7 +172,7 @@ export default function Register() {
                 </button>
               </div>
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300 max-xl:px-16 max-sm:px-20">
                   <img
                     className="h-6 w-6"
                     src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -178,7 +182,7 @@ export default function Register() {
                 </button>
               </div>
               <div className="">
-                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] max-xl:px-16 max-sm:px-20 px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300">
+                <button className="flex items-center gap-2 rounded-lg border border-solid border-[#515DEF] px-24 py-4 text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-slate-300 max-xl:px-16 max-sm:px-20">
                   <img
                     className="h-6 w-6"
                     src="https://cdn.freebiesupply.com/images/large/2x/apple-logo-transparent.png"

@@ -44,6 +44,8 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
     }
   });
 
+  console.log({ uniqueVariants, color });
+
   const handleAddCart = async () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,9 +58,11 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
       console.log({ res });
 
       if (res?.error?.status === 404) {
-        toast.error(res.error.data.error);
+        toast.error("Không tìm thấy sản phẩm có màu sắc và sze đã chọn.");
       } else if (res?.error?.status === 422) {
         toast.error("Bạn chưa chọn màu sắc hoặc kích thước");
+      } else if (res?.error?.status === 400) {
+        toast.error("Số lượng sản phẩm không đủ.");
       } else {
         toast.success("Thêm vào giỏ hàng thành công");
         refetch();
@@ -118,29 +122,42 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
             {uniqueVariants
               .map((variant) => variant.size) // Lấy danh sách size duy nhất
               .filter((value, index, self) => self.indexOf(value) === index) // Lọc bỏ trùng lặp
-              .map((sizeName) => (
-                <div
-                  key={sizeName}
-                  onClick={() => {
-                    if (sizeName === size) {
-                      setSize("");
-                    } else {
-                      setSize(sizeName);
-                    }
-                  }}
-                  className={`${
-                    size === sizeName
-                      ? "bg-[#005D63] text-white"
-                      : "border border-solid border-[#C4D1D0] text-[#566363]"
-                  } flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded`}
-                >
+              .map((sizeName) => {
+                // Kiểm tra xem size này có hợp lệ với màu hiện tại không
+                const isValidSize =
+                  !color || // Không chọn màu thì mọi size đều hợp lệ
+                  uniqueVariants.some(
+                    (variant) =>
+                      variant.size === sizeName && variant.color === color,
+                  );
+
+                // Tạo lớp CSS cho trạng thái
+                const containerClasses = isValidSize
+                  ? size === sizeName
+                    ? "bg-[#005D63] text-white cursor-pointer"
+                    : "border border-solid border-[#C4D1D0] text-[#566363] cursor-pointer"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed";
+
+                const textClasses = isValidSize
+                  ? size === sizeName
+                    ? "text-white"
+                    : "text-[#566363]"
+                  : "text-gray-400";
+
+                return (
                   <div
-                    className={`${size === sizeName ? "text-white" : "text-[#566363]"}`}
+                    key={sizeName}
+                    onClick={() => {
+                      if (isValidSize) {
+                        setSize(sizeName === size ? "" : sizeName);
+                      }
+                    }}
+                    className={`${containerClasses} flex h-[24px] w-[24px] items-center justify-center rounded`}
                   >
-                    {sizeName}
+                    <div className={textClasses}>{sizeName}</div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
 

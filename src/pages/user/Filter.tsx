@@ -1,7 +1,9 @@
 import useFormatCurrency from "@/hooks/useFormatCurrency";
 import { setLoading } from "@/redux/slices/loadingSlice";
-import { useGetCategoriesQuery } from "@/services/authApi";
-import { useFilterProductsQuery } from "@/services/productApi";
+import {
+  useFilterProductsQuery,
+  useGetCategoriesWithFilterQuery,
+} from "@/services/productApi";
 import { ICategory } from "@/types/genre";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { Favorite } from "@mui/icons-material";
@@ -34,7 +36,7 @@ const Filter = () => {
   };
 
   const { data: categories, isLoading: isLoadingCategories } =
-    useGetCategoriesQuery();
+    useGetCategoriesWithFilterQuery();
 
   const [category, setCategory] = useState<number[]>([]);
 

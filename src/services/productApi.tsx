@@ -106,9 +106,12 @@ export const productApi = createApi({
         body: newProduct,
       }),
     }),
-    editProduct: builder.mutation<AddProduct, { slug: string; updatedProduct: FormData }>({
+    editProduct: builder.mutation<
+      AddProduct,
+      { slug: string; updatedProduct: FormData }
+    >({
       query: ({ slug, updatedProduct }) => {
-        updatedProduct.append('_method', 'PUT'); // Thêm _method vào FormData nếu backend yêu cầu
+        updatedProduct.append("_method", "PUT"); // Thêm _method vào FormData nếu backend yêu cầu
         return {
           url: `/admin/products/${slug}`,
           method: "POST", // Giữ POST nếu backend yêu cầu POST
@@ -303,6 +306,12 @@ export const productApi = createApi({
           minPrice,
           maxPrice,
         },
+      }),
+    }),
+
+    getCategoriesWithFilter: builder.query({
+      query: () => ({
+        url: `/filter-categories`,
       }),
     }),
 
@@ -525,6 +534,7 @@ export const {
   useFilterByDateOrdersAdminQuery,
   useCheckoutMutation,
   useSearchProductQuery,
+  useGetCategoriesWithFilterQuery,
   useAddBrandMutation,
   useDeleteBrandMutation,
   useGetDetailBrandQuery,
@@ -545,5 +555,5 @@ export const {
   useGetCommentsQuery,
   useDeleteCommentsMutation,
   useUpdateCommentMutation,
-  useGetAllVoucherQuery
+  useGetAllVoucherQuery,
 } = productApi;

@@ -46,6 +46,7 @@ import Filter from "./pages/user/Filter";
 import EditProducts from "./components/admin/CRUD/EditProduct";
 import Favorites from "./pages/user/Favorites";
 import BannerAdmin from "./pages/admin/Banner";
+import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
 
 function App() {
   const router = createBrowserRouter([
@@ -83,13 +84,14 @@ function App() {
               path: "/profile",
               element: <Profile />,
               children: [
-                { index: true, element: <ProfileRight /> },
-                { path: "addresses", element: <Address /> },
-                { path: "addresses/add", element: <FormAddAddress /> },
+                { index: true, element: <ProfileRight /> }, // Trang mặc định
+                { path: "addresses", element: <Address /> }, // Danh sách địa chỉ
+                { path: "addresses/add", element: <FormAddAddress /> }, // Thêm địa chỉ mới
                 {
                   path: "addresses/update/:id",
                   element: <FormUpdateAddress />,
-                },
+                }, // Cập nhật địa chỉ
+                { path: "update", element: <FormUpdateInfo /> }, // Cập nhật thông tin
               ],
             },
             {

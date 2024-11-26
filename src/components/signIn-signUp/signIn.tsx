@@ -120,9 +120,12 @@ export default function SignInComponent() {
         <div className="flex h-full w-[470px] flex-col justify-center border-2 border-black max-xl:w-full max-sm:w-full">
           <div className="">
             <p className="login font-manrope text-[40px] font-semibold">
-              Login
+              Đăng nhập
             </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              onKeyPress={(e) => e.key === "Enter" && handleSubmit(onSubmit)()}
+            >
               <div className="mt-[3rem]">
                 <FormField<loginType>
                   label="Email"
@@ -172,7 +175,7 @@ export default function SignInComponent() {
                   Don't have an account?{" "}
                 </p>
                 <Link
-                  to={"/signup"}
+                  to={"/sign-up"}
                   className="text-[14px] font-semibold text-[#FF8682] hover:text-red-500 hover:underline"
                 >
                   Sign Up

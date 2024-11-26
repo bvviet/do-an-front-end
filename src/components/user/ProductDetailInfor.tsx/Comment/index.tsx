@@ -12,9 +12,9 @@ const Comment: FC<CommentProps> = ({ productId }) => {
     <div className="grid grid-cols-1 gap-[40px] lg:grid-cols-2 lg:gap-[60px]">
       {/* Left */}
       <div className="">
-        <h4 className="text-[2rem] font-bold">Customer Reviews</h4>
+        <h4 className="text-[2rem] font-bold">Đánh giá của khách hàng</h4>
         <p className="mb-[8px] mt-[9px] text-[1.8rem] font-semibold leading-[166.667%] lg:mt-[18px]">
-          77 Reviews
+          77 Đánh giá
         </p>
         <div className="flex items-center gap-1">
           <img src={groupStart} alt="" />

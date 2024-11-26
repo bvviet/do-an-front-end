@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/user/Header";
 import Footer from "../components/user/Footer";
 // import Breadcrumbs from "@/components/Breadcrumbs";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { styled } from "@mui/material/styles";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { useEffect } from "react";
 
 const FixedLinearProgress = styled(LinearProgress)({
   position: "fixed",
@@ -17,6 +18,10 @@ const FixedLinearProgress = styled(LinearProgress)({
 });
 
 const UserLayout = () => {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
   const loading = useSelector((state: RootState) => state.loading.isLoading);
   return (
     <div className="bg-[#F0F0F0]">

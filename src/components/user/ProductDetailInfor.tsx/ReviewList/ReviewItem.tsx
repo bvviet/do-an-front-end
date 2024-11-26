@@ -17,7 +17,6 @@ import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import Confirm from "@/components/Confirm";
 import {
   useDeleteCommentsMutation,
-  useGetCommentsQuery,
   useUpdateCommentMutation,
 } from "@/services/productApi";
 import { useDispatch } from "react-redux";
@@ -46,7 +45,7 @@ const ReviewItem = ({
   const [deleteComment, { isLoading: isLoadingUpdate }] =
     useDeleteCommentsMutation();
   const [updateComment, { isLoading }] = useUpdateCommentMutation();
-  const { data } = useGetCommentsQuery({ productId });
+  // const { data } = useGetCommentsQuery({ productId });
 
   const handleDelete = async (commentId: number) => {
     const response = await deleteComment({ commentId, productId }).unwrap();
@@ -141,7 +140,7 @@ const ReviewItem = ({
         <Rating name="half-rating" value={comment.rating} readOnly />
       </div>
       <div className="mt-[28px]">
-        <h4 className="mb-[16px] text-[2rem] font-bold">Beautiful Sweater</h4>
+        {/* <h4 className="mb-[16px] text-[2rem] font-bold">Beautiful Sweater</h4> */}
         <p className="text-[1.6rem] leading-[175%] text-[#566363]">
           “{comment.content}”
         </p>

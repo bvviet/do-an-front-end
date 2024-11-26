@@ -97,7 +97,7 @@ const ThanhToan: React.FC = () => {
       .catch((error) => {
         console.error("Có lỗi khi lấy voucher: ", error);
       });
-  }, []);
+  }, [token]);
 
   const handleVoucherSelect = (voucher: IVoucher) => {
     console.log("Voucher selected:", voucher);

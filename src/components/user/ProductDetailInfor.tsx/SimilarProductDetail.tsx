@@ -44,7 +44,8 @@ const SimilarProductDetail = ({
 }) => {
   return (
     <>
-      <h2 className="text-[30px] mb-10 font-bold">Sản phẩm cùng thể loại</h2>
+      <h2 className="mb-10 text-[30px] font-bold">Sản phẩm cùng thể loại</h2>
+      {relatedProducts.length === 0 && <p>Không có sản phẩm</p>}
       <Slider {...settings}>
         {relatedProducts?.map((product) => (
           <ProductItem key={product.id} product={product} />
