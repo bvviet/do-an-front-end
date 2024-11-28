@@ -91,7 +91,7 @@ const ThanhToan: React.FC = () => {
       })
       .then((response) => {
         // Truy cập mảng vouchers từ thuộc tính `data`
-        const vouchersData = response.data.vouchers || []; // Đảm bảo vouchersData là mảng
+        const vouchersData = response.data.data.vouchers || []; // Đảm bảo vouchersData là mảng
         setVouchers(vouchersData);
       })
       .catch((error) => {
@@ -108,14 +108,34 @@ const ThanhToan: React.FC = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
-  const subtotal =
-    carts?.total_price && selectedVoucher?.discount_value
-      ? (parseFloat(carts?.total_price.toString()) *
-          parseFloat(selectedVoucher?.discount_value.toString())) /
-        100
+  const subtotal = (() => {
+    if (!carts?.total_price || !selectedVoucher?.discount_value) {
+      return 0;
+    }
+
+    const discountValue = parseFloat(selectedVoucher.discount_value.toString());
+    const totalPrice = parseFloat(carts.total_price.toString());
+    console.log("Total Price:", totalPrice);
+    console.log("Discount Value:", discountValue);
+
+    // Nếu discount_value lớn hơn 1000, dùng trực tiếp giá trị giảm giá
+    if (discountValue > 1000) {
+      return Math.max(0, discountValue); // Đảm bảo không trả về giá trị âm
+    }
+
+    // Nếu discount_value nhỏ hơn hoặc bằng 99, tính theo phần trăm
+    if (discountValue <= 99) {
+      return (totalPrice * discountValue) / 100;
+    }
+    return 0
+  })();
+  const discount = parseFloat(selectedVoucher?.max_discount || "0");
+  const total =
+    carts?.total_price
+      ? carts.total_price - Math.min(subtotal, discount)
       : 0;
-  const total = carts?.total_price ? carts.total_price - subtotal : 0;
-  console.log("toorngh tíadf", subtotal);
+
+  console.log("toorngh tíadf", discount);
 
   if (isLoading)
     return (
@@ -198,18 +218,20 @@ const ThanhToan: React.FC = () => {
                       vouchers.map((voucher) => (
                         <label
                           key={voucher.id}
-                          className={`mb-6 block cursor-pointer gap-4 rounded-lg border bg-red-100 p-4 ${
-                            selectedVoucher === voucher
-                              ? "border-red-500"
-                              : "border-gray-300"
-                          }`}
+                          className={`mb-6 block cursor-pointer gap-4 rounded-lg border bg-red-100 p-4 ${selectedVoucher === voucher
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                         >
                           <span>
                             {voucher.name} {voucher.code}
                           </span>
                           <div className="flex items-center justify-between">
                             <p className="text-[18px] font-semibold">
-                              Giảm {voucher.discount_value}%
+                              Giảm{" "}
+                              {parseFloat(voucher.discount_value) > 100
+                                ? `${(formatCurrency(voucher.discount_value))}`
+                                : `${voucher.discount_value}%`}
                             </p>
                             <input
                               type="radio"
@@ -222,7 +244,7 @@ const ThanhToan: React.FC = () => {
                           <p className="text-[16px]">
                             Đối với đơn hàng có giá trị trên{" "}
                             {formatCurrency(voucher.minimum_order_value)}, giảm
-                            tối đa 1230K
+                            tối đa {formatCurrency(voucher.max_discount)}
                           </p>
                           <span className="text-[14px] text-red-500">
                             Hết hạn sau 12 giờ
@@ -235,7 +257,7 @@ const ThanhToan: React.FC = () => {
                         </label>
                       ))
                     ) : (
-                      <div>Không có voucher nào để hiển thị.</div>
+                      <div className="text-center text-red-600">Không có voucher nào để hiển thị.</div>
                     )}
                   </div>
                 </div>
@@ -257,8 +279,10 @@ const ThanhToan: React.FC = () => {
           </div>
           <div className="text-end font-manrope text-[16px] font-medium leading-[171.429%] max-lg:text-[14px]">
             <p>{formatCurrency(carts?.total_price ?? 0)}</p>
-            <p className="text-red-600">
-              {subtotal ? formatCurrency(-subtotal) : "-0"}
+            <p className="text-red-600">-
+              {subtotal > discount
+                ? formatCurrency(discount)
+                : formatCurrency(subtotal)}
             </p>
             <p>Miễn phí</p>
           </div>

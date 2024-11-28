@@ -1,21 +1,26 @@
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useWatch } from "react-hook-form";
 import { AddVoucherBase, IVoucher } from "@/types/voucher";
 import { toast } from "react-toastify";
-import { TextField, Select, MenuItem, FormControlLabel, Switch } from "@mui/material";
+import { TextField, FormControlLabel, Switch, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useUpdateVoucherMutation } from "@/services/productApi";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditVoucherComponent() {
-    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<AddVoucherBase>();
+    const { register, handleSubmit, watch, reset, formState: { errors }, control } = useForm<AddVoucherBase>();
     const [updateVoucher, { isLoading }] = useUpdateVoucherMutation();
     const [voucher, setVoucher] = useState<IVoucher>()
     const navi = useNavigate()
-    // Khai báo state applicableIds để lưu mảng các ID sản phẩm
-    const [applicableIds, setApplicableIds] = useState<number[]>([]);
     const { id } = useParams()
 
+    const [discountType, setDiscountType] = useState("percent");
+
+    const watchDiscountType = watch("discount_type", "percent");
+    const minimumOrderValue = useWatch({ name: "minimum_order_value", control });
+    const handleDiscountTypeChange = (event: SelectChangeEvent<string>) => {
+        setDiscountType(event.target.value);
+    };
     const formatDate = (dateString: string) => {
         if (!dateString) return "";
         const date = new Date(dateString);
@@ -31,27 +36,12 @@ export default function EditVoucherComponent() {
                 discount_value: voucher.discount_value,
                 start_date: formatDate(voucher.start_date),
                 end_date: formatDate(voucher.end_date),
-                applicable_type: voucher.applicable_type === "category" || voucher.applicable_type === "product"
-                    ? voucher.applicable_type
-                    : undefined, // Chuyển giá trị không hợp lệ thành undefined
+                max_discount: voucher.max_discount,
                 usage_limit: voucher.usage_limit,
                 discount_type: voucher.discount_type,
                 voucher_active: voucher.voucher_active,
             });
-            if (Array.isArray(voucher.applicable_ids)) {
-                // Nếu đã là mảng, gán trực tiếp
-                setApplicableIds(voucher.applicable_ids);
-            } else if (typeof voucher.applicable_ids === "string") {
-                // Nếu là chuỗi, chuyển đổi sang mảng
-                const ids = voucher.applicable_ids
-                    .replace(/[[\]]/g, "") // Loại bỏ dấu ngoặc vuông
-                    .split(",") // Chia thành mảng
-                    .map(id => Number(id.trim())); // Chuyển thành số
-                setApplicableIds(ids);
-            } else {
-                // Mặc định gán mảng rỗng nếu kiểu không khớp
-                setApplicableIds([]);
-            }
+            setDiscountType(voucher.discount_type || "percent");
         }
     }, [voucher, reset]);
     // Hàm xử lý submit form
@@ -61,19 +51,19 @@ export default function EditVoucherComponent() {
             // Dữ liệu truyền vào updateVoucher phải là Partial<IVoucher>
             const voucherData: Partial<AddVoucherBase> = {
                 ...data,
-                applicable_ids: applicableIds, // Giữ kiểu là number[]
+                // Giữ kiểu là number[]
             };
 
             // Gửi request cập nhật
             await updateVoucher({ id: voucherId, data: voucherData }).unwrap();
             setTimeout(() => {
                 toast.success("Cập nhật voucher thành công!");
-            }, 2000);
+            }, 500);
 
             // Điều hướng sau khi hiển thị thông báo
-            setTimeout(() => {
-                navi("/admin/voucher");
-            }, 2000);
+
+            navi("/admin/voucher");
+
             reset();
         } catch (error) {
             console.error(error);
@@ -86,8 +76,7 @@ export default function EditVoucherComponent() {
 
         try {
             const { data } = await axios.get('http://127.0.0.1:8000/api/voucher/' + id);
-            const parsedApplicableIds = JSON.parse(data.applicable_ids); // Chuyển đổi chuỗi thành mảng
-            setVoucher({ ...data, applicable_ids: parsedApplicableIds }); // Gán lại giá trị đã chuyển đổi vào state
+            setVoucher(data.data); // Gán lại giá trị đã chuyển đổi vào state
         } catch (error) {
             console.error(error);
             toast.error("Đã có lỗi xảy ra");
@@ -98,20 +87,7 @@ export default function EditVoucherComponent() {
         if (!id) return
         getDetail(id)
     }, [id])
-
     // Hàm xử lý khi người dùng nhập ID sản phẩm vào TextField
-    const handleApplicableIdsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = event.target.value;
-
-        // Tách các giá trị cách nhau bởi dấu phẩy, loại bỏ khoảng trắng, và kiểm tra tính hợp lệ của số
-        const ids = inputValue
-            .split(",")
-            .map(id => id.trim())  // Loại bỏ khoảng trắng ở đầu và cuối
-            .filter(id => !isNaN(Number(id)))  // Loại bỏ giá trị trống và không phải là số
-            .map(id => Number(id));  // Chuyển chuỗi thành số
-
-        setApplicableIds(ids);
-    };
     const [today, setToday] = useState<string>("");
     useEffect(() => {
         const currentDate = new Date().toISOString().split("T")[0];  // Lấy ngày hiện tại ở định dạng yyyy-mm-dd
@@ -148,29 +124,66 @@ export default function EditVoucherComponent() {
                         error={!!errors.minimum_order_value}
                         helperText={errors.minimum_order_value?.message}
                     />
-
                     <TextField
-                        label="Giảm giá (%)"
+                        label="Giảm tối đa"
                         type="number"
                         slotProps={{
                             inputLabel: {
                                 shrink: true,
                             },
                         }}
-                        {...register("discount_value", {
-                            required: "Giảm giá không được để trống",
-                            min: {
-                                value: 1,
-                                message: "Giảm giá phải tối thiểu 1%"
-                            },
-                            max: {
-                                value: 99,
-                                message: "Giảm giá không được vượt quá 99%"
-                            }
-                        })}
-                        error={!!errors.discount_value}
-                        helperText={errors.discount_value?.message}
+                        placeholder="Áp dụng cho những đơn có giá trị tối thiểu"
+                        {...register("max_discount", { required: "Giá trị không được để trống" })}
+                        error={!!errors.max_discount}
+                        helperText={errors.max_discount?.message}
                     />
+
+                    {watchDiscountType === "percent" && (
+                        <TextField
+                            label="Giảm giá (%)"
+                            type="number"
+                            {...register("discount_value", {
+                                required: "Giảm giá không được để trống",
+                                validate: {
+                                    minValue: (value) => {
+                                        const numValue = parseFloat(value); // Chuyển giá trị string thành number
+                                        return numValue >= 1 || "Giảm giá phải tối thiểu 1%";
+                                    },
+                                    maxValue: (value) => {
+                                        const numValue = parseFloat(value); // Chuyển giá trị string thành number
+                                        return numValue <= 99 || "Giảm giá không được vượt quá 99%";
+                                    },
+                                },
+                            })}
+                            error={!!errors.discount_value}
+                            helperText={errors.discount_value?.message}
+                        />
+                    )}
+
+                    {/* Hiển thị ô giảm giá cố định nếu chọn "fixed" */}
+                    {watchDiscountType === "fixed" && (
+                        <TextField
+                            label="Giảm giá (VND)"
+                            type="number"
+                            placeholder="Giảm tối đa cho các đơn hàng"
+                            {...register("discount_value", {
+                                required: "Giá trị không được để trống",
+                                validate: {
+                                    minValue: (value) => {
+                                        const numValue = parseFloat(value);
+                                        if (numValue < 10000) {
+                                            return "Giảm giá phải tối thiểu trên 10.000 VND";
+                                        }
+                                        if (numValue > minimumOrderValue) {
+                                            return "Giảm giá không được lớn hơn đơn tối thiểu";
+                                        }
+                                    },
+                                },
+                            })}
+                            error={!!errors.discount_value}
+                            helperText={errors.discount_value?.message}
+                        />
+                    )}
                     <TextField
                         label="Ngày bắt đầu"
                         type="date"
@@ -217,28 +230,17 @@ export default function EditVoucherComponent() {
                         error={!!errors.end_date}
                         helperText={errors.end_date?.message}
                     />
-                    <TextField
-                        label="Danh sách áp dụng"
-                        placeholder="Nhập ID sản phẩm (ví dụ: 1, 2, 3)"
-                        slotProps={{
-                            inputLabel: {
-                                shrink: true,
-                            },
-                        }}
-                        value={applicableIds.join(",")}  // Hiển thị mảng ID đã nhập dưới dạng chuỗi
-                        onChange={handleApplicableIdsChange}  // Gọi hàm handle khi có thay đổi
 
-                    />
+
                     <Select
                         label="Loại áp dụng"
-                        {...register("applicable_type", { required: "Chọn loại áp dụng" })}
-                        value={watch("applicable_type") || "product"} // Sử dụng watch để lấy giá trị hiện tại
+                        value={discountType}
+                        {...register("discount_type", { required: "Chọn loại áp dụng" })}
+                        onChange={handleDiscountTypeChange}
                     >
-                        <MenuItem value="category">Category</MenuItem>
-                        <MenuItem value="product">Product</MenuItem>
+                        <MenuItem value="percent">Giảm theo %</MenuItem>
+                        <MenuItem value="fixed">Giảm theo giá tiền</MenuItem>
                     </Select>
-
-
 
                     <TextField
                         label="Giới hạn sử dụng"
@@ -253,7 +255,7 @@ export default function EditVoucherComponent() {
                         helperText={errors.usage_limit?.message}
                     />
 
-                    <TextField
+                    {/* <TextField
                         className="sr-only"
                         label="Giảm giá theo"
                         type="text"
@@ -261,7 +263,7 @@ export default function EditVoucherComponent() {
                         {...register("discount_type", { required: "Giảm giá không được để trống" })}
                         error={!!errors.discount_type}
                         helperText={errors.discount_type?.message}
-                    />
+                    /> */}
                     <div>
                         <FormControlLabel control={<Switch defaultChecked />} {...register("voucher_active")} label="Active" />
                     </div>
