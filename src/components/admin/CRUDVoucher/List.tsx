@@ -26,16 +26,17 @@ import CFButton from "../CfButton";
 import { useDeleteVoucherMutation } from "@/services/productApi";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface Column {
   id:
   | "name"
   | "id"
   | "discount"
-  | "usage"
+  | "day"
   | "code"
-  | "applicable"
-  | "productId"
+  | "usage_limit"
+  | "used_count"
   | "";
   label: string;
   minWidth?: number;
@@ -44,12 +45,12 @@ interface Column {
 
 const columns: Column[] = [
   { id: "id", label: "ID", minWidth: 100, align: "center" },
-  { id: "name", label: "Name", minWidth: 170, align: "center" },
-  { id: "discount", label: "Discount", minWidth: 100, align: "center" },
-  { id: "usage", label: "Usage", minWidth: 100, align: "center" },
-  { id: "code", label: "Code", minWidth: 100, align: "center" },
-  { id: "applicable", label: "Applicable", minWidth: 100, align: "center" },
-  { id: "productId", label: "ProductId", minWidth: 150, align: "center" },
+  { id: "name", label: "Tên", minWidth: 170, align: "center" },
+  { id: "discount", label: "Giảm", minWidth: 100, align: "center" },
+  { id: "day", label: "Ngày", minWidth: 100, align: "center" },
+  { id: "code", label: "Mã", minWidth: 100, align: "center" },
+  { id: "usage_limit", label: "Lượt dùng", minWidth: 100, align: "center" },
+  { id: "used_count", label: "Còn", minWidth: 150, align: "center" },
   { id: "", label: "", minWidth: 150, align: "center" },
 ];
 
@@ -60,17 +61,12 @@ export default function ListVoucher() {
   const [loading, setLoading] = useState(false);
   const [vouchers, setVouchers] = useState<IVoucher[]>([]);
   const [deleteVoucher] = useDeleteVoucherMutation();
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    lastPage: 1,
-    total: 0, // Tổng số bản ghi (thông tin này cần phải trả về từ API)
-  });
   const token = useSelector((state: RootState) => state.auth.access_token);
-  const fetchVouchersByPage = async (page: number) => {
+  const fetchVouchersByPage = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/voucher?page=${page}&limit=${rowsPerPage}`,
+        `http://127.0.0.1:8000/api/admin/getAllVouchers`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
@@ -78,11 +74,7 @@ export default function ListVoucher() {
         },
       );
       setVouchers(response.data.vouchers); // Lấy dữ liệu voucher
-      setPagination({
-        currentPage: response.data.current_page,
-        lastPage: response.data.last_page,
-        total: response.data.total_available_vouchers, // Tổng số bản ghi
-      });
+
     } catch (error) {
       console.error("Lỗi khi tải voucher:", error);
       toast.error("Không thể tải danh sách voucher.");
@@ -92,25 +84,23 @@ export default function ListVoucher() {
   };
 
   useEffect(() => {
-    fetchVouchersByPage(page + 1); // Lấy voucher ở trang hiện tại
+    fetchVouchersByPage(); // Lấy voucher ở trang hiện tại
   }, [page, rowsPerPage, token]); // Khi trang hoặc số lượng dòng thay đổi
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
-    setPage(0); // Khi thay đổi số dòng mỗi trang, quay về trang đầu tiên
+    setPage(0);
   };
 
   const handleDelete = async (brandID: number) => {
     try {
       await deleteVoucher(brandID).unwrap();
       toast.success("Voucher đã được xóa thành công.");
-      fetchVouchersByPage(page);
+      fetchVouchersByPage();
     } catch (err) {
       const error = err as { status?: number; data?: { message?: string } };
       const errorMessage =
@@ -121,7 +111,18 @@ export default function ListVoucher() {
   };
 
   if (loading) return <LinearProgress />;
+  const formatDiscountValue = (value: string): string => {
+    const numericValue = parseFloat(value);
 
+    // Nếu giá trị nhỏ hơn 99, trả về phần trăm
+    if (numericValue < 99) {
+      return `${Math.round(numericValue)}%`;
+    }
+    // Nếu giá trị lớn hơn hoặc bằng 99, trả về tiền tệ (VND)
+    else {
+      return formatCurrency(numericValue);
+    }
+  };
   return (
     <>
       <Paper sx={{ width: "100%", borderRadius: "10px" }}>
@@ -153,78 +154,94 @@ export default function ListVoucher() {
             </TableHead>
             <TableBody>
               {Array.isArray(vouchers) && vouchers.length > 0 ? (
-                vouchers.map((voucher) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={voucher.id}
-                  >
-                    {columns.map((column) => {
-                      let value;
-                      if (column.id === "id") {
-                        value = voucher.id;
-                      } else if (column.id === "name") {
-                        value = voucher.name;
-                      } else if (column.id === "discount") {
-                        value = `${Math.round(parseFloat(voucher.discount_value))}%`;
-                      } else if (column.id === "usage") {
-                        value = voucher.usage_limit;
-                      } else if (column.id === "code") {
-                        value = voucher.code;
-                      } else if (column.id === "applicable") {
-                        value = voucher.applicable_type;
-                      } else if (column.id === "productId") {
-                        const applicableIds = JSON.parse(
-                          voucher.applicable_ids,
-                        );
-                        value = Array.isArray(applicableIds)
-                          ? applicableIds.join(", ")
-                          : "";
-                      } else if (column.id === "") {
-                        value = (
-                          <>
-                            <Tooltip title="Delete Voucher">
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() =>
-                                  openPopup(
-                                    <CFButton
-                                      title="Are you sure you want to delete this item?"
-                                      handleDelete={() =>
-                                        handleDelete(voucher.id)
-                                      }
-                                    />,
-                                  )
-                                }
-                              >
-                                <DeleteIcon color="error" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit Voucher">
-                              <Link to={`/admin/voucher/${voucher.id}`}>
-                                <IconButton aria-label="edit">
-                                  <EditIcon color="primary" />
+                vouchers.map((voucher) => {
+                  const today = new Date();
+                  const endDate = new Date(voucher.end_date);
+                  const isExpired = endDate < today || (voucher.usage_limit - voucher.used_count) === 0;
+
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={voucher.id}
+                      style={{
+                        opacity: isExpired ? 0.5 : 1, // Làm mờ nếu hết hạn
+                        // pointerEvents: isExpired ? "none" : "auto", // Không cho phép thao tác nếu hết hạn
+                      }}
+                    >
+                      {columns.map((column) => {
+                        let value;
+                        if (column.id === "id") {
+                          value = voucher.id;
+                        } else if (column.id === "name") {
+                          value = voucher.name;
+                        } else if (column.id === "discount") {
+                          value = <span className="text-red-600"> {formatDiscountValue(voucher.discount_value)}</span>;
+                        } else if (column.id === "day") {
+                          //const startDate = new Date(voucher.start_date);
+                          const daysLeft = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 3600 * 24));
+
+                          if (daysLeft <= 0) {
+                            value = <span className="text-red-600">Đã hết hạn</span>;
+                          } else if (daysLeft === 1) {
+                            value = <span className="text-red-600">Còn 1 ngày</span>;
+                          } else {
+                            value = `Còn ${daysLeft} ngày`;
+                          }
+                        } else if (column.id === "code") {
+                          value = voucher.code;
+                        } else if (column.id === "usage_limit") {
+                          value = voucher.usage_limit;
+                        } else if (column.id === "used_count") {
+                          const remainingUses = voucher.usage_limit - voucher.used_count;
+
+                          if (remainingUses === 0) {
+                            value = <span className="text-red-600"> Đã hết lượt dùng</span>;
+                          } else {
+                            value = `${remainingUses} lượt`;
+                          }
+                        } else if (column.id === "") {
+                          value = (
+                            <>
+                              <Tooltip title="Delete Voucher">
+                                <IconButton
+                                  aria-label="delete"
+                                  onClick={() =>
+                                    openPopup(
+                                      <CFButton
+                                        title="Are you sure you want to delete this item?"
+                                        handleDelete={() => handleDelete(voucher.id)}
+                                      />
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="error" />
                                 </IconButton>
-                              </Link>
-                            </Tooltip>
-                          </>
+                              </Tooltip>
+                              <Tooltip title="Edit Voucher">
+                                <Link to={`/admin/voucher/${voucher.id}`}>
+                                  <IconButton aria-label="edit">
+                                    <EditIcon color="primary" />
+                                  </IconButton>
+                                </Link>
+                              </Tooltip>
+                            </>
+                          );
+                        }
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {value}
+                          </TableCell>
                         );
-                      }
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))
+                      })}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    <Typography color="error">
-                      Không có voucher nào để hiển thị.
-                    </Typography>
+                    <Typography color="error">Không có voucher nào để hiển thị.</Typography>
                   </TableCell>
                 </TableRow>
               )}
@@ -234,7 +251,7 @@ export default function ListVoucher() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 50]}
           component="div"
-          count={pagination.total} // Tổng số bản ghi từ API
+          count={vouchers.length} // Tổng số bản ghi từ API
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

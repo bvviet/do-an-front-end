@@ -4,6 +4,7 @@ export interface IVoucher {
   minimum_order_value: number;
   discount_type: string;
   discount_value: string;
+  max_discount: string,
   start_date: string;
   end_date: string;
   deleted_at: null;
@@ -12,21 +13,20 @@ export interface IVoucher {
   voucher_active: boolean;
   usage_limit: number;
   used_count: number;
-  applicable_type: string;
-  applicable_ids: string;
   code: string;
+  status:string
 }
 export interface AddVoucherBase {
   name: string;
   minimum_order_value: number;
   discount_type: string;
   discount_value: string;
+  max_discount:string
   start_date: string;
   end_date: string;
   usage_limit: number;
   voucher_active: boolean;
-  applicable_type: "category" | "product";
-  applicable_ids: number[]; // Nếu là mảng ID
+ 
 }
 
 // export interface AddVoucherCategory extends AddVoucherBase {
