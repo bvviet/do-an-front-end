@@ -37,6 +37,7 @@ export interface ProductType {
   img_thumbnail: string;
   price_regular: number;
   price_sale: number;
+  average_rating: number;
   description: string;
   content: string;
   user_manual: string;

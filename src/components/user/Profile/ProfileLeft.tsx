@@ -23,8 +23,7 @@ const ProfileLeft = () => {
     dispatch(setLoading(isLoading));
   }, [isLoading, dispatch]);
 
-  const urlImage =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH87TKQrWcl19xly2VNs0CjBzy8eaKNM-ZpA&s";
+  const urlImage = data?.avatar;
   return (
     <aside>
       {/* User */}
@@ -32,7 +31,7 @@ const ProfileLeft = () => {
         <AvatarComponent width="110" height="110" urlImage={urlImage} />
         <h1 className="mt-[20px] text-[1.8rem] font-bold">{data?.name}</h1>
         <p className="text-[1.5rem] font-medium">
-          Registered: {formatDate(data?.created_at)}
+          Đăng ký: {formatDate(data?.created_at)}
         </p>
       </div>
 

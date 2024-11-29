@@ -183,6 +183,42 @@ export const authApi = createApi({
         },
       }),
     }),
+
+    updateAddress: builder.mutation<
+      void,
+      {
+        city: string;
+        district: string;
+        ward: string;
+        detail_address: string;
+        phone_number: string;
+        address_name: string;
+        id: number;
+      }
+    >({
+      query: ({
+        city,
+        district,
+        ward,
+        detail_address,
+        phone_number,
+        address_name,
+        id,
+      }) => ({
+        url: `/addresses/${id}`,
+        method: "POST",
+        body: {
+          city,
+          district,
+          ward,
+          detail_address,
+          phone_number,
+          address_name,
+          _method: "PUT",
+        },
+      }),
+    }),
+
     setAddressDefault: builder.mutation<SetAddressDefaultResponse, number>({
       query: (id) => ({
         url: `/addresses/${id}/default`,
@@ -266,6 +302,7 @@ export const {
   useUpdateProfileMutation,
   useCreateAddressMutation,
   useGetAddressQuery,
+  useUpdateAddressMutation,
   useDeleteAddressMutation,
   useGetUsersAdminQuery,
   useSetAddressDefaultMutation,

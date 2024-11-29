@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setLoading } from "@/redux/slices/loadingSlice.ts";
 import ProductsAll from "./ProductsAll.tsx";
+import ProductsView from "./ProductView.tsx";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ const HomePage = () => {
         <ProductsAll products={products} />
         <ProductNew products={products} />
         {/* <BestSellers /> */}
+        {/* View */}
+        <ProductsView />
       </div>
       <ProductOffers />
       <div className="container">
