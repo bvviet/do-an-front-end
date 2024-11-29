@@ -21,6 +21,7 @@ interface ProductItemProps {
   bestSeller?: boolean;
   newProduct?: boolean;
   product: ProductType;
+  productsHot?: boolean;
 }
 
 export interface ErrorType {
@@ -34,6 +35,7 @@ const ProductItem: FC<ProductItemProps> = ({
   bestSeller,
   newProduct,
   product,
+  productsHot,
 }) => {
   const [showSticker, setShowSticker] = useState<boolean>(false);
   const [isGet, setIsGet] = useState<boolean>(false);
@@ -93,6 +95,12 @@ const ProductItem: FC<ProductItemProps> = ({
         </div>
       )}
 
+      {productsHot && (
+        <div className="absolute left-[26px] top-[22px] z-10 w-fit rounded-[5px] bg-black px-[10px] py-[6px] text-[1.4rem] leading-[171.429%] text-white">
+          Sản phẩm hot
+        </div>
+      )}
+
       {/* Product Image */}
       <div className="relative">
         <Link to={`/detail/${product?.slug}`} className="">
@@ -139,8 +147,16 @@ const ProductItem: FC<ProductItemProps> = ({
       {/* Price */}
       <div className="mb-[28px] mt-[12px] flex items-center justify-between">
         <div className="flex items-center gap-[6px]">
-          <img src={star} alt="Star Icon" />
-          <p className="leading-[171.429%] text-[#566363]">5.0 (132)</p>
+          {product.average_rating && product.average_rating != 0 ? (
+            <>
+              <img src={star} alt="Star Icon" />
+              <p className="leading-[171.429%] text-[#566363]">
+                {product.average_rating}
+              </p>
+            </>
+          ) : (
+            ""
+          )}
         </div>
         {product?.price_sale ? (
           <div className="flex items-center gap-3">

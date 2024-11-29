@@ -9,6 +9,7 @@ import {
   useCreateAddressMutation,
   useGetDetailAddressQuery,
   useGetUsersQuery,
+  useUpdateAddressMutation,
 } from "@/services/authApi";
 import { saveUserInfo } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
@@ -140,6 +141,7 @@ const FormUpdateAddress = () => {
   const formSchema = yup.object().shape({
     phone_number: yup
       .string()
+      .min(10, "Số điện thoại phải 10 số")
       .max(10, "Số điện thoại không nhiều hơn 10 số")
       .required("Số điện thoại là bắt buộc"),
     address_name: yup.string().required("Loại địa chỉ không được bỏ trống"),
@@ -159,10 +161,9 @@ const FormUpdateAddress = () => {
 
   const { data: addressDetail, isLoading: isLoadingGetDetail } =
     useGetDetailAddressQuery(Id);
-
   console.log({ addressDetail });
 
-  const [createAddress, { isSuccess, isLoading }] = useCreateAddressMutation();
+  const [updateAddress, { isSuccess, isLoading }] = useUpdateAddressMutation();
 
   const {
     register,
@@ -173,7 +174,8 @@ const FormUpdateAddress = () => {
   });
 
   const onSubmit: SubmitHandler<addressType> = async (data) => {
-    await createAddress({
+    await updateAddress({
+      id: Id,
       address_name: data.address_name,
       detail_address: data.detail_address,
       ward: selectedCommune?.label ?? "",
@@ -181,7 +183,7 @@ const FormUpdateAddress = () => {
       city: selectedProvince?.label ?? "",
       phone_number: data.phone_number,
     }).unwrap();
-    toast.success("Thêm mới địa chỉ thành công");
+    toast.success("Cập nhật địa chỉ thành công");
   };
 
   const { data: users, refetch } = useGetUsersQuery(undefined, {
@@ -189,9 +191,7 @@ const FormUpdateAddress = () => {
   });
 
   useEffect(() => {
-    if (isLoading || isLoadingGetDetail) {
-      dispatch(setLoading(isLoading || isLoadingGetDetail));
-    }
+    dispatch(setLoading(isLoading || isLoadingGetDetail));
 
     // Sau khi thêm thành công refetch lại người dùng và lưu vào store
     if (isSuccess && users) {
@@ -237,7 +237,7 @@ const FormUpdateAddress = () => {
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Tỉnh / Thành phố
+              Tỉnh / Thành phố ({addressDetail?.address?.city})
             </label>
 
             <Select
@@ -262,7 +262,7 @@ const FormUpdateAddress = () => {
               htmlFor="district"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Quận / Huyện
+              Quận / Huyện ({addressDetail?.address?.district})
             </label>
 
             <Select
@@ -287,7 +287,7 @@ const FormUpdateAddress = () => {
               htmlFor="commune"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Xã / Phường
+              Xã / Phường ({addressDetail?.address?.ward})
             </label>
 
             <Select
@@ -312,11 +312,11 @@ const FormUpdateAddress = () => {
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Văn Phòng, nhà riêng
+              Văn Phòng, nhà riêng ({addressDetail?.address?.address_name})
             </label>
             <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
               <select {...register("address_name")} className="w-full">
-                <option value="">Chọn văn phòng ↔️ nhà riêng</option>
+                <option value="">--Chọn--</option>
                 <option value="Nhà riêng">Nhà riêng</option>
                 <option value="Văn phòng">Văn phòng</option>
               </select>
@@ -335,7 +335,7 @@ const FormUpdateAddress = () => {
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Số điện thoại
+              Số điện thoại ({addressDetail?.address?.phone_number})
             </label>
             <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
               <input
@@ -358,7 +358,8 @@ const FormUpdateAddress = () => {
               htmlFor="province"
               className="text-[1.8rem] font-medium lg:text-[2.2rem]"
             >
-              Địa chỉ cụ thể: số nhà, tên đường
+              Địa chỉ cụ thể: số nhà, tên đường (
+              {addressDetail?.address?.detail_address})
             </label>
             <div className="mt-3 flex h-[36px] items-center rounded-xl border border-solid border-[#d2d1d6] bg-white px-[12px]">
               <input
