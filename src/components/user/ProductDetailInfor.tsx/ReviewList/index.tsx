@@ -12,7 +12,6 @@ const Reviews: FC<ReviewsProps> = ({ productId }) => {
   const [visibleCount, setVisibleCount] = useState(3);
   const dispatch = useDispatch();
   const { data, isLoading } = useGetCommentsQuery({ productId });
-  console.log(data);
 
   const arr = (data?.comments || []).slice(0, visibleCount);
 

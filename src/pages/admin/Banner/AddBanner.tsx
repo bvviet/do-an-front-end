@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCreateBannerMutation } from "@/services/productApi";
 import {
   Button,
   Dialog,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const AddBanner = ({ openDialog, handleCloseDialog }: any) => {
   const {
@@ -14,17 +16,21 @@ const AddBanner = ({ openDialog, handleCloseDialog }: any) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const [createBanner] = useCreateBannerMutation();
   const onSubmit = async (data: any) => {
     try {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("link", data.link);
+
+      // Đổi tên từ imgUrl thành image (theo yêu cầu server)
       if (data.imgUrl[0]) {
-        formData.append("imgUrl", data.imgUrl[0]);
+        formData.append("image", data.imgUrl[0]);
+        await createBanner(formData);
+        toast.success("Thêm mới thành công");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error);
     }
   };
 
