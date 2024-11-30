@@ -8,30 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import AddBanner from "./AddBanner";
 import EditBanner from "./EditBanner";
-
-const banners = [
-  {
-    id: 1,
-    name: "Banner 1",
-    link: "https://placehold.co/276x350?text=%22No%20Image%22",
-    imgUrl:
-      "https://file.hstatic.net/1000003969/collection/sale-700x400_29ba8c40bf7444049d70e09a3bd1296e.jpg",
-  },
-  {
-    id: 2,
-    name: "Banner 2",
-    link: "https://placehold.co/276x350?text=%22No%20Image%22",
-    imgUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7dW37mmtPxg8rSz95wY58QG6qUQ0h4sN-TOVZK2ig3sB60uX1wVwZZ5VrWi2t_KAGP4k&usqp=CAU",
-  },
-  {
-    id: 3,
-    name: "Banner 2",
-    link: "https://placehold.co/276x350?text=%22No%20Image%22",
-    imgUrl:
-      "https://jobs.kidsplaza.vn/wp-content/uploads/2023/05/mo-ta-cong-viec-sale-online-2.jpg",
-  },
-];
+import { useGetAllBannerAdminQuery } from "@/services/productApi";
 
 const BannerAdmin = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -41,6 +18,8 @@ const BannerAdmin = () => {
   const handleCloseDialog = () => setOpenDialog(false);
   const handleOpenDialogEdit = () => setOpenDialogEdit(true);
   const handleCloseDialogEdit = () => setOpenDialogEdit(false);
+
+  const { data: banners } = useGetAllBannerAdminQuery();
 
   return (
     <div className="mx-auto p-[20px]">
@@ -61,14 +40,14 @@ const BannerAdmin = () => {
         <p>Đường dẫn</p>
         <p>Hành động</p>
       </div>
-      {banners.map((banner, index) => (
+      {banners?.data.map((banner, index) => (
         <div
           className="mt-10 grid grid-cols-[50px_150px_1fr_2fr_100px] items-center gap-4 text-center"
           key={banner.id}
         >
           <p>{index + 1}</p>
           <Link to="#" className="mx-auto h-[100px] w-[150px]">
-            <img src={banner.imgUrl} alt="" className="h-full w-full" />
+            <img src={banner.image} alt="" className="h-full w-full" />
           </Link>
           <h2 className="font-manrope text-[1.8rem] font-bold text-[#000]">
             {banner.name}
@@ -80,7 +59,7 @@ const BannerAdmin = () => {
             <p className="font-semibold underline">{banner.link}</p>
           </Link>
           <div className="flex items-center justify-center gap-2">
-            <IconButton >
+            <IconButton>
               <DeleteOutlineIcon color="error" />
             </IconButton>
             <IconButton onClick={handleOpenDialogEdit}>

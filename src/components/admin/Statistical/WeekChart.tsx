@@ -33,11 +33,11 @@ interface RevenueChartProps {
 const WeekChart: React.FC<RevenueChartProps> = ({ data }) => {
   // Dữ liệu cho biểu đồ
   const chartData = {
-    labels: data.total_revenue_default.map((item) => item.time), // Labels là thời gian
+    labels: (data?.total_revenue_default || []).map((item) => item.time), // Labels là thời gian
     datasets: [
       {
-        label: "Doanh thu",
-        data: data.total_revenue_default.map((item) => item.price), // Dữ liệu là giá trị price
+        label: "Doanh thu tuần qua",
+        data: (data?.total_revenue_default || []).map((item) => item.price), // Dữ liệu là giá trị price
         fill: false,
         borderColor: "rgb(75, 192, 192)", // Màu của đường line
         tension: 0.1,
@@ -66,7 +66,10 @@ const WeekChart: React.FC<RevenueChartProps> = ({ data }) => {
     <div className="chart-container">
       <Line data={chartData} options={options} />
       <div className="total-revenue">
-        <p>Tổng doanh thu: {data.total_revenue.toLocaleString()}₫</p>
+        <p className="mt-5">
+          <span className="font-semibold">Tổng doanh thu:</span>{" "}
+          {data?.total_revenue?.toLocaleString()}₫
+        </p>
       </div>
     </div>
   );

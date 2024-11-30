@@ -22,13 +22,16 @@ import { Link } from "react-router-dom";
 import { useGetUsersQuery } from "@/services/authApi";
 import DomainIcon from "@mui/icons-material/Domain";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  { id: 1, name: "Ra trang người dùng", link: "/" },
+  { id: 2, name: "Trang cá nhân", link: "/profile" },
+];
 const arrayNav = [
   {
     id: 1,
     name: "Dashboard",
     icon: DomainIcon,
-    link: "/admin/dashboard",
+    link: "/admin",
   },
   {
     id: 2,
@@ -132,14 +135,13 @@ const NavbarAdmin = () => {
       </div>
 
       {/* Avatar - Căn dưới cùng */}
-      <div className="mt-auto">
+      <div className="sticky bottom-0 left-0 mt-auto bg-main p-4">
         <Box sx={{ flexGrow: 0 }}>
           <div className="flex items-center gap-5">
             <IconButton sx={{ p: 0 }}>
-              <Avatar
-                alt="Remy Sharp"
-                src="https://images.unsplash.com/photo-1636041282783-e218bb0a217b?q=80&w=1854&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              />
+              <Avatar src={user?.avatar ?? ""}>
+                {user?.name.slice(0, 1).toLocaleUpperCase()}
+              </Avatar>
             </IconButton>
 
             <div>
@@ -173,8 +175,12 @@ const NavbarAdmin = () => {
             onClose={handleCloseUserMenu}
           >
             {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
+              <MenuItem key={setting.id} onClick={handleCloseUserMenu}>
+                <Link to={`${setting.link}`}>
+                  <Typography sx={{ textAlign: "center" }}>
+                    {setting.name}
+                  </Typography>
+                </Link>
               </MenuItem>
             ))}
           </Menu>

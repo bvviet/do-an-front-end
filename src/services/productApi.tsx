@@ -512,6 +512,19 @@ export const productApi = createApi({
       query: ({ page, limit }: { page: number; limit: number }) =>
         `voucher?page=${page}&limit=${limit}`,
     }),
+
+    // Banner
+    createBanner: builder.mutation({
+      query: (formData) => ({
+        url: "/admin/banners",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+
+    getAllBannerAdmin: builder.query<void, void>({
+      query: () => "/admin/banners",
+    }),
   }),
 });
 
@@ -563,4 +576,6 @@ export const {
   useDeleteCommentsMutation,
   useUpdateCommentMutation,
   useGetAllVoucherQuery,
+  useCreateBannerMutation,
+  useGetAllBannerAdminQuery,
 } = productApi;

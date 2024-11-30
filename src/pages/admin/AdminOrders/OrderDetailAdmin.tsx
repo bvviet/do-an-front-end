@@ -323,7 +323,7 @@ const OrderDetailAdmin = () => {
                   Tổng tiền:
                 </td>
                 <td className="border border-gray-400 p-2 text-center font-bold text-[#ee4d2d]">
-                  {data?.total_all_orders}
+                  {formatCurrency(data?.total_amount ?? 0)}
                 </td>
               </tr>
             </tfoot>

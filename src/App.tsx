@@ -47,6 +47,7 @@ import EditProducts from "./components/admin/CRUD/EditProduct";
 import Favorites from "./pages/user/Favorites";
 import BannerAdmin from "./pages/admin/Banner";
 import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
+import Dashboard from "./pages/admin/Dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -112,6 +113,7 @@ function App() {
       path: "/admin",
       element: <AdminLayout />,
       children: [
+        { path: "/admin", element: <Dashboard /> },
         { path: "lists", element: <ListAuth /> },
         { path: "product", element: <LabTabs /> },
         { path: "product/:slug", element: <EditProducts /> },
