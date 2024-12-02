@@ -1,7 +1,7 @@
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AddProduct } from "@/types/product";
-import { Box, FormControlLabel, LinearProgress, MenuItem, Select, Switch, TextField } from "@mui/material";
+import { Box, FormControlLabel, IconButton, LinearProgress, MenuItem, Select, Switch, TextField, Tooltip } from "@mui/material";
 import { useGetCategoriesQuery } from "@/services/authApi";
 import { ICategory } from "@/types/genre";
 import { useAddProductMutation } from "@/services/productApi";
@@ -10,6 +10,9 @@ import { useSizes } from "@/hooks/useSize";
 import { useColors } from "@/hooks/useColor";
 import { useEffect, useState } from "react";
 import { useTabContext } from "@/contexts/TabContext";
+import CFButton from "../CfButton";
+import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function AddProducts() {
   const { control, register, handleSubmit, reset, formState: { errors }, getValues } = useForm<AddProduct>();
@@ -18,6 +21,7 @@ export default function AddProducts() {
   const { brandsData, brandsLoading, brandsError } = useBrands();
   const { sizes, isLoading: isLoadingSizes, error: sizeError } = useSizes();
   const { colors, isLoading: isLoadingColors, error: colorError } = useColors();
+  const { openPopup } = useModalContext();
   const { setValue } = useTabContext();
   const [productVariants, setProductVariants] = useState<{
     product_size_id: string;
@@ -36,6 +40,9 @@ export default function AddProducts() {
       }]);
     }
   }, [sizes, colors]);
+  const handleRemoveVariant = (index: number) => {
+    setProductVariants((prev) => prev.filter((_, i) => i !== index));
+  };
   // Kiểm tra lỗi hoặc dữ liệu đang tải
   if (isLoadingSizes || isLoadingColors) {
     return <p> <LinearProgress /></p>;
@@ -146,7 +153,7 @@ export default function AddProducts() {
                     fullWidth
                     {...register("price_regular", {
                       required: "Giá gốc không được để trống",
-                      validate: value => value > 0 || "Giá gốc phải lớn hơn 0"
+                      validate: value => value > 1000 || "Giá gốc phải lớn hơn 1000"
                     })}
                     error={!!errors.price_regular}
                     helperText={errors.price_regular?.message}
@@ -168,7 +175,7 @@ export default function AddProducts() {
                         if (value >= priceRegular) {
                           return "Giá sale phải nhỏ hơn giá gốc";
                         }
-                        return value > 0 || "Giá sale phải lớn hơn 0";
+                        return value > 1000 || "Giá sale phải lớn hơn 1000";
                       }
                     })}
                     error={!!errors.price_sale}
@@ -319,6 +326,7 @@ export default function AddProducts() {
                         <th className="px-4 py-2">Màu</th>
                         <th className="px-4 py-2">Số lượng</th>
                         <th className="px-4 py-2">Ảnh</th>
+                        <th className="px-4 py-2"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -391,6 +399,21 @@ export default function AddProducts() {
                               )}
                             </div>
                           </td>
+                          <Tooltip title="Delete product">
+                            <IconButton
+                              aria-label="delete"
+                              onClick={() =>
+                                openPopup(
+                                  <CFButton
+                                    title="Are you sure you want to delete this item?"
+                                    handleDelete={() => handleRemoveVariant(index)}
+                                  />
+                                )
+                              }
+                            >
+                              <DeleteIcon color="error" />
+                            </IconButton>
+                          </Tooltip>
                         </tr>
                       ))}
                     </tbody>

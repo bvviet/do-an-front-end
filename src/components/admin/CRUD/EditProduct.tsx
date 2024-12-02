@@ -227,7 +227,10 @@ export default function EditProducts() {
               },
             }}
             fullWidth
-            {...register("price_regular", { required: "Giá gốc không được để trống" })}
+            {...register("price_regular", {
+              required: "Giá gốc không được để trống", validate: value =>
+                value > 1000 || "Giá phải lớn hơn 1000"
+            })}
             error={!!errors.price_regular}
             helperText={errors.price_regular?.message}
           />
@@ -317,7 +320,10 @@ export default function EditProducts() {
               },
             }}
             fullWidth
-            {...register("price_sale", { required: "Giá sale không được để trống" })}
+            {...register("price_sale", {
+              required: "Giá sale không được để trống", validate: value =>
+                value > 1000 || "Giá sale phải lớn hơn 1000"
+            })}
             error={!!errors.price_sale}
             helperText={errors.price_sale?.message}
           />

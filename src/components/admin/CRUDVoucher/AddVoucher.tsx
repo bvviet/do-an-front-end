@@ -74,7 +74,10 @@ export default function AddVoucherComponent() {
                         label="Đơn tối thiểu"
                         type="number"
                         placeholder="Áp dụng cho những đơn có giá trị tối thiểu"
-                        {...register("minimum_order_value", { required: "Giá trị không được để trống" })}
+                        {...register("minimum_order_value", {
+                            required: "Giá trị không được để trống", validate: value =>
+                                value > 10000 || "Giá sale phải lớn hơn 10.000vnd"
+                        })}
                         error={!!errors.minimum_order_value}
                         helperText={errors.minimum_order_value?.message}
                     />
@@ -85,6 +88,8 @@ export default function AddVoucherComponent() {
                         {...register("max_discount", {
                             required: "Giá trị không được để trống",
                             validate: {
+                                greaterThanZero: (value) =>
+                                    parseFloat(value) > 10000 || "Giảm tối đa phải lớn hơn 10.000",
                                 notLessThanDiscount: (value) => {
                                     const numValue = parseFloat(value); // Chuyển giá trị max_discount sang số
                                     const discountValue = parseFloat(watch("discount_value") || "0"); // Lấy giá trị của discount_value
@@ -109,7 +114,7 @@ export default function AddVoucherComponent() {
                                 validate: {
                                     minValue: (value) => {
                                         const numValue = parseFloat(value); // Chuyển giá trị string thành number
-                                        return numValue >= 1 || "Giảm giá phải tối thiểu 1%";
+                                        return numValue >= 1 || "Giảm giá phải tối thiểu lớn hơn hoặc bằng 1%";
                                     },
                                     maxValue: (value) => {
                                         const numValue = parseFloat(value); // Chuyển giá trị string thành number
@@ -194,7 +199,10 @@ export default function AddVoucherComponent() {
                     <TextField
                         label="Giới hạn sử dụng"
                         type="number"
-                        {...register("usage_limit", { required: "Giới hạn sử dụng không được để trống" })}
+                        {...register("usage_limit", {
+                            required: "Giới hạn sử dụng không được để trống", validate: value =>
+                                value > 0 || "Giới hạn sử dụng phải lớn hơn 0"
+                        })}
                         error={!!errors.usage_limit}
                         helperText={errors.usage_limit?.message}
                     />
