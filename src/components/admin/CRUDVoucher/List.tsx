@@ -12,7 +12,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import Search from "../CRUD/Components/Search";
 import LinkProducts from "../CRUD/Components/Button";
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -60,6 +59,8 @@ export default function ListVoucher() {
   const { openPopup } = useModalContext();
   const [loading, setLoading] = useState(false);
   const [vouchers, setVouchers] = useState<IVoucher[]>([]);
+  const [allVouchers, setAllVouchers] = useState<IVoucher[]>([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
   const [deleteVoucher] = useDeleteVoucherMutation();
   const token = useSelector((state: RootState) => state.auth.access_token);
   const fetchVouchersByPage = async () => {
@@ -74,7 +75,7 @@ export default function ListVoucher() {
         },
       );
       setVouchers(response.data.vouchers); // Lấy dữ liệu voucher
-
+      setAllVouchers(response.data.vouchers);
     } catch (error) {
       console.error("Lỗi khi tải voucher:", error);
       toast.error("Không thể tải danh sách voucher.");
@@ -86,6 +87,18 @@ export default function ListVoucher() {
   useEffect(() => {
     fetchVouchersByPage(); // Lấy voucher ở trang hiện tại
   }, [page, rowsPerPage, token]); // Khi trang hoặc số lượng dòng thay đổi
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Ngăn reload trang
+    if (searchTerm === "") {
+      setVouchers(allVouchers);
+    } else {
+      const filteredVoucher = allVouchers.filter((voucher) =>
+        voucher.name.toLowerCase().includes(searchTerm.toLowerCase()) // Tìm kiếm theo tên
+      );
+      setVouchers(filteredVoucher); // Cập nhật danh sách sản phẩm hiển thị
+    }
+  };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -134,7 +147,39 @@ export default function ListVoucher() {
             <TableHead>
               <TableRow>
                 <TableCell align="center" colSpan={6}>
-                  <Search />
+                  <form className="flex items-center" onSubmit={handleSearch} >
+                    <label htmlFor="simple-search" className="sr-only">
+                      Search
+                    </label>
+                    <div className="relative w-full">
+                      <button
+                        type="submit"
+                        className="absolute inset-y-0 left-0 flex items-center pl-3"
+                      >
+                        <svg
+                          className="h-9 w-9 text-gray-800 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+                      <input
+                        type="text"
+                        id="simple-search"
+                        className="block shadow-xl  w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        placeholder="Search"
+
+                        value={searchTerm} // Liên kết với state
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
+                  </form>
                 </TableCell>
                 <TableCell align="center" colSpan={2}>
                   <LinkProducts />

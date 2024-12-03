@@ -37,6 +37,7 @@ export default function EditProducts() {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<AddProduct>();
 
@@ -321,8 +322,14 @@ export default function EditProducts() {
             }}
             fullWidth
             {...register("price_sale", {
-              required: "Giá sale không được để trống", validate: value =>
-                value > 1000 || "Giá sale phải lớn hơn 1000"
+              required: "Giá sale không được để trống",
+              validate: (value) => {
+                const priceRegular = getValues("price_regular"); // Lấy giá gốc từ form
+                if (value >= priceRegular) {
+                  return "Giá sale phải nhỏ hơn giá gốc";
+                }
+                return value > 1000 || "Giá sale phải lớn hơn 1000";
+              },
             })}
             error={!!errors.price_sale}
             helperText={errors.price_sale?.message}
@@ -349,8 +356,8 @@ export default function EditProducts() {
           </div>
           <div className="my-8 mt-2 px-7 pt-6">
             <FormControlLabel control={<Switch defaultChecked />} {...register("is_active")} label="Active" />
-            <FormControlLabel control={<Switch defaultChecked />} {...register("is_new")} label="New" />
-            <FormControlLabel control={<Switch defaultChecked />} {...register("is_show_home")} label="Show home" />
+            {/* <FormControlLabel control={<Switch defaultChecked />} {...register("is_new")} label="New" />
+            <FormControlLabel control={<Switch defaultChecked />} {...register("is_show_home")} label="Show home" /> */}
           </div>
 
         </div>

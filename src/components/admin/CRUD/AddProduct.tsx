@@ -68,8 +68,7 @@ export default function AddProducts() {
     formData.append("view", String(1));
     formData.append("user_manual", data.user_manual);
     formData.append("is_active", data.is_active ? "1" : "0");
-    formData.append("is_new", data.is_new ? "1" : "0");
-    formData.append("is_show_home", data.is_show_home ? "1" : "0");
+
     formData.append("category_id", data.category_id.toString());
     formData.append("brand_id", data.brand_id.toString());
     formData.append("img_thumbnail", data.img_thumbnail || "null");
@@ -183,8 +182,8 @@ export default function AddProducts() {
                   />
                   <div className="my-8 mt-2 px-7 pt-6">
                     <FormControlLabel control={<Switch defaultChecked />} {...register("is_active")} label="Active" />
-                    <FormControlLabel control={<Switch defaultChecked />} {...register("is_new")} label="New" />
-                    <FormControlLabel control={<Switch defaultChecked />} {...register("is_show_home")} label="Show home" />
+                    {/* <FormControlLabel control={<Switch defaultChecked />} {...register("is_new")} label="New" />
+                    <FormControlLabel control={<Switch defaultChecked />} {...register("is_show_home")} label="Show home" /> */}
                   </div>
                   <div className="flex flex-col">
                     <label>Chọn thương hiệu</label>
@@ -254,7 +253,7 @@ export default function AddProducts() {
                         required: "Mô tả không được để trống",
                         validate: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount > 10 || "Mô tả phải dài hơn 10 từ";
+                          return wordCount > 5 || "Mô tả phải dài hơn 5 từ";
                         }
                       })}
                     />
@@ -275,7 +274,7 @@ export default function AddProducts() {
                         required: "Content không được để trống",
                         validate: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount > 10 || "Content phải dài hơn 10 từ";
+                          return wordCount > 5 || "Content phải dài hơn 5 từ";
                         }
                       })}
                     />

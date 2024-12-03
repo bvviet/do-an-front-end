@@ -15,15 +15,16 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import Search from "./Components/Search";
 import LinkProducts from "./Components/Button";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import { toast } from "react-toastify";
 import { useDeleteCategoryMutation } from "@/services/authApi"; // Hook để thực hiện xóa danh mục
 import { ICategory } from "@/types/genre"; // Kiểu dữ liệu cho danh mục
-import useCategories from "@/hooks/useGenre";
 import { Link } from "react-router-dom";
 import CFButton from "../CfButton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import axios from "axios";
 
 interface Column {
   id: "name" | "id" | "action" | "image" | "slug" | "children";
@@ -45,10 +46,55 @@ export default function ListCategory() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { openPopup } = useModalContext();
-  const { categories, isLoading } = useCategories();
   const [deleteCategory] = useDeleteCategoryMutation();
+  const [loading, setLoading] = React.useState(false);
+  const [categoriesList, setCategory] = React.useState<ICategory[]>([]);
+  const [allCategory, setAllCategory] = React.useState<ICategory[]>([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  // const categoriesList: ICategory[] = Array.isArray(categories) ? categories : (categories as { categories: ICategory[] })?.categories || [];
 
-  const categoriesList: ICategory[] = Array.isArray(categories) ? categories : (categories as { categories: ICategory[] })?.categories || [];
+  const token = useSelector((state: RootState) => state.auth.access_token);
+
+  const fetchBrand = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/admin/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
+          },
+        },
+      );
+      setCategory(response.data.categories); // Lấy dữ liệu 
+      setAllCategory(response.data.categories);
+
+    } catch (error) {
+      console.error("Lỗi khi tải voucher:", error);
+      toast.error("Không thể tải danh sách voucher.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    fetchBrand();
+  }, []);
+  console.log("dấds", allCategory);
+
+  // hàm tìm kiếm
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Ngăn reload trang
+    if (searchTerm === "") {
+      setCategory(allCategory);
+    } else {
+
+      const filteredCategory = allCategory.filter((category) =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase()) // Tìm kiếm theo tên
+      );
+      setCategory(filteredCategory); // Cập nhật danh sách sản phẩm hiển thị
+    }
+  };
+  // end hàm tìm kiếm
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -71,7 +117,7 @@ export default function ListCategory() {
     }
   };
 
-  if (isLoading) return <LinearProgress />;
+  if (loading) return <LinearProgress />;
 
   return (
     <Paper sx={{ width: "100%", borderRadius: "10px" }}>
@@ -80,7 +126,39 @@ export default function ListCategory() {
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={4}>
-                <Search />
+                <form className="flex items-center" onSubmit={handleSearch} >
+                  <label htmlFor="simple-search" className="sr-only">
+                    Search
+                  </label>
+                  <div className="relative w-full">
+                    <button
+                      type="submit"
+                      className="absolute inset-y-0 left-0 flex items-center pl-3"
+                    >
+                      <svg
+                        className="h-9 w-9 text-gray-800 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                    <input
+                      type="text"
+                      id="simple-search"
+                      className="block shadow-xl  w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      placeholder="Search"
+
+                      value={searchTerm} // Liên kết với state
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </form>
               </TableCell>
               <TableCell align="center" colSpan={2}>
                 <LinkProducts />
@@ -170,7 +248,7 @@ export default function ListCategory() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 20]}
         component="div"
-        count={categories.length}
+        count={categoriesList.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
