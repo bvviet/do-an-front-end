@@ -9,7 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import { IconButton, LinearProgress, Tooltip, TablePagination, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import Search from "./Components/Search";
 import LinkProducts from "./Components/Button";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import axios from "axios";
@@ -44,11 +43,14 @@ export default function ListProducts() {
   const { openPopup } = useModalContext();
   const [loading, setLoading] = React.useState(true);
   const [deleteProduct] = useDeleteProductMutation();
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [allProducts, setAllProducts] = React.useState<ProductType[]>([]);
   // Hàm gọi API để lấy dữ liệu sản phẩm từ địa chỉ mới
   const fetchProducts = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/products"); // Địa chỉ API mới
       setProducts(response.data.products);
+      setAllProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -68,6 +70,20 @@ export default function ListProducts() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  // hàm tìm kiếm
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Ngăn reload trang
+    if (searchTerm === "") {
+      setProducts(allProducts)
+    } else {
+      const filteredProducts = allProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) // Tìm kiếm theo tên
+      );
+      setProducts(filteredProducts); // Cập nhật danh sách sản phẩm hiển thị
+    }
+  };
+  // end hàm tìm kiếm
 
   const handleDelete = async (productId: number) => {
     try {
@@ -91,7 +107,39 @@ export default function ListProducts() {
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={5}>
-                <Search />
+                <form className="flex items-center" onSubmit={handleSearch} >
+                  <label htmlFor="simple-search" className="sr-only">
+                    Search
+                  </label>
+                  <div className="relative w-full">
+                    <button
+                      type="submit"
+                      className="absolute inset-y-0 left-0 flex items-center pl-3"
+                    >
+                      <svg
+                        className="h-9 w-9 text-gray-800 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                    <input
+                      type="text"
+                      id="simple-search"
+                      className="block shadow-xl  w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      placeholder="Search"
+
+                      value={searchTerm} // Liên kết với state
+                      onChange={(e) => setSearchTerm(e.target.value)} // Cập nhật state
+                    />
+                  </div>
+                </form>
               </TableCell>
               <TableCell align="center" colSpan={2}>
                 <LinkProducts />
