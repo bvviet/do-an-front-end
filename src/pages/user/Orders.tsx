@@ -63,42 +63,6 @@ const Orders = () => {
             </TabList>
           </Box>
         </TabContext>
-        {/* <table className="min-w-full rounded-md border border-gray-300 bg-white">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border-b px-4 py-2 text-center">Mã đơn</th>
-              <th className="border-b px-4 py-2 text-center">Ngày mua hàng</th>
-              <th className="border-b px-4 py-2 text-center">Trạng thái</th>
-              <th className="border-b px-4 py-2 text-center">Giá</th>
-              <th className="border-b px-4 py-2 text-center">Xem chi tiết</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.orders
-              ? (data?.orders || []).map((order, index) => (
-                  <tr key={order.id} className="border-b">
-                    <td className="px-4 py-2 text-center">{index + 1}</td>
-                    <td className="px-4 py-2 text-center">
-                      {formatDate(order?.created_at ?? undefined)}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      {getOrderStatus(order?.order_status)}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      <span className="font-medium text-[#ee4d2d]">
-                        ₫{parseFloat(order.total_amount).toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      <Link to={`/order/detail/${order.id}`}>
-                        <Button variant="outlined">Xem chi tiết</Button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))
-              : "Không có đơn nào"}
-          </tbody>
-        </table> */}
 
         <div className="">
           {(data?.orders || []).map((order: any) => (

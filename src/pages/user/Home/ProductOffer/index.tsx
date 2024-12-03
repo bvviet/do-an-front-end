@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductItem from "../../../../components/user/Product";
 import bannerOffers from "../../../../assets/images/BannerOffers.png";
 import fire from "@/assets/images/fire.png";
-import { useGetAllProductsQuery } from "@/services/productApi";
+import { useGetProductsSellQuery } from "@/services/productApi";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const ProductOffers = () => {
   const [visibleCount, setVisibleCount] = useState(6);
+  const dispatch = useDispatch();
 
-  const { data: products } = useGetAllProductsQuery();
-  const productOffer = products?.products;
+  const { data: products, isLoading } = useGetProductsSellQuery();
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [dispatch, isLoading]);
+
+  const productOffer = products?.data;
+  console.log({ productOffer });
 
   const showHide = visibleCount < (productOffer?.length || 0);
 

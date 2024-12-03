@@ -11,9 +11,7 @@ const ProductsAll: FC<ProductNewProps> = ({ products }) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
   // Khai báo productNew ở ngoài if block
-  const productAll = products?.products?.filter(
-    (product) => product.is_new === true,
-  );
+  const productAll = products?.products;
 
   const showHide = visibleCount < (productAll?.length || 0);
 

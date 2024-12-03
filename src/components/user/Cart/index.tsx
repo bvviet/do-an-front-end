@@ -20,7 +20,10 @@ const Cart = () => {
           <CartLeft />
         </div>
         <div className="col-span-12 lg:col-span-5">
-          <CartRight totalPrice={carts?.total_price} />
+          <CartRight
+            totalPrice={carts?.total_price}
+            carts={carts?.cart_items || []}
+          />
         </div>
       </div>
     </div>

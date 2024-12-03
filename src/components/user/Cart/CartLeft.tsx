@@ -51,26 +51,43 @@ const CartLeft = () => {
 
       <div className="flex flex-col gap-5">
         {carts?.cart_items?.map((cart, index) => {
-          // Chuyển đổi giá trị price_regular sang số
-          //const price = formatCurrency(cart.price_regular);
           const priceSale = formatCurrency(cart.total);
-          // const totalPrice = formatCurrency(
-          //   (typeof cart.price_regular === "string"
-          //     ? parseFloat(cart.price_regular)
-          //     : cart.price_regular) * cart.quantity,
-          // );
 
           return (
             <div key={cart.id}>
-              <span>Sản phẩm {index + 1}</span>
-              <section>
+              <div className="flex justify-between">
+                <span>Sản phẩm {index + 1}</span>
+                <div className="flex items-center">
+                  <IconButton
+                    disabled={isLoading}
+                    onClick={() =>
+                      openPopup(
+                        <Confirm
+                          titleButton={"Xóa"}
+                          handleDelete={() => handleDelete(cart.id)}
+                        />,
+                      )
+                    }
+                  >
+                    <Delete />
+                  </IconButton>
+                  <p>Xóa</p>
+                </div>
+              </div>
+              <section
+                className={`${cart.status !== 0 ? "pointer-events-none cursor-not-allowed opacity-50" : ""}`}
+              >
                 <div className="my-3 h-[1px] w-full bg-[#C4D1D0]"></div>
                 <div className="flex items-center gap-7 py-4">
                   {/* ảnh */}
-                  <Link to={`/detail/${cart.product_id}`}>
+                  <Link to={`/detail/${cart.slug}`}>
                     <div className="mb-auto h-[150px] w-[120px] flex-shrink-0 lg:mb-0">
                       <img
-                        src={cart.img_thumbnail}
+                        src={
+                          cart.status !== 0
+                            ? "https://placehold.co/276x350?text=H%E1%BA%BFt%20h%C3%A0ng"
+                            : cart.img_thumbnail
+                        }
                         className="h-full w-full rounded-md object-cover"
                       />
                     </div>
@@ -78,7 +95,7 @@ const CartLeft = () => {
                   {/* Thông tin */}
                   <div className="w-full">
                     <div className="flex flex-wrap justify-between">
-                      <Link to={`/detail/${cart.product_id}`}>
+                      <Link to={`/detail/${cart.slug}`}>
                         <p className="break-words text-[18px] font-bold transition-colors hover:text-[#378d6c]">
                           {cart.name}
                         </p>
@@ -127,22 +144,7 @@ const CartLeft = () => {
                           <p>Lưu</p>
                         </div>
 
-                        <div className="flex items-center">
-                          <IconButton
-                            disabled={isLoading}
-                            onClick={() =>
-                              openPopup(
-                                <Confirm
-                                  titleButton={"Xóa"}
-                                  handleDelete={() => handleDelete(cart.id)}
-                                />,
-                              )
-                            }
-                          >
-                            <Delete />
-                          </IconButton>
-                          <p>Xóa</p>
-                        </div>
+                        <div className="flex items-center"></div>
                       </div>
                     </div>
                   </div>

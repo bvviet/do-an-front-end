@@ -21,6 +21,7 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(setLoading(isLoading));
   }, [dispatch, isLoading]);
+
   return (
     <>
       <SliceShow />

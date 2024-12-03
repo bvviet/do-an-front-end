@@ -24,7 +24,7 @@ const Dashboard = () => {
     dispatch(setLoading(isLoadingWeek || isLoadingGetStatus));
   }, [dispatch, isLoadingWeek, isLoadingGetStatus]);
 
-  const ordersNew = ordersStatus?.orders.slice(-5).reverse();
+  const ordersNew = ordersStatus?.orders.data.slice(-5).reverse();
   console.log({ ordersNew });
 
   return (

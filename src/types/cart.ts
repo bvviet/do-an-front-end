@@ -13,6 +13,8 @@ export interface CartItemType {
   price: string;
   total: number;
   description: string;
+  status: number;
+  status_message: string;
 }
 
 export interface CartAddResponse {
