@@ -210,7 +210,7 @@ export default function ListAdminOrders() {
                   </TableCell>
                 </TableRow>
               ) : (
-                orders?.orders
+                orders?.orders.data
                   .slice()
                   .reverse()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

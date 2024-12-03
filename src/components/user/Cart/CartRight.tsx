@@ -1,18 +1,26 @@
 import useFormatCurrency from "@/hooks/useFormatCurrency";
-import React, { FC } from "react";
+import { CartItemType } from "@/types/cart";
+import React, { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 interface CartRightProps {
+  carts: CartItemType[];
   totalPrice?: number;
 }
 
-const CartRight: FC<CartRightProps> = ({ totalPrice = 0 }) => {
+const CartRight: FC<CartRightProps> = ({ totalPrice = 0, carts }) => {
+  const [disable, setDisable] = useState<boolean>(false);
   // Sử dụng custom hook để format giá trị tổng
   const formattedTotalPrice = useFormatCurrency(totalPrice);
 
   // Tính tổng tiền (totalPrice + shipping)
   const totalAmount = totalPrice;
   const formattedTotalAmount = useFormatCurrency(totalAmount);
+  useEffect(() => {
+    const allProductsActive = carts.every((product) => product.status !== 0);
+    setDisable(allProductsActive);
+  }, [carts]);
+  console.log({ disable });
 
   return (
     <div>
@@ -41,8 +49,13 @@ const CartRight: FC<CartRightProps> = ({ totalPrice = 0 }) => {
           {formattedTotalAmount}
         </span>
       </div>
-      <Link to={"/checkout"}>
-        <button className="mt-[20px] w-full rounded-md bg-[#FFD44D] py-[10px] text-[18px] font-semibold text-[#131717] hover:text-slate-500">
+      <Link
+        to={"/checkout"}
+        className={`${disable || carts.length == 0 ? "pointer-events-none cursor-not-allowed opacity-50" : ""}`}
+      >
+        <button
+          className={`mt-[20px] w-full rounded-md bg-[#FFD44D] py-[10px] text-[18px] font-semibold text-[#131717] hover:text-slate-500`}
+        >
           Check Out
         </button>
       </Link>

@@ -45,8 +45,12 @@ const ProductItem: FC<ProductItemProps> = ({
     return str.length > num ? str.slice(0, num) + "..." : str;
   };
 
-  const price_regular = useFormatCurrency(product?.price_regular);
-  const price_sale = useFormatCurrency(product?.price_sale);
+  const price_regular = useFormatCurrency(
+    product?.price_regular || product?.product_price_regular,
+  );
+  const price_sale = useFormatCurrency(
+    product?.price_sale || product?.product_price_sale,
+  );
 
   const [createFavorite, { isLoading }] = useCreateFavoriteMutation();
   const { refetch, error } = useGetFavoritesQuery(undefined, {
@@ -105,7 +109,7 @@ const ProductItem: FC<ProductItemProps> = ({
       <div className="relative">
         <Link to={`/detail/${product?.slug}`} className="">
           <img
-            src={product?.img_thumbnail}
+            src={product?.img_thumbnail || product.product_image}
             alt=""
             className="h-[310px] w-full transform cursor-pointer rounded-[10px] object-cover transition-all duration-300 ease-in-out hover:scale-105"
           />
@@ -140,7 +144,7 @@ const ProductItem: FC<ProductItemProps> = ({
       {/* Title */}
       <Link to={`/detail/${product?.id}`}>
         <h2 className="transform cursor-pointer text-[20px] font-bold text-[#131717] transition-all duration-200 ease-in-out hover:text-[#43766C]">
-          {truncateString(product?.name || "", 60)}
+          {truncateString(product?.name || product?.product_name || "", 60)}
         </h2>
       </Link>
 
@@ -158,7 +162,7 @@ const ProductItem: FC<ProductItemProps> = ({
             ""
           )}
         </div>
-        {product?.price_sale ? (
+        {product?.price_sale || product?.product_price_sale ? (
           <div className="flex items-center gap-3">
             <p className="text-[1.8rem] leading-[166.667%] text-[#566363] line-through">
               {price_regular}

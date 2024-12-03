@@ -99,6 +99,12 @@ export const productApi = createApi({
       }),
     }),
 
+    getProductsSell: builder.query<void, void>({
+      query: () => ({
+        url: "/top-selling",
+      }),
+    }),
+
     getDetailProduct: builder.query<ProductDetailType, string>({
       query: (slug) => ({
         url: `/products/${slug}`,
@@ -531,6 +537,7 @@ export const productApi = createApi({
 export const {
   useGetAllProductsQuery,
   useGetViewProductsQuery,
+  useGetProductsSellQuery,
   useGetDetailProductQuery,
   useAddCartMutation,
   useEditProductMutation,
