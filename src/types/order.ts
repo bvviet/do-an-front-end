@@ -43,6 +43,8 @@ interface OrderItemDetailType {
   price_sale: string;
   created_at: string;
   updated_at: string;
+  status_deleted: number;
+  slug: string;
   product: {
     id: number;
     name: string;

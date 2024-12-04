@@ -41,14 +41,20 @@ type FetchError = {
 };
 dayjs.locale("vi");
 interface Column {
-  id: "id" | "order_status" | "name" | "total_amount" | "created_at" | "action";
+  id:
+    | "order_code"
+    | "order_status"
+    | "name"
+    | "total_amount"
+    | "created_at"
+    | "action";
   label: string;
   minWidth?: number;
   align?: "right";
 }
 
 const columns: Column[] = [
-  { id: "id", label: "Mã đơn hàng", minWidth: 70 },
+  { id: "order_code", label: "Mã đơn hàng", minWidth: 70 },
   { id: "order_status", label: "Tình trạng", minWidth: 180 },
   { id: "name", label: "Khách hàng", minWidth: 210 },
   { id: "total_amount", label: "Tổng tiền", minWidth: 80 },
@@ -210,7 +216,7 @@ export default function ListAdminOrders() {
                   </TableCell>
                 </TableRow>
               ) : (
-                orders?.orders.data
+                (orders?.orders || [])
                   .slice()
                   .reverse()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
