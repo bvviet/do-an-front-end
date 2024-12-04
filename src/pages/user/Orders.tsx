@@ -81,7 +81,7 @@ const Orders = () => {
               {/* Item */}
               {(order?.order_items || []).map((order_item: any) => (
                 <section
-                  className={`${order_item.status_deleted === 1 ? "pointer-events-none opacity-50" : ""}`}
+                  className={`${order_item.status_deleted !== 0 ? "pointer-events-none opacity-50" : ""}`}
                 >
                   <hr />
                   <div className="flex items-center py-[12px]">
@@ -101,9 +101,20 @@ const Orders = () => {
                           {order_item.product.name}
                         </p>
                       </Link>
-                      <p className="text-slate-500">
-                        Phân loại hàng: {order_item.size}
-                      </p>
+                      <div className="flex items-center gap-[10px]">
+                        <p className="text-slate-500">
+                          Phân loại hàng: {order_item.size}
+                        </p>
+                        Màu:
+                        <p
+                          style={{
+                            backgroundColor: order_item.color,
+                            height: "15px",
+                            width: "15px",
+                            borderRadius: "5px",
+                          }}
+                        ></p>
+                      </div>
                       <p className="flex items-center gap-[10px] font-medium text-black">
                         x{order_item.quantity}
                         {order_item.status_deleted === 1 && (
