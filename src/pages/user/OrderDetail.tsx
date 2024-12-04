@@ -9,6 +9,7 @@ import {
   Typography,
   Card,
   CardContent,
+  Chip,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
@@ -204,7 +205,7 @@ const OrderDetail = () => {
           {orderDetail?.order_items?.map((orderItem, index) => (
             <div
               key={index}
-              className="gap-6 border-b-2 border-solid border-b-[#ccc] pb-6"
+              className={`${orderItem.status_deleted === 1 ? "pointer-events-none opacity-50" : ""} gap-6 border-b-2 border-solid border-b-[#ccc] pb-6`}
             >
               <div className="flex items-center">
                 <div className="h-[100px] w-[10%]">
@@ -214,8 +215,8 @@ const OrderDetail = () => {
                     className="h-full w-full rounded object-cover"
                   />
                 </div>
-                <div className="flex w-[75%] flex-col gap-2 ml-6">
-                  <Link to={"/#!"}>
+                <div className="ml-6 flex w-[75%] flex-col gap-2">
+                  <Link to={`${orderItem.slug}`} className="flex items-center">
                     <h3 className="font-medium">{orderItem.product_name}</h3>
                   </Link>
                   <div>Phân loại: {orderItem.size}</div>
@@ -247,6 +248,9 @@ const OrderDetail = () => {
                 >
                   Trả hàng miễn phí 15 ngày
                 </Button>
+                {orderItem.status_deleted === 1 && (
+                  <Chip label="Hết hàng" color="error" />
+                )}
               </div>
             </div>
           ))}

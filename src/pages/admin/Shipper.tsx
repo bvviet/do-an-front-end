@@ -179,7 +179,11 @@ const Shipper: React.FC = () => {
                   >
                     <Box
                       component="img"
-                      src={product.image}
+                      src={
+                        product.image === "N/A"
+                          ? "https://placehold.co/276x350?text=H%E1%BA%BFt%20h%C3%A0ng"
+                          : product.image
+                      }
                       alt={product.product_name}
                       sx={{
                         width: 50,

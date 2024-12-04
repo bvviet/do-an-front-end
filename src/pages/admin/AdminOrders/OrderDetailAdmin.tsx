@@ -13,6 +13,7 @@ import paymentMethods from "@/utils/paymentMethods";
 import {
   Button,
   Card,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -288,7 +289,10 @@ const OrderDetailAdmin = () => {
             </thead>
             <tbody>
               {data?.order_items.map((item, index) => (
-                <tr className="bg-white" key={item.order_id}>
+                <tr
+                  className={`bg-white ${item.status_deleted === 1 ? "pointer-events-none opacity-50" : ""}`}
+                  key={item.order_id}
+                >
                   <td className="border border-gray-400 p-2">{index + 1}</td>
                   <td className="border border-gray-400 p-2">
                     <img
@@ -298,7 +302,17 @@ const OrderDetailAdmin = () => {
                     />
                   </td>
                   <td className="border border-gray-400 p-2">
-                    {item.product.name}
+                    <div className="flex flex-col">
+                      {item.product.name}
+                      {item.status_deleted === 1 && (
+                        <Chip
+                          label="Hết hàng"
+                          color="error"
+                          size="small"
+                          sx={{ width: "80px" }}
+                        />
+                      )}
+                    </div>
                   </td>
                   <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
                     {formatCurrency(item.price ?? 0)}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Button, Tab } from "@mui/material";
+import { Box, Button, Chip, Tab } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetOrdersUserQuery } from "@/services/productApi";
 import { useDispatch } from "react-redux";
@@ -80,7 +80,9 @@ const Orders = () => {
               </div>
               {/* Item */}
               {(order?.order_items || []).map((order_item: any) => (
-                <section>
+                <section
+                  className={`${order_item.status_deleted === 1 ? "pointer-events-none opacity-50" : ""}`}
+                >
                   <hr />
                   <div className="flex items-center py-[12px]">
                     <Link
@@ -101,14 +103,12 @@ const Orders = () => {
                       </Link>
                       <p className="text-slate-500">
                         Phân loại hàng: {order_item.size}
-                        {/* <div
-                        className={`h-[50px] w-[50px] bg-[${order_item.color}]`}
-                      >
-                        a
-                      </div> */}
                       </p>
-                      <p className="font-medium text-black">
+                      <p className="flex items-center gap-[10px] font-medium text-black">
                         x{order_item.quantity}
+                        {order_item.status_deleted === 1 && (
+                          <Chip label="Hết hàng" color="error" size="small" />
+                        )}
                       </p>
                     </div>
                     <div className="ml-auto flex gap-[10px]">

@@ -65,51 +65,6 @@ const Favorites = () => {
       <div className="grid grid-cols-1 gap-[40px] sm:grid-cols-2 lg:grid-cols-3">
         {/* Item 1 */}
         {(favoritess?.data || []).map((favorite) => (
-          // <div
-          //   className="overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg"
-          //   key={favorite.id}
-          // >
-          //   <Link to={`/${favorite.product_id}`}>
-          //     <img
-          //       src={favorite.product.img_thumbnail}
-          //       alt="Item 1"
-          //       className="h-[300px] w-full transform object-cover transition-all duration-500 ease-in-out hover:scale-105 hover:brightness-110"
-          //     />
-          //   </Link>
-
-          //   <div className="bg-white p-6">
-          //     <h3 className="mb-2 text-base font-semibold text-gray-500 transition-all duration-200 hover:text-gray-800">
-          //       {favorite?.product.category_id}
-          //     </h3>
-          //     <p className="mb-4 text-xl font-bold text-gray-800 transition-all duration-300 hover:text-[#F86624]">
-          //       {favorite?.product.name}
-          //     </p>
-          //     <div className="my-4 flex items-center gap-4">
-          //       <p className="text-lg text-gray-400 line-through">
-          //         {formatCurrency(favorite.product.price_regular)}
-          //       </p>
-          //       <p className="text-lg font-medium text-[#F86624]">
-          //         {formatCurrency(favorite.product.price_sale)}
-          //       </p>
-          //     </div>
-          //     <Button
-          //       variant="contained"
-          //       color="error"
-          //       className="mt-6 w-full rounded-full bg-red-500 py-2 text-white transition-all duration-300 hover:bg-red-600"
-          //       onClick={() =>
-          //         openPopup(
-          //           <Confirm
-          //             titleButton={"Xóa"}
-          //             handleDelete={() => handleDelete(favorite.product_id)}
-          //           />,
-          //         )
-          //       }
-          //     >
-          //       Xóa
-          //     </Button>
-          //   </div>
-          // </div>
-
           <div
             key={favorite.id}
             className="group relative rounded-lg border border-solid border-[#afaeae3a] p-5 shadow-sm shadow-indigo-500/20"
@@ -137,7 +92,6 @@ const Favorites = () => {
               </div>
             </Link>
             <div className="mt-[15px] flex items-center justify-between">
-              <p className="text-[14px]">{favorite.product?.id}</p>
               <IconButton>
                 <Favorite color="error" />
               </IconButton>
