@@ -205,7 +205,7 @@ const OrderDetail = () => {
           {orderDetail?.order_items?.map((orderItem, index) => (
             <div
               key={index}
-              className={`${orderItem.status_deleted === 1 ? "pointer-events-none opacity-50" : ""} gap-6 border-b-2 border-solid border-b-[#ccc] pb-6`}
+              className={`${orderItem.status_deleted !== 0 ? "pointer-events-none opacity-50" : ""} gap-6 border-b-2 border-solid border-b-[#ccc] pb-6`}
             >
               <div className="flex items-center">
                 <div className="h-[100px] w-[10%]">
@@ -219,7 +219,20 @@ const OrderDetail = () => {
                   <Link to={`${orderItem.slug}`} className="flex items-center">
                     <h3 className="font-medium">{orderItem.product_name}</h3>
                   </Link>
-                  <div>Phân loại: {orderItem.size}</div>
+                  <div className="flex items-center gap-5">
+                    Phân loại: {orderItem.size}
+                    <div className="flex items-center gap-2">
+                      Màu
+                      <div
+                        style={{
+                          backgroundColor: orderItem.color,
+                          height: "15px",
+                          width: "15px",
+                          borderRadius: "5px",
+                        }}
+                      ></div>
+                    </div>
+                  </div>
                   <div>X{orderItem.quantity}</div>
                 </div>
                 <div className="flex gap-3">

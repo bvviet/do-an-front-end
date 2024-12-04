@@ -282,6 +282,8 @@ const OrderDetailAdmin = () => {
                 <th className="border border-gray-400 p-2 text-center">
                   Số lượng
                 </th>
+                <th className="border border-gray-400 p-2 text-center">Size</th>
+                <th className="border border-gray-400 p-2 text-center">Màu</th>
                 <th className="border border-gray-400 p-2 text-center">
                   Thành tiền
                 </th>
@@ -304,7 +306,7 @@ const OrderDetailAdmin = () => {
                   <td className="border border-gray-400 p-2">
                     <div className="flex flex-col">
                       {item.product.name}
-                      {item.status_deleted === 1 && (
+                      {item.status_deleted !== 0 && (
                         <Chip
                           label="Hết hàng"
                           color="error"
@@ -319,6 +321,19 @@ const OrderDetailAdmin = () => {
                   </td>
                   <td className="border border-gray-400 p-2 text-center">
                     {item.quantity}
+                  </td>
+                  <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
+                    {item.size}
+                  </td>
+                  <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
+                    <div
+                      style={{
+                        backgroundColor: item.color,
+                        height: "15px",
+                        width: "15px",
+                        borderRadius: "5px",
+                      }}
+                    ></div>
                   </td>
                   <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
                     {formatCurrency(
