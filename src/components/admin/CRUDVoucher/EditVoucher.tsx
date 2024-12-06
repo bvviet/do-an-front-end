@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler, useWatch } from "react-hook-form";
 import { AddVoucherBase, IVoucher } from "@/types/voucher";
 import { toast } from "react-toastify";
-import { TextField, FormControlLabel, Switch, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { TextField, FormControlLabel, Switch, Select, MenuItem, SelectChangeEvent, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useUpdateVoucherMutation } from "@/services/productApi";
 import axios from "axios";
@@ -100,7 +100,7 @@ export default function EditVoucherComponent() {
     return (
         <div className="mx-auto h-fit max-w-screen-xl rounded-lg bg-white px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto  text-center mb-12">
-                <h1 className="text-[32px] font-bold ">Sửa Voucher!</h1>
+                <h1 className="text-[32px] font-bold ">Sửa mã giảm giá!</h1>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 <div className="grid grid-cols-2 gap-6">
@@ -224,21 +224,39 @@ export default function EditVoucherComponent() {
                             helperText={errors.discount_value?.message}
                         />
                     )}
-                    <TextField
-                        label="Ngày bắt đầu"
-                        type="date"
-                        inputProps={{
-                            min: today,  // Giới hạn ngày bắt đầu không được nhỏ hơn ngày hôm nay
-                        }}
-                        slotProps={{
-                            inputLabel: {
-                                shrink: true,
-                            },
-                        }}
-                        {...register("start_date", { required: "Ngày bắt đầu không được để trống" })}
-                        error={!!errors.start_date}
-                        helperText={errors.start_date?.message}
-                    />
+                    <div className="relative flex">
+                        <TextField
+                            className="w-full"
+                            label="Ngày bắt đầu"
+                            type="date"
+                            inputProps={{
+                                min: today,  // Giới hạn ngày bắt đầu không được nhỏ hơn ngày hôm nay
+                            }}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: true,
+                                },
+                            }}
+                            {...register("start_date", {
+                                required: "Ngày bắt đầu không được để trống",
+                                disabled: voucher && voucher.used_count > 0,
+                            })}
+                            error={!!errors.start_date}
+                            helperText={errors.start_date?.message}
+                        />
+
+                        {(voucher?.used_count ?? 0) > 0 && (
+                            <Tooltip
+                                title="Voucher đã được sử dụng, không thể thay đổi ngày bắt đầu."
+                                arrow
+                                enterDelay={500} // Delay when hover over
+                            >
+                                <span className="absolute left-full top-0 transform -translate-y-1/2 -translate-x-1/2 text-red-500">
+                                    <i className="fa-solid fa-circle-info"></i>
+                                </span>
+                            </Tooltip>
+                        )}
+                    </div>
                     <TextField
                         label="Ngày kết thúc"
                         type="date"
@@ -294,12 +312,12 @@ export default function EditVoucherComponent() {
                     <button
                         type="submit"
                         className="text-black text-[14px] disabled:bg-[#FFD44D] disabled:opacity-50 max-lg:text-[12px] leading-[166.667%] font-manrope py-4 px-12 bg-[#FFD44D] rounded-xl flex items-center justify-center gap-2"
-                        disabled={isLoading}
+                        disabled={isLoading || (voucher?.used_count ?? 0) > 0}
                     >
                         {isLoading ? (
                             <i className="fas fa-spinner fa-spin"></i>
                         ) : (
-                            "Thêm thương hiệu"
+                            "Cập thương hiệu"
                         )}
                     </button>
 

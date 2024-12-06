@@ -135,7 +135,23 @@ export default function EditProducts() {
       return updatedVariants;
     });
   };
+  const isDuplicateVariant = (variants: typeof productVariants): boolean => {
+    const seen = new Set();
+    for (const variant of variants) {
+      const key = `${variant.product_size_id}-${variant.product_color_id}`;
+      if (seen.has(key)) {
+        return true; // Trùng lặp
+      }
+      seen.add(key);
+    }
+    return false; // Không trùng lặp
+  };
   const onSubmit = async (data: AddProduct) => {
+    if (isDuplicateVariant(productVariants)) {
+      toast.error("Không được phép có biến thể trùng lặp (size và color giống nhau)");
+      return;
+    }
+
     console.log("Dữ liệu trước khi gửi:", data); // Kiểm tra console để chắc chắn rằng data có đầy đủ các trường
     const formData = new FormData();
 
@@ -282,11 +298,7 @@ export default function EditProducts() {
                               {child.name}
                             </MenuItem>
                           ))
-                        ) : (
-                          <MenuItem key={category.id} value={category.id} disabled>
-
-                          </MenuItem>
-                        )
+                        ) : null
                       ))}
                 </Select>
               )}
@@ -346,7 +358,7 @@ export default function EditProducts() {
             />
           </div>
           <div >
-            <label htmlFor="">Content</label>
+            <label htmlFor="">Nội dung</label>
             <textarea
               rows={2}
               className="block w-full rounded-lg border p-2.5"
