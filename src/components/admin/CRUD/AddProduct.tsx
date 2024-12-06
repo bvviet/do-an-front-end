@@ -15,7 +15,7 @@ import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function AddProducts() {
-  const { control, register, handleSubmit, reset, formState: { errors }, getValues } = useForm<AddProduct>();
+  const { control, register, handleSubmit, reset, formState: { errors }, getValues, trigger } = useForm<AddProduct>();
   const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
   const [addProduct, { isLoading }] = useAddProductMutation();
   const { brandsData, brandsLoading, brandsError } = useBrands();
@@ -55,10 +55,24 @@ export default function AddProducts() {
   if (brandsError) {
     toast.error("Không thể tải danh sách thương hiệu");
   }
-
+  const isDuplicateVariant = (variants: typeof productVariants): boolean => {
+    const seen = new Set();
+    for (const variant of variants) {
+      const key = `${variant.product_size_id}-${variant.product_color_id}`;
+      if (seen.has(key)) {
+        return true; // Trùng lặp
+      }
+      seen.add(key);
+    }
+    return false; // Không trùng lặp
+  };
 
   console.log("color", colors); // Chạy khi sizes hoặc colors thay đổi
   const onSubmit: SubmitHandler<AddProduct> = async (data) => {
+    if (isDuplicateVariant(productVariants)) {
+      toast.error("Không được phép có biến thể trùng lặp (size và color giống nhau)");
+      return;
+    }
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("price_regular", String(data.price_regular));
@@ -152,7 +166,8 @@ export default function AddProducts() {
                     fullWidth
                     {...register("price_regular", {
                       required: "Giá gốc không được để trống",
-                      validate: value => value > 1000 || "Giá gốc phải lớn hơn 1000"
+                      validate: value => value > 1000 || "Giá gốc phải lớn hơn 1000",
+                      onChange: () => trigger("price_sale"),
                     })}
                     error={!!errors.price_regular}
                     helperText={errors.price_regular?.message}
@@ -170,12 +185,16 @@ export default function AddProducts() {
                     {...register("price_sale", {
                       required: "Giá sale không được để trống",
                       validate: value => {
-                        const priceRegular = getValues("price_regular"); // Lấy giá gốc từ form
-                        if (value >= priceRegular) {
+                        const priceRegular = Number(getValues("price_regular")); // Chuyển thành số
+                        const priceSale = Number(value); // Chuyển thành số
+                        if (!priceRegular || priceRegular <= 1000) {
+                          return "Hãy nhập Giá gốc hợp lệ trước";
+                        }
+                        if (priceSale >= priceRegular) {
                           return "Giá sale phải nhỏ hơn giá gốc";
                         }
-                        return value > 1000 || "Giá sale phải lớn hơn 1000";
-                      }
+                        return priceSale > 1000 || "Giá sale phải lớn hơn 1000";
+                      },
                     })}
                     error={!!errors.price_sale}
                     helperText={errors.price_sale?.message}
