@@ -19,7 +19,6 @@ const Header = () => {
     null,
   );
   const { openOverlay } = useOverlayContext();
-  console.log({ openOverlay });
 
   const { logOut } = useLogout();
   const userInfor = useUserInfor();
@@ -191,15 +190,19 @@ const Header = () => {
         {/* Mobile */}
         <div className="relative mt-[20px] flex items-center justify-between lg:hidden">
           {/* Icon menu */}
-          <div className="flex items-center gap-[5px]">
-            <img
-              src={menu}
-              alt="Menu"
-              className="cursor-pointer"
-              onClick={() => openOverlay(<Navbar />)}
-            />
+          <button
+            onClick={() => openOverlay(<Navbar />)}
+            className="flex cursor-pointer items-center gap-[5px] border-none bg-transparent p-0"
+            style={{
+              all: "unset",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+            }}
+          >
+            <img src={menu} alt="Menu" className="cursor-pointer" />
             <span className="text-[1.4rem]">Menu</span>
-          </div>
+          </button>
           {/* Search */}
           <Search />
         </div>

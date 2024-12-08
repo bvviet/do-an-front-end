@@ -8,6 +8,7 @@ import { RootState } from "@/redux/store";
 import { styled } from "@mui/material/styles";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useEffect } from "react";
+import { OverlayProvider } from "@/contexts/Overlay";
 
 const FixedLinearProgress = styled(LinearProgress)({
   position: "fixed",
@@ -27,7 +28,9 @@ const UserLayout = () => {
     <div className="bg-[#F0F0F0]">
       <ScrollToTopButton />
       {loading && <FixedLinearProgress color="secondary" />}
-      <Header />
+      <OverlayProvider>
+        <Header />
+      </OverlayProvider>
       {/* <Breadcrumbs /> */}
       <Outlet />
       <Footer />

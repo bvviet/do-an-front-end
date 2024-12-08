@@ -142,10 +142,6 @@ const Orders = () => {
                   </span>
                 </p>
 
-                <Button variant="contained" color="warning">
-                  Mua lại
-                </Button>
-
                 <Link to={`/order/detail/${order.id}`}>
                   <Button
                     variant="outlined"

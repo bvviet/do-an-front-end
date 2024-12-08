@@ -42,12 +42,14 @@ const ThanhToan: React.FC = () => {
 
       if (selectedRadio === "1" && response.payment_url) {
         toast.success("Cảm ơn bạn đã mua hàng");
-        setTimeout(() => {
-          window.location.href = response.payment_url;
-        }, 2000);
+
+        window.location.href = response.payment_url;
+
         refetch();
         disPatch(setCart([]));
-        navigate("/thanks");
+        
+          navigate("/thanks");
+       
       } else {
         toast.success("Cảm ơn bạn đã mua hàng");
         refetch();
@@ -127,13 +129,12 @@ const ThanhToan: React.FC = () => {
     if (discountValue <= 99) {
       return (totalPrice * discountValue) / 100;
     }
-    return 0
+    return 0;
   })();
   const discount = parseFloat(selectedVoucher?.max_discount || "0");
-  const total =
-    carts?.total_price
-      ? carts.total_price - Math.min(subtotal, discount)
-      : 0;
+  const total = carts?.total_price
+    ? carts.total_price - Math.min(subtotal, discount)
+    : 0;
 
   console.log("toorngh tíadf", discount);
 
@@ -218,10 +219,11 @@ const ThanhToan: React.FC = () => {
                       vouchers.map((voucher) => (
                         <label
                           key={voucher.id}
-                          className={`mb-6 block cursor-pointer gap-4 rounded-lg border bg-red-100 p-4 ${selectedVoucher === voucher
-                            ? "border-red-500"
-                            : "border-gray-300"
-                            }`}
+                          className={`mb-6 block cursor-pointer gap-4 rounded-lg border bg-red-100 p-4 ${
+                            selectedVoucher === voucher
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          }`}
                         >
                           <span>
                             {voucher.name} {voucher.code}
@@ -230,7 +232,7 @@ const ThanhToan: React.FC = () => {
                             <p className="text-[18px] font-semibold">
                               Giảm{" "}
                               {parseFloat(voucher.discount_value) > 100
-                                ? `${(formatCurrency(voucher.discount_value))}`
+                                ? `${formatCurrency(voucher.discount_value)}`
                                 : `${voucher.discount_value}%`}
                             </p>
                             <input
@@ -257,7 +259,9 @@ const ThanhToan: React.FC = () => {
                         </label>
                       ))
                     ) : (
-                      <div className="text-center text-red-600">Không có voucher nào để hiển thị.</div>
+                      <div className="text-center text-red-600">
+                        Không có voucher nào để hiển thị.
+                      </div>
                     )}
                   </div>
                 </div>
@@ -279,7 +283,8 @@ const ThanhToan: React.FC = () => {
           </div>
           <div className="text-end font-manrope text-[16px] font-medium leading-[171.429%] max-lg:text-[14px]">
             <p>{formatCurrency(carts?.total_price ?? 0)}</p>
-            <p className="text-red-600">-
+            <p className="text-red-600">
+              -
               {subtotal > discount
                 ? formatCurrency(discount)
                 : formatCurrency(subtotal)}

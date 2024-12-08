@@ -4,6 +4,8 @@ import dropDownIcon from "../../assets/icons/dropdown.svg";
 import dropDownActiveIcon from "../../assets/icons/dropdownActive.svg";
 import { useGetAllCategoriesQuery } from "@/services/authApi";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 interface MenuItemProps {
   label: string;
@@ -11,7 +13,11 @@ interface MenuItemProps {
 }
 
 const Navbar: React.FC = () => {
-  const { data: category } = useGetAllCategoriesQuery();
+  const dispatch = useDispatch();
+  const { data: category, isLoading } = useGetAllCategoriesQuery();
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [dispatch, isLoading]);
 
   return (
     <div className="mt-[28px] flex-wrap px-8 sm:px-0 lg:flex">

@@ -87,7 +87,7 @@ const Favorites = () => {
                     )
                   }
                 >
-                  Xóa khỏi giỏ hàng
+                  Xóa
                 </Button>
               </div>
             </Link>

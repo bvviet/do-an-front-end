@@ -151,8 +151,8 @@ const OrderDetail = () => {
         </div>
       )}
       {/* Địa chỉ giao hàng */}
-      <div>
-        <Card sx={{ margin: 2 }} className="bg-slate-50">
+      <div className="py-10">
+        <Card sx={{}} className="bg-slate-50">
           <CardContent className="bg-slate-50">
             <Typography variant="h5" gutterBottom>
               Thông tin mua hàng
@@ -237,10 +237,10 @@ const OrderDetail = () => {
                 </div>
                 <div className="flex gap-3">
                   <span className="font-medium text-[#636261aa] line-through">
-                    {formatCurrency(orderItem.price_sale)}
+                    {formatCurrency(orderItem.price_regular)}
                   </span>
                   <span className="font-medium text-[#ee4d2d]">
-                    {formatCurrency(orderItem.price_regular)}
+                    {formatCurrency(orderItem.price_sale)}
                   </span>
                 </div>
               </div>
