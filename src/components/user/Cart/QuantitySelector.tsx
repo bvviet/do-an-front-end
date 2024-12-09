@@ -4,11 +4,14 @@ import { Add, Remove } from "@mui/icons-material";
 import { useUpdateQuantityCartMutation } from "@/services/productApi";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { toast } from "react-toastify";
+
 interface QuantitySelectorProps {
   quantityNumber: number;
   idCart: number;
   refetch: () => void;
 }
+
 const QuantitySelector: FC<QuantitySelectorProps> = ({
   quantityNumber,
   idCart,
@@ -19,31 +22,31 @@ const QuantitySelector: FC<QuantitySelectorProps> = ({
   const dispatch = useDispatch();
 
   const handleIncrease = async () => {
-    const newQuantity = quantity + 1; // Lưu giá trị mới vào biến
-    setQuantity(newQuantity); // Cập nhật state
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
     try {
       const response = await updateQuantityCart({
         cartId: idCart,
-        quantity: newQuantity, // Sử dụng giá trị mới
+        quantity: newQuantity,
       }).unwrap();
       console.log({ response });
-      refetch(); // Gọi refetch sau khi cập nhật thành công
+      refetch();
     } catch (error) {
-      console.log(error);
+      toast.error(error.data.message);
     }
   };
 
   const handleDecrease = async () => {
     if (quantity > 1) {
-      const newQuantity = quantity - 1; // Lưu giá trị mới vào biến
-      setQuantity(newQuantity); // Cập nhật state
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
       try {
         const response = await updateQuantityCart({
           cartId: idCart,
-          quantity: newQuantity, // Sử dụng giá trị mới
+          quantity: newQuantity,
         }).unwrap();
         console.log({ response });
-        refetch(); // Gọi refetch sau khi cập nhật thành công
+        refetch();
       } catch (error) {
         console.log(error);
       }
@@ -57,7 +60,7 @@ const QuantitySelector: FC<QuantitySelectorProps> = ({
   return (
     <Box display="flex" alignItems="center">
       <p className="mr-3 text-[18px] font-semibold">Số lượng:</p>
-      <IconButton onClick={handleDecrease}>
+      <IconButton onClick={handleDecrease} disabled={quantity <= 1}>
         <Remove />
       </IconButton>
       <TextField

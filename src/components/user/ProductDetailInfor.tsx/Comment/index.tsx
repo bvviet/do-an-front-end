@@ -9,9 +9,7 @@ interface CommentProps {
 }
 
 const Comment: FC<CommentProps> = ({ productId }) => {
-  const { data, isLoading } = useGetCommentsQuery({ productId });
-  console.log({ data });
-
+  const { data } = useGetCommentsQuery({ productId });
   return (
     <div className="grid grid-cols-1 gap-[40px] lg:grid-cols-2 lg:gap-[60px]">
       {/* Left */}
@@ -29,18 +27,14 @@ const Comment: FC<CommentProps> = ({ productId }) => {
         </div>
         {/*  */}
         <div className="mt-[30px] flex flex-col gap-[12px]">
-          {Object.entries(data?.rating || []).map(([, value], index) => (
+          {Object.entries(data?.rating || []).map(([key, value]) => (
             <ReviewItem
-              numberStarts={String(index)}
+              numberStarts={key.replace("_stars", "")} // Lấy số sao từ key
               quantityStarts={String(value)}
               percentStart={String(value)}
             />
           ))}
-          {/* <ReviewItem numberStarts="4" quantityStarts="20" percentStart="60" />
-          <ReviewItem numberStarts="3" quantityStarts="12" percentStart="50" />
-          <ReviewItem numberStarts="2" quantityStarts="8" percentStart="30" />
-          <ReviewItem numberStarts="1" quantityStarts="0" percentStart="0" /> */}
-        </div>
+        </div>  
       </div>
       {/* Right */}
       <div className="">

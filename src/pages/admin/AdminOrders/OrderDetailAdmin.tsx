@@ -126,7 +126,7 @@ const OrderDetailAdmin = () => {
   return (
     <div className="overflow-x-auto">
       {/* Thêm overflow-x-auto ở đây */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 gap-6">
         <Card className="col-span-1 !bg-gray-100 p-6">
           <h2 className="text-[2rem] font-bold">1. Thông tin khách hàng</h2>
           <div className="flex flex-col gap-3">
@@ -155,8 +155,11 @@ const OrderDetailAdmin = () => {
           <h2 className="text-[2rem] font-bold">2. Thông tin đơn hàng</h2>
           <div className="flex flex-col gap-3">
             <div>
-              <span className="font-semibold">Mã đơn hàng:</span>{" "}
-              <span>{data?.order_id}</span>
+              <span className="font-semibold">Phương thức thanh toán:</span>{" "}
+              <span>
+                {data?.payment_method === 0 ? "Thanh toán khi nhận hàng" : ""}
+                {data?.payment_method === 1 ? "Thanh toán bằng VNPAY" : ""}
+              </span>
             </div>
             <div>
               <span className="font-semibold">Trạng thái thanh toán:</span>{" "}
@@ -249,18 +252,6 @@ const OrderDetailAdmin = () => {
             </>
           </div>
         </Card>
-        <Card className="col-span-1 !bg-gray-100 p-6">
-          <h2 className="text-[2rem] font-bold">3. Thông tin giao hàng</h2>
-          <div className="flex flex-col gap-3">
-            <div>
-              <span className="font-semibold">Người giao:</span>{" "}
-              <span>ABC</span>
-            </div>
-            <div>
-              <span className="font-semibold">Hình thức:</span> <span>ABC</span>
-            </div>
-          </div>
-        </Card>
       </div>
       {/* Khối chi tiết đơn hàng */}
       <div className="mt-16 overflow-hidden">
@@ -291,10 +282,7 @@ const OrderDetailAdmin = () => {
             </thead>
             <tbody>
               {data?.order_items.map((item, index) => (
-                <tr
-                  className={`bg-white ${item.status_deleted === 1 ? "pointer-events-none opacity-50" : ""}`}
-                  key={item.order_id}
-                >
+                <tr className={`bg-white`} key={item.order_id}>
                   <td className="border border-gray-400 p-2">{index + 1}</td>
                   <td className="border border-gray-400 p-2">
                     <img
@@ -332,6 +320,7 @@ const OrderDetailAdmin = () => {
                         height: "15px",
                         width: "15px",
                         borderRadius: "5px",
+                        border: "1px solid #ccc",
                       }}
                     ></div>
                   </td>

@@ -8,22 +8,30 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditVoucherComponent() {
-    const { register, setValue: setFormValue, handleSubmit, watch, reset, formState: { errors }, control } = useForm<AddVoucherBase>();
-    const [updateVoucher, { isLoading }] = useUpdateVoucherMutation();
-    const [voucher, setVoucher] = useState<IVoucher>()
-    const navi = useNavigate()
-    const { id } = useParams()
+  const {
+    register,
+    setValue: setFormValue,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+    control,
+  } = useForm<AddVoucherBase>();
+  const [updateVoucher, { isLoading }] = useUpdateVoucherMutation();
+  const [voucher, setVoucher] = useState<IVoucher>();
+  const navi = useNavigate();
+  const { id } = useParams();
 
-    const [discountType, setDiscountType] = useState("percent");
+  const [discountType, setDiscountType] = useState("percent");
 
-    const watchDiscountType = watch("discount_type", "percent");
-    const minimumOrderValue = useWatch({ name: "minimum_order_value", control });
-    //const discountValue = useWatch({ name: "discount_value", control })
-    const handleDiscountTypeChange = (event: SelectChangeEvent<string>) => {
-        const newValue = event.target.value;
-        setDiscountType(newValue); // Cập nhật state local (nếu cần)
-        setFormValue("discount_type", newValue); // Cập nhật vào react-hook-form
-    };
+  const watchDiscountType = watch("discount_type", "percent");
+  const minimumOrderValue = useWatch({ name: "minimum_order_value", control });
+  //const discountValue = useWatch({ name: "discount_value", control })
+  const handleDiscountTypeChange = (event: SelectChangeEvent<string>) => {
+    const newValue = event.target.value;
+    setDiscountType(newValue); // Cập nhật state local (nếu cần)
+    setFormValue("discount_type", newValue); // Cập nhật vào react-hook-form
+  };
 
     const formatDate = (dateString: string) => {
         if (!dateString) return "";

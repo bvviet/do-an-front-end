@@ -80,7 +80,6 @@ const FormComment: FC<FormCommentProps> = ({ productId }) => {
         <Rating
           name="half-rating"
           value={rating}
-          precision={0.5}
           size="large"
           onChange={(event, newValue) => setRating(newValue)}
         />
