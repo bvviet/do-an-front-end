@@ -104,7 +104,7 @@ const NavbarAdmin = () => {
   return (
     <div className="flex h-[100vh] flex-col overflow-y-auto rounded-r-lg bg-main p-7 text-[1.5rem] text-white">
       {/* Logo */}
-      <div>
+      <div className="sticky top-0 left-0 ">
         <Logo />
       </div>
 
@@ -119,11 +119,10 @@ const NavbarAdmin = () => {
                 onClick={() => setActiveNavbar(nav.id)}
               >
                 <div
-                  className={`${
-                    activeNavbar === nav.id
-                      ? "rounded-[10px] bg-white text-main"
-                      : "hover:opacity-70"
-                  } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
+                  className={`${activeNavbar === nav.id
+                    ? "rounded-[10px] bg-white text-main"
+                    : "hover:opacity-70"
+                    } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
                 >
                   <nav.icon />
                   <span>{nav.name}</span>

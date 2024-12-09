@@ -20,19 +20,19 @@ import { useDeleteProductMutation } from "@/services/productApi";
 import CFButton from "../CfButton";
 
 interface Column {
-  id: "id" | "name" | "price" | "category" | "img" | "action" | "";
+  id: "id" | "name" | "price" | "price_sale" | "img" | "category" | "";
   label: string;
   minWidth?: number;
-  align?: "right";
+  align?: "right" | "center";
 }
 
 const columns: Column[] = [
   { id: "id", label: "Id", minWidth: 70 },
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "price", label: "Price", minWidth: 100 },
-  { id: "category", label: "Category", minWidth: 170, align: "right" },
-  { id: "img", label: "Image", minWidth: 100, align: "right" },
-  { id: "action", label: "Action", minWidth: 70, align: "right" },
+  { id: "name", label: "Tên", minWidth: 100, },
+  { id: "img", label: "Ảnh", minWidth: 100, align: "center" },
+  { id: "price", label: "Giá gốc", minWidth: 100 },
+  { id: "price_sale", label: "Giá sale", minWidth: 70, align: "right" },
+  { id: "category", label: "Thể loại", minWidth: 170, align: "right" },
   { id: "", label: "", minWidth: 80, align: "right" },
 ];
 
@@ -165,13 +165,15 @@ export default function ListProducts() {
                       value = product.name;
                     } else if (column.id === "price") {
                       value = formatCurrency(product.price_regular);
-
+                    } else if (column.id === "price_sale") {
+                      value = <span className="text-red-600">
+                        {formatCurrency(product.price_sale)}
+                      </span>
                     } else if (column.id === "img") {
                       value = (
                         <img src={product.img_thumbnail} alt={product.name} style={{ width: '100px', height: 'auto' }} />
                       );
-                    } else if (column.id === "action") {
-                      value = product.is_active.toString();
+
                     } else if (column.id === "") {
                       value = (
                         <>

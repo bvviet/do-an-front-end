@@ -20,8 +20,8 @@ export default function VoucherTabs() {
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider", width: "96%", margin: "auto", marginBottom: "20px" }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="List Voucher" value="1" />
-                        <Tab label="Add Voucher" value="2" />
+                        <Tab label="Danh sách mã giảm giá" value="1" />
+                        <Tab label="Thêm mã giảm giá" value="2" />
                     </TabList>
                 </Box>
                 <TabPanel value="1">
