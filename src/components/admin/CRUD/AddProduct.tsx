@@ -2,27 +2,57 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AddProduct } from "@/types/product";
 import { Box, FormControlLabel, IconButton, LinearProgress, MenuItem, Select, Switch, TextField, Tooltip } from "@mui/material";
-import { useGetCategoriesQuery } from "@/services/authApi";
 import { ICategory } from "@/types/genre";
 import { useAddProductMutation } from "@/services/productApi";
 import { useBrands } from "@/hooks/useBrand";
 import { useSizes } from "@/hooks/useSize";
 import { useColors } from "@/hooks/useColor";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTabContext } from "@/contexts/TabContext";
 import CFButton from "../CfButton";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 export default function AddProducts() {
   const { control, register, handleSubmit, reset, formState: { errors }, getValues, trigger } = useForm<AddProduct>();
-  const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
+  //const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
   const [addProduct, { isLoading }] = useAddProductMutation();
   const { brandsData, brandsLoading, brandsError } = useBrands();
   const { sizes, isLoading: isLoadingSizes, error: sizeError } = useSizes();
   const { colors, isLoading: isLoadingColors, error: colorError } = useColors();
   const { openPopup } = useModalContext();
   const { setValue } = useTabContext();
+
+  const [categories, setCategory] = React.useState<ICategory[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const token = useSelector((state: RootState) => state.auth.access_token);
+  const fetchBrand = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/admin/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
+          },
+        },
+      );
+      setCategory(response.data.data.categories); // Lấy dữ liệu 
+    } catch (error) {
+      console.error("Lỗi khi tải voucher:", error);
+      toast.error("Không thể tải danh sách voucher.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    fetchBrand();
+  }, []);
+  console.log("dấds", categories);
+
   const [productVariants, setProductVariants] = useState<{
     product_size_id: string;
     product_color_id: string;
@@ -131,7 +161,7 @@ export default function AddProducts() {
     });
   };
 
-
+  if (loading) return <LinearProgress />;
 
 
   return (
@@ -236,21 +266,18 @@ export default function AddProducts() {
                       {...register("category_id", { required: "Thể loại không được để trống" })}
                       render={({ field }) => (
                         <Select {...field} displayEmpty sx={{ width: "full" }}>
-                          {Array.isArray(categories.categories) &&
-                            categories.categories
-                              .map((category) => (
-                                category.children && category.children.length > 0 ? (
-                                  category.children.map((child) => (
+                          {Array.isArray(categories) &&
+                            categories.map((category) =>
+                              category.children && category.children.length > 0 ? (
+                                category.children
+                                  .filter((child) => child.name !== "Sản phẩm đã bị xóa") // Lọc các danh mục con
+                                  .map((child) => (
                                     <MenuItem key={child.id} value={child.id}>
                                       {child.name}
                                     </MenuItem>
                                   ))
-                                ) : (
-                                  <MenuItem key={category.id} value={category.id} disabled>
-                                    No children available
-                                  </MenuItem>
-                                )
-                              ))}
+                              ) : null
+                            )}
                         </Select>
                       )}
                     />

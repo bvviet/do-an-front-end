@@ -35,16 +35,16 @@ interface Column {
 
 const columns: Column[] = [
   { id: "id", label: "ID", minWidth: 100, align: "center" },
-  { id: "name", label: "Name", minWidth: 170, align: "center" },
-  { id: "image", label: "Image", minWidth: 170, align: "center" },
+  { id: "name", label: "Tên", minWidth: 170, align: "center" },
+  //{ id: "image", label: "Ảnh", minWidth: 170, align: "center" },
   { id: "slug", label: "Slug", minWidth: 170, align: "center" },
-  { id: "children", label: "Children", minWidth: 200, align: "center" }, // Cột mới cho danh mục con
-  { id: "action", label: "Action", minWidth: 170, align: "center" },
+  { id: "children", label: "Thể loại con", minWidth: 200, align: "center" },
+  { id: "action", label: "Thao tác", minWidth: 170, align: "center" },
 ];
 
 export default function ListCategory() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const { openPopup } = useModalContext();
   const [deleteCategory] = useDeleteCategoryMutation();
   const [loading, setLoading] = React.useState(false);
@@ -52,7 +52,6 @@ export default function ListCategory() {
   const [allCategory, setAllCategory] = React.useState<ICategory[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   // const categoriesList: ICategory[] = Array.isArray(categories) ? categories : (categories as { categories: ICategory[] })?.categories || [];
-
   const token = useSelector((state: RootState) => state.auth.access_token);
 
   const fetchBrand = async () => {
@@ -66,8 +65,8 @@ export default function ListCategory() {
           },
         },
       );
-      setCategory(response.data.categories); // Lấy dữ liệu 
-      setAllCategory(response.data.categories);
+      setCategory(response.data.data.categories); // Lấy dữ liệu 
+      setAllCategory(response.data.data.categories);
 
     } catch (error) {
       console.error("Lỗi khi tải voucher:", error);
@@ -107,7 +106,7 @@ export default function ListCategory() {
   const handleDelete = async (id: string) => {
     try {
       await deleteCategory(id).unwrap();
-      toast.success("Category deleted successfully");
+      toast.success("Xoá thể loại thành công");
       window.location.reload()
     } catch (err) {
       const error = err as { status?: number; data?: { message?: string } };
@@ -185,44 +184,48 @@ export default function ListCategory() {
                         value = category.id;
                       } else if (column.id === "slug") {
                         value = category.slug;
-                      } else if (column.id === "image") {
-                        value = (
-                          <img src={category.image} alt={category.name} style={{ width: '100px', height: 'auto' }} />
-                        );
+                        // } else if (column.id === "image") {
+                        //   value = (
+                        //     <img src={category.image} alt={category.name} style={{ width: '100px', height: 'auto' }} />
+                        //   );
                       } else if (column.id === "children") {
                         // Hiển thị ID và name của danh mục con
                         value = category.children && category.children.length > 0
                           ? category.children.map(child => (
-                            <div key={child.id} className="flex justify-center">
-                              <span>{child.id} | {child.name}</span>
+                            <div key={child.id} className="flex justify-center ">
+                              <span>{child.name}</span>
                             </div>
                           ))
                           : "No children"; // Nếu không có danh mục con
                       } else if (column.id === "action") {
                         value = (
                           <>
-                            <Tooltip title="Delete category">
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() =>
-                                  openPopup(
-                                    <CFButton
-                                      title="Are you sure you want to delete this item?"
-                                      handleDelete={() => handleDelete(category.id)}
-                                    />
-                                  )
-                                }
-                              >
-                                <DeleteIcon color="error" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit category">
-                              <Link to={`/admin/genre/${category.id}`}>
-                                <IconButton aria-label="edit">
-                                  <EditIcon color="primary" />
-                                </IconButton>
-                              </Link>
-                            </Tooltip>
+                            {category.name !== "Danh mục lưu trữ" && ( // Ẩn cả nút xóa và chỉnh sửa nếu tên là "Danh mục lưu trữ"
+                              <>
+                                <Tooltip title="Delete category">
+                                  <IconButton
+                                    aria-label="delete"
+                                    onClick={() =>
+                                      openPopup(
+                                        <CFButton
+                                          title="Are you sure you want to delete this item?"
+                                          handleDelete={() => handleDelete(category.id)}
+                                        />
+                                      )
+                                    }
+                                  >
+                                    <DeleteIcon color="error" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Edit category">
+                                  <Link to={`/admin/genre/${category.id}`}>
+                                    <IconButton aria-label="edit">
+                                      <EditIcon color="primary" />
+                                    </IconButton>
+                                  </Link>
+                                </Tooltip>
+                              </>
+                            )}
                           </>
                         );
                       }
@@ -246,9 +249,9 @@ export default function ListCategory() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[20, 30, 40]}
         component="div"
-        count={categoriesList.length}
+        count={allCategory.length || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

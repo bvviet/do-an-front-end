@@ -41,14 +41,14 @@ const ThanhToan: React.FC = () => {
       const response = await checkout(checkoutData).unwrap();
 
       if (selectedRadio === "1" && response.payment_url) {
-        toast.success("Cảm ơn bạn đã mua hàng");
+        // toast.success("Cảm ơn bạn đã mua hàng");
 
         window.location.href = response.payment_url;
 
         refetch();
         disPatch(setCart([]));
         
-          navigate("/thanks");
+          // navigate("/thanks");
        
       } else {
         toast.success("Cảm ơn bạn đã mua hàng");

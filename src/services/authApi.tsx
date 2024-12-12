@@ -66,7 +66,7 @@ interface CategoryType {
 interface IGenre {
   success: boolean;
   message: string;
-  category: CategoryType;
+  categories: CategoryType;
 }
 interface AddCategoryType {
   id: string;
