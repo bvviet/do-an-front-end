@@ -1,12 +1,16 @@
 import FormField from "@/components/FormField";
 import TextInputs from "@/components/FormInputs/TextInputs";
 import { useTabContext } from "@/contexts/TabContext";
-import { useAddCategoryMutation, useGetCategoriesQuery } from "@/services/authApi";
+import { RootState } from "@/redux/store";
+import { useAddCategoryMutation } from "@/services/authApi";
 import { ICategory } from "@/types/genre";
-import { CircularProgress, MenuItem, Select } from "@mui/material";
+import { LinearProgress, MenuItem, Select } from "@mui/material";
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import axios from "axios";
+import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 // Định nghĩa kiểu dữ liệu cho các trường của form
@@ -19,8 +23,35 @@ interface FormData {
 export default function AddCategory() {
   const { control, handleSubmit, reset, formState: { errors }, getValues } = useForm<FormData>();
   const [addCategory, { isLoading, error }] = useAddCategoryMutation();
-  const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
+  // const { data: categories = { categories: [] as ICategory[] } } = useGetCategoriesQuery();
   const { setValue } = useTabContext(); // Lấy setValue từ TabContext
+  const [categories, setCategory] = React.useState<ICategory[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const token = useSelector((state: RootState) => state.auth.access_token);
+
+  const fetchBrand = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/admin/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
+          },
+        },
+      );
+      setCategory(response.data.data.categories);
+    } catch (error) {
+      console.error("Lỗi khi tải voucher:", error);
+      toast.error("Không thể tải danh sách voucher.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    fetchBrand();
+  }, []);
+  console.log("dấds", categories);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
@@ -46,7 +77,7 @@ export default function AddCategory() {
       toast.error("Tạo thể loại thất bại");
     }
   };
-
+  if (loading) return <LinearProgress />;
   return (
     <div className="h-[600px] flex items-center justify-center my-auto rounded-xl  bg-white px-2 pb-12">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +109,7 @@ export default function AddCategory() {
                       </p>
                     )}
                   </div>
-                  <div className="flex flex-col w-[440px]">
+                  <div className="flex flex-col">
                     <label className="text-[20px] font-bold text-black">Chọn danh mục cha</label>
                     <Controller
                       name="parent_id"
@@ -89,20 +120,18 @@ export default function AddCategory() {
                           <MenuItem value="">
                             <em>Không chọn</em>
                           </MenuItem>
-                          {Array.isArray(categories?.categories)
-                            ? categories.categories
-                              .filter((category) => category.parent_id === 0)
-                              .map((category: ICategory) => (
-                                <MenuItem key={category.id} value={category.id}>
-                                  {category.name}
-                                </MenuItem>
-                              ))
-                            : null}
+                          {categories
+                            .filter((category: ICategory) => category.name !== ("Danh mục lưu trữ")) // Loại bỏ danh mục có tên chứa "Lưu trữ"
+                            .map((category: ICategory) => (
+                              <MenuItem key={category.id} value={category.id}>
+                                {category.name}
+                              </MenuItem>
+                            ))}
                         </Select>
                       )}
                     />
                   </div>
-                  <div className="w-[440px]">
+                  {/* <div className="w-[440px]">
                     <label className="text-[2rem]  text-black font-bold mb-2 block">Upload file</label>
                     <input name="image" accept=".jpeg,.jpg,.png,.svg,.webp"
                       onChange={(e) => {
@@ -116,7 +145,7 @@ export default function AddCategory() {
                       }} type="file"
                       className="w-[440px] text-gray-400 font-semibold text-xl bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-6 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
                     <p className="text-[12px] text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
-                  </div>
+                  </div> */}
                   {/* <div>
                     <label className="block font-medium text-gray-700 text-3xl">
                       Hình ảnh (Tải lên tệp)

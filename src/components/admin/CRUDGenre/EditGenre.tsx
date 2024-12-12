@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { CircularProgress, MenuItem, Select } from '@mui/material';
+import { CircularProgress, MenuItem, Select, Tooltip } from '@mui/material';
 import { useDeleteCategoryMutation, useGetCategoriesQuery, useGetCategoryDetailQuery, useUpdateCategoryMutation } from '@/services/authApi';
 import FormField from '@/components/FormField';
 import TextInputs from '@/components/FormInputs/TextInputs';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { ICategory } from '@/types/genre';
 
 interface FormData {
   id: string;
@@ -25,12 +26,12 @@ export default function EditCategory() {
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
   const [deleteCategory] = useDeleteCategoryMutation();
   // Đảm bảo categories là một mảng
-  const categories = Array.isArray(categoriesData?.categories) ? categoriesData.categories : [];
+  const categories = Array.isArray(categoriesData?.data.categories) ? categoriesData.data.categories : [];
+  console.log("cáda", categories);
 
   useEffect(() => {
-    if (data?.success && data.categories && data.categories.length > 0) {
-      // Lấy danh mục đầu tiên trong mảng categories
-      const category = data.categories[0]; // Lấy phần tử đầu tiên của mảng categories
+    if (!isLoading && data?.success && data.categories?.length > 0) {
+      const category = data.categories[0];
       reset({
         id: category.id,
         name: category.name,
@@ -38,8 +39,7 @@ export default function EditCategory() {
         parent_id: category.parent_id || "",
       });
     }
-    console.log(data); // Kiểm tra dữ liệu trả về
-  }, [data, reset]);
+  }, [isLoading, data, reset]);
 
   if (isLoading) {
     return <CircularProgress />;
@@ -85,17 +85,21 @@ export default function EditCategory() {
   };
 
   // Hàm để xoá thể loại con
-  const handleDeleteCategory = async (childId: string) => {
+  const handleDeleteCategory = async (childId: string, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission when deleting category
+
     try {
       await deleteCategory(childId).unwrap();
       toast.success("Xóa thể loại thành công");
-      // Có thể thêm logic để cập nhật lại danh sách thể loại
+      setTimeout(() => {
+        window.location.href = "/admin/genre"
+      }, 2000)
     } catch (err) {
       console.error("Lỗi khi xóa thể loại:", err);
       toast.error("Xóa thể loại thất bại");
     }
   };
-
+  const hasChildren = data?.categories?.[0]?.children?.length > 0;
   return (
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 bg-white rounded-lg">
       <form onSubmit={handleSubmit(onSubmit)} className="mx-auto mb-0 mt-8  space-y-4 py-12 ">
@@ -123,50 +127,45 @@ export default function EditCategory() {
               error={errors.slug}
             />
           </div>
-          <div className="flex flex-col">
-            <label className='text-[20px] font-semibold text-black'>Chọn danh mục cha</label>
-            <Controller
-              name="parent_id"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select {...field} displayEmpty sx={{ width: "340px" }}>
-                  <MenuItem value="">
-                    <em>Không chọn</em>
-                  </MenuItem>
-                  {categories
-                    .filter((category) => category.parent_id === 0)
-                    .map((parentCategory) => {
-                      const hasChildren = categories.some((childCategory) => childCategory.parent_id === parentCategory.id);
-                      return (
-                        <MenuItem key={parentCategory.id} value={parentCategory.id} disabled={hasChildren}>
-                          {parentCategory.name} {hasChildren ? "(Không thể chọn)" : ""}
-                        </MenuItem>
-                      );
-                    })}
-                </Select>
-              )}
-            />
-          </div>
+          <div>
 
-          {/* <div className=" mt-3 w-full lg:w-auto">
-            <Controller
-              name="image"
-              control={control}
-              render={({ field }) => (
-                <div>
-                  <FormField<FormData>
-                    label="Hình ảnh"
-                    Component={TextInputs}
-                    control={control}
-                    type="file"
-                    error={errors.image}
-                    {...field}
-                  />
-                </div>
+            <label className="text-[20px] font-bold text-black">Chọn danh mục cha</label>
+            <div className="flex flex-col relative" >
+
+              <Controller
+                name="parent_id"
+                control={control}
+                defaultValue="" // Đặt giá trị mặc định là rỗng (Không chọn)
+                render={({ field }) => (
+                  <Select {...field} displayEmpty sx={{ width: "full" }} disabled={hasChildren} >
+                    <MenuItem value="">
+                      <em>Không chọn</em>
+                    </MenuItem>
+                    {categories
+                      .filter((category: ICategory) =>
+                        category.id !== data?.categories?.[0]?.id && category.name !== ('Danh mục lưu trữ')
+                      ) // Lọc danh mục không chứa "Lưu trữ" và có children là mảng rỗng
+                      .map((category: ICategory) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              {hasChildren && (
+                <Tooltip
+                  title="Danh mục này có danh mục con, không thể chọn làm danh mục cha."
+                  arrow
+                  enterDelay={500} // Delay before Tooltip appears
+                >
+                  <span className="absolute left-full top-0 transform -translate-y-1/2 -translate-x-1/2 text-red-500 cursor-pointer">
+                    <i className="fa-solid fa-circle-info"></i> {/* Icon thông báo */}
+                  </span>
+                </Tooltip>
               )}
-            />
-          </div> */}
+            </div>
+          </div>
           <div></div>
           <div className="overflow-x-auto ">
             <label className='text-[20px] font-semibold text-black pb-5' htmlFor="">Danh mục con</label>
@@ -180,21 +179,22 @@ export default function EditCategory() {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200 divide-solid ">
-                {data?.categories?.[0]?.children && data.categories[0].children.length > 0 ? (
+
+
+              <tbody className="divide-y divide-gray-200 divide-solid">
+                {data?.categories?.[0]?.children?.length ? (
                   // Lặp qua danh mục con
                   data.categories[0].children.map((child) => (
                     <tr key={child.id}>
                       <td className="whitespace-nowrap px-4 py-2 text-[18px]">{child.id}</td>
                       <td className="whitespace-nowrap px-4 py-2 text-[18px]">{child.name}</td>
-                      <td className="whitespace-nowrap px-4 py-2 ">
+                      <td className="whitespace-nowrap px-4 py-2">
                         <button
-                          onClick={() => handleDeleteCategory(child.id)}
+                          onClick={(e) => handleDeleteCategory(child.id, e)} // Pass the event to handleDeleteCategory
                           className="inline-block rounded bg-red-600 px-6 py-2 text-[14px] font-medium text-white hover:bg-red-700"
                         >
                           Xoá
                         </button>
-
                       </td>
                     </tr>
                   ))

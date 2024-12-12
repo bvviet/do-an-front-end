@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
@@ -10,10 +10,11 @@ import { useSizes } from "@/hooks/useSize";
 import { useColors } from "@/hooks/useColor";
 import { useEditProductMutation } from "@/services/productApi";
 import { AddProduct, ProductVariants } from "@/types/product";
-import { useGetCategoriesQuery } from "@/services/authApi";
 import { ICategory } from "@/types/genre";
 import CFButton from "../CfButton";
 import { useModalContext } from "@/contexts/ModelPopUp/ModelProvider";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 interface VariantError {
   product_size_id?: string;
   product_color_id?: string;
@@ -45,11 +46,37 @@ export default function EditProducts() {
   const { sizes, isLoading: isLoadingSizes, error: sizeError } = useSizes();
   const { colors, isLoading: isLoadingColors, error: colorError } = useColors();
   const { openPopup } = useModalContext();
-  const { data: categories = { categories: [] as ICategory[] } } =
-    useGetCategoriesQuery();
+  // const { data: categories = { categories: [] as ICategory[] } } =
+  //   useGetCategoriesQuery();
   const [editProduct, { isLoading }] = useEditProductMutation();
-
+  const [categories, setCategory] = React.useState<ICategory[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const token = useSelector((state: RootState) => state.auth.access_token);
   const [variantErrors, setVariantErrors] = useState<VariantError[]>([]);
+
+  const fetchBrand = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/admin/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào tiêu đề
+          },
+        },
+      );
+      setCategory(response.data.data.categories); // Lấy dữ liệu 
+    } catch (error) {
+      console.error("Lỗi khi tải voucher:", error);
+      toast.error("Không thể tải danh sách voucher.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    fetchBrand();
+  }, []);
+  console.log("dấds", categories);
 
   const validateVariants = () => {
     const errors: VariantError[] = productVariants.map((variant) => {
@@ -216,7 +243,7 @@ export default function EditProducts() {
   if (brandsError || sizeError || colorError) {
     return <p>Đã xảy ra lỗi khi tải dữ liệu!</p>;
   }
-
+  if (loading) return <LinearProgress />;
   return (
     <div className="h-auto rounded-xl bg-white px-2 pb-12">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -289,17 +316,23 @@ export default function EditProducts() {
                   <MenuItem value={product?.category_id} disabled>
                     {product?.category_name} {/* Hiển thị tên thương hiệu hiện tại */}
                   </MenuItem>
-                  {Array.isArray(categories.categories) &&
-                    categories.categories
-                      .map((category) => (
-                        category.children && category.children.length > 0 ? (
-                          category.children.map((child) => (
-                            <MenuItem key={child.id} value={child.id}>
+                  {Array.isArray(categories) &&
+                    categories.map((category) =>
+                      category.children && category.children.length > 0 ? (
+                        category.children
+                          .filter((child) => child.name !== "Sản phẩm đã xóa") // Lọc các danh mục con không hợp lệ
+                          .map((child) => (
+                            <MenuItem key={child.id} value={child.id} disabled={child.name === product?.category_name}>
                               {child.name}
                             </MenuItem>
                           ))
-                        ) : null
-                      ))}
+                      ) : null
+                      //  (
+                      //   <MenuItem key={category.id} value={category.id} disabled>
+                      //     {/* {category.name} */}
+                      //   </MenuItem>
+                      // )
+                    )}
                 </Select>
               )}
             />

@@ -1,19 +1,26 @@
 import { ProductType } from "./product";
 
+type ChildType = {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+  parent_id: number;
+};
 export interface ICategory {
   id: string;
   name: string;
   slug: string;
   image: string;
   parent_id: number;
-  children?: ICategory[];
+  children?: ChildType[];
 }
 
 export interface CategoriesResponse {
   success: boolean;
   message: string;
-  categories: {
-    data: ICategory[];
+  data: {
+    categories: ICategory[];
   };
 }
 

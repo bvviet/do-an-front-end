@@ -71,7 +71,7 @@ const arrayNav = [
   },
   {
     id: 8,
-    name: "Voucher",
+    name: "Mã giảm giá",
     icon: DiscountIcon,
     link: "/admin/voucher",
   },
