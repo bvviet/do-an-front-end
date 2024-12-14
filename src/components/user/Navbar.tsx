@@ -20,7 +20,8 @@ const Navbar: React.FC = () => {
   }, [dispatch, isLoading]);
 
   return (
-    <div className="mt-[28px] flex-wrap px-8 sm:px-0 lg:flex">
+    <div className="mt-[28px] flex-wrap items-center px-8 sm:px-0 lg:flex">
+      <Link to={"/filter"}>Loc</Link>
       {category?.categories?.map(
         (item: {
           id: React.Key | null | undefined;

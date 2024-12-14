@@ -26,23 +26,20 @@ const Filter = () => {
   };
 
   const handleCategorySelect = (itemId: number) => {
-    setCategory((prevCategory) => {
-      const newCategory = prevCategory.includes(itemId)
-        ? prevCategory.filter((id) => id !== itemId)
-        : [...prevCategory, itemId];
-      setDrop(true);
-      return newCategory;
-    });
+    setSelectedCategory((prevCategory) =>
+      prevCategory === itemId ? null : itemId,
+    );
+    setDrop(true);
   };
 
   const { data: categories, isLoading: isLoadingCategories } =
     useGetCategoriesWithFilterQuery();
 
-  const [category, setCategory] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const { data: products, isLoading: isLoadingFilter } = useFilterProductsQuery(
     {
-      categories: category,
+      categories: selectedCategory ? [selectedCategory] : [],
       minPrice: value[0],
       maxPrice: value[1],
     },
@@ -65,12 +62,8 @@ const Filter = () => {
     <div className="container mb-20">
       <div className="mb-[70px] mt-[100px] flex flex-col items-center justify-center gap-[20px]">
         <h1 className="font-slab text-[4.2rem] font-bold leading-[123.81%]">
-          Product List
+          Danh sách sản phẩm
         </h1>
-        <p className="leading-[175%] text-[#566363]">
-          We hear what you need. We plan, design & develop visionary concept
-          websites.
-        </p>
       </div>
       <div className="grid grid-cols-12 gap-[30px]">
         {/* Products Section */}
@@ -88,7 +81,9 @@ const Filter = () => {
                     className="h-full w-full rounded-[10px] object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <Button variant="contained">Add to Cart</Button>
+                    <Link to={`/detail/${product.slug}`}>
+                      <Button variant="contained">Xem chi tiết</Button>
+                    </Link>
                   </div>
                 </Link>
                 <div className="mt-[15px] flex items-center justify-between">
@@ -129,11 +124,11 @@ const Filter = () => {
                 <p
                   key={item.id}
                   className={`cursor-pointer rounded-lg border border-solid border-[#595959] p-2 text-center text-[1.3rem] text-black hover:text-slate-500 ${
-                    category.includes(Number(item.id))
+                    selectedCategory === item.id
                       ? "bg-slate-800 text-white"
                       : ""
                   }`}
-                  onClick={() => handleCategorySelect(Number(item.id))}
+                  onClick={() => handleCategorySelect(item.id)}
                 >
                   {item.name}
                 </p>

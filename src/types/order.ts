@@ -78,6 +78,7 @@ export interface OrderDetailTypeResponse {
   created_at: string;
   updated_at: string;
   order_items: OrderItemDetailType[];
+  voucher_discount: number
 }
 
 export interface CanCelOrderUserResponse {

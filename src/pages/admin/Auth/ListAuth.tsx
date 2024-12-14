@@ -31,7 +31,6 @@ const columns: Column[] = [
   { id: "email", label: "Email", minWidth: 210 },
   { id: "role", label: "Vai trò", minWidth: 80 },
   { id: "created_at", label: "Ngày đăng ký", minWidth: 170 },
-  { id: "action", label: "Hành động", minWidth: 130 },
 ];
 
 export default function ListAuth() {

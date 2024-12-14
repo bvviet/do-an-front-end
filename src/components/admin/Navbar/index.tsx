@@ -7,6 +7,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PublicIcon from "@mui/icons-material/Public";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import { useState } from "react";
 import {
   Avatar,
@@ -34,22 +35,10 @@ const arrayNav = [
     link: "/admin",
   },
   {
-    id: 2,
-    name: "Người dùng",
-    icon: AccountBoxIcon,
-    link: "/admin/lists",
-  },
-  {
     id: 3,
     name: "Sản phẩm",
     icon: ShoppingCartIcon,
     link: "/admin/product",
-  },
-  {
-    id: 4,
-    name: "Thương hiệu",
-    icon: PublicIcon,
-    link: "/admin/brand",
   },
   {
     id: 5,
@@ -81,11 +70,23 @@ const arrayNav = [
     icon: BarChartIcon,
     link: "/admin/statistical",
   },
+  // {
+  //   id: 10,
+  //   name: "Banner",
+  //   icon: ViewCarouselIcon,
+  //   link: "/admin/banners",
+  // },
   {
-    id: 10,
-    name: "Banner",
-    icon: BarChartIcon,
-    link: "/admin/banners",
+    id: 4,
+    name: "Thương hiệu",
+    icon: PublicIcon,
+    link: "/admin/brand",
+  },
+  {
+    id: 2,
+    name: "Người dùng",
+    icon: AccountBoxIcon,
+    link: "/admin/lists",
   },
 ];
 
@@ -104,7 +105,7 @@ const NavbarAdmin = () => {
   return (
     <div className="flex h-[100vh] flex-col overflow-y-auto rounded-r-lg bg-main p-7 text-[1.5rem] text-white">
       {/* Logo */}
-      <div className="sticky top-0 left-0 ">
+      <div className="sticky left-0 top-0 bg-[#005d63]">
         <Logo />
       </div>
 
@@ -119,10 +120,11 @@ const NavbarAdmin = () => {
                 onClick={() => setActiveNavbar(nav.id)}
               >
                 <div
-                  className={`${activeNavbar === nav.id
-                    ? "rounded-[10px] bg-white text-main"
-                    : "hover:opacity-70"
-                    } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
+                  className={`${
+                    activeNavbar === nav.id
+                      ? "rounded-[10px] bg-white text-main"
+                      : "hover:opacity-70"
+                  } flex w-full cursor-pointer gap-[10px] p-[10px] hover:rounded-[10px]`}
                 >
                   <nav.icon />
                   <span>{nav.name}</span>

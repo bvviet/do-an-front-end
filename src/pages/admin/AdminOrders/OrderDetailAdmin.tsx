@@ -23,8 +23,9 @@ import {
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const statusUpdate = (status: string | undefined) => {
   switch (status) {
@@ -126,6 +127,12 @@ const OrderDetailAdmin = () => {
   return (
     <div className="overflow-x-auto">
       {/* Thêm overflow-x-auto ở đây */}
+      <div className="my-4">
+        <Link to={"/admin/orders"}>
+          <ArrowBackIcon />
+          Trở về
+        </Link>
+      </div>
       <div className="grid grid-cols-2 gap-6">
         <Card className="col-span-1 !bg-gray-100 p-6">
           <h2 className="text-[2rem] font-bold">1. Thông tin khách hàng</h2>
@@ -264,7 +271,7 @@ const OrderDetailAdmin = () => {
           <table className="min-w-full max-w-full table-auto border-collapse">
             <thead>
               <tr className="bg-gray-300">
-                <th className="border border-gray-400 p-2 text-left">#</th>
+                <th className="border border-gray-400 p-2 text-left">STT</th>
                 <th className="border border-gray-400 p-2 text-left">Ảnh</th>
                 <th className="border border-gray-400 p-2 text-left">
                   Tên sản phẩm
@@ -338,11 +345,25 @@ const OrderDetailAdmin = () => {
                   colSpan={4}
                   className="border border-gray-400 p-2 text-right font-bold"
                 >
-                  Tổng tiền:
+                  <div className="flex flex-col">
+                    <span>voucher</span> <span>Tổng tiền:</span>
+                  </div>
                 </td>
-                <td className="border border-gray-400 p-2 text-center font-bold text-[#ee4d2d]">
-                  {formatCurrency(data?.total_amount ?? 0)}
-                </td>
+                <div className="flex flex-col">
+                  <td>
+                    {Number(data?.voucher_discount) !== 0 && (
+                      <div className="flex justify-end">
+                        -
+                        <span className="ml-2 font-medium text-[#ee4d2d]">
+                          {formatCurrency(Number(data?.voucher_discount))}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="border border-gray-400 p-2 text-center font-bold text-[#ee4d2d]">
+                    {formatCurrency(data?.total_amount ?? 0)}
+                  </td>
+                </div>
               </tr>
             </tfoot>
           </table>
