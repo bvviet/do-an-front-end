@@ -62,24 +62,6 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
                   {productDetail?.name}
                 </h3>
                 <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-[6px]">
-                    <img src={start} alt="" />
-                    <span className="text-[1.8rem] leading-[166.667%] text-[#566363]">
-                      5.0 (37)
-                    </span>
-                  </div>
-                  <div className="h-[25px] w-[1px] border border-solid border-gray-400"></div>
-                  <div className="flex items-center gap-6">
-                    <span className="text-[1.6rem] leading-[166.667%] text-[#566363]">
-                      <span className="font-semibold text-black"> 2.1k </span>
-                      Đánh Giá
-                    </span>
-                    <div className="h-[25px] w-[1px] border border-solid border-gray-400"></div>
-                    <span className="text-[1.6rem] leading-[166.667%] text-[#566363]">
-                      <span className="font-semibold text-black"> 11.1k </span>
-                      Đã bán
-                    </span>
-                  </div>
                 </div>
                 <div className="mb-5 flex items-center gap-[12px] rounded-lg bg-gray-200 p-4">
                   <span className="text-[2.8rem] font-semibold leading-[166.667%] text-red-600">

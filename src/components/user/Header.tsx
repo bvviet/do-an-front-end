@@ -40,6 +40,7 @@ const Header = () => {
     (state: RootState) => state.carts.cart_items || [],
   );
   const favorite = useSelector((state: RootState) => state.favorite.items);
+  const role = useSelector((state: RootState) => state.auth.userInfo?.role);
 
   const renderMenu = (
     <Menu
@@ -100,14 +101,16 @@ const Header = () => {
           </ul>
           <div className="my-[8px] h-[1px] w-full bg-[#0000000d]" />
           <ul>
-            <li>
-              <Link
-                to="/admin"
-                className="block py-[10px] font-medium hover:text-[#444]"
-              >
-                Trang Admin
-              </Link>
-            </li>
+            {role === "admin" && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="block py-[10px] font-medium hover:text-[#444]"
+                >
+                  Trang Admin
+                </Link>
+              </li>
+            )}
             <li>
               <a
                 href="#!"

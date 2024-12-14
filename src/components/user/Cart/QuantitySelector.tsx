@@ -65,8 +65,8 @@ const QuantitySelector: FC<QuantitySelectorProps> = ({
       </IconButton>
       <TextField
         value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
         inputProps={{
+          readOnly: true,
           min: 1,
           style: { textAlign: "center", padding: "3px 0" },
           inputMode: "numeric",

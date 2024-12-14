@@ -275,6 +275,14 @@ const OrderDetail = () => {
           )}
           {/* Tổng tiền, button */}
           <div className="ml-auto">
+            {Number(orderDetail?.voucher_discount) !== 0 && (
+              <div className="flex justify-end">
+                -
+                <span className="ml-2 font-medium text-[#ee4d2d]">
+                  {formatCurrency(Number(orderDetail?.voucher_discount))}
+                </span>
+              </div>
+            )}
             <div className="flex justify-end">
               Số tiền phải trả:
               <span className="ml-2 font-medium text-[#ee4d2d]">
