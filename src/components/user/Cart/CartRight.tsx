@@ -56,7 +56,7 @@ const CartRight: FC<CartRightProps> = ({ totalPrice = 0, carts }) => {
         <button
           className={`mt-[20px] w-full rounded-md bg-[#FFD44D] py-[10px] text-[18px] font-semibold text-[#131717] hover:text-slate-500`}
         >
-          Kiểm tra
+          Thanh toán
         </button>
       </Link>
     </div>

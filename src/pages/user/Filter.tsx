@@ -137,7 +137,7 @@ const Filter = () => {
           </div>
 
           <div className="mt-10 h-fit rounded-xl border border-solid border-[#a3a3a3] px-8 py-5 md:col-span-3">
-            <h2 className="text-xxl mb-4 font-semibold">Filter by Price</h2>
+            <h2 className="text-xxl mb-4 font-semibold">Lọc theo gía tiềntiền</h2>
             <Box sx={{ width: "100%" }}>
               <MuiSlider
                 value={value}

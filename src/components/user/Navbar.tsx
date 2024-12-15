@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="mt-[28px] flex-wrap items-center px-8 sm:px-0 lg:flex">
-      <Link to={"/filter"}>Loc</Link>
       {category?.categories?.map(
         (item: {
           id: React.Key | null | undefined;
@@ -89,6 +88,7 @@ const Navbar: React.FC = () => {
           </MenuItem>
         ),
       )}
+      <Link to={"/filter"}>Lọc</Link>
     </div>
   );
 };

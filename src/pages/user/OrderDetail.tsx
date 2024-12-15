@@ -163,6 +163,17 @@ const OrderDetail = () => {
             <Typography variant="body1">
               <strong>Ngày đặt hàng:</strong>
               {formatDate(orderDetail?.created_at)}
+              <div>
+                <span className="font-semibold">Phương thức thanh toán:</span>{" "}
+                <span>
+                  {orderDetail?.payment_method === 0
+                    ? "Thanh toán khi nhận hàng"
+                    : ""}
+                  {orderDetail?.payment_method === 1
+                    ? "Thanh toán bằng VNPAY"
+                    : ""}
+                </span>
+              </div>
             </Typography>
             <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
               Thông tin người mua
@@ -275,20 +286,27 @@ const OrderDetail = () => {
           )}
           {/* Tổng tiền, button */}
           <div className="ml-auto">
-            {Number(orderDetail?.voucher_discount) !== 0 && (
-              <div className="flex justify-end">
-                -
-                <span className="ml-2 font-medium text-[#ee4d2d]">
-                  {formatCurrency(Number(orderDetail?.voucher_discount))}
-                </span>
-              </div>
-            )}
-            <div className="flex justify-end">
-              Số tiền phải trả:
-              <span className="ml-2 font-medium text-[#ee4d2d]">
-                {formatCurrency(Number(orderDetail?.total_amount))}
-              </span>
+            <div className="w-full">
+              <table className="w-full text-right">
+                <tbody>
+                  {Number(orderDetail?.voucher_discount) !== 0 && (
+                    <tr>
+                      <td className="pr-4">Phiếu giảm giá:</td>
+                      <td className="font-medium text-[#ee4d2d]">
+                        -{formatCurrency(Number(orderDetail?.voucher_discount))}
+                      </td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td className="pr-4">Thành tiền:</td>
+                    <td className="font-medium text-[#ee4d2d]">
+                      {formatCurrency(Number(orderDetail?.total_amount))}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+
             <div className="mt-6 flex justify-end gap-6">
               {/* <Button variant="outlined">Thanh toán khi nhận hàng</Button> */}
               {orderDetail?.order_status === "delivered" ? (

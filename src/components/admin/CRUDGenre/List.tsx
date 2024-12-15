@@ -65,9 +65,8 @@ export default function ListCategory() {
           },
         },
       );
-      setCategory(response.data.data.categories); // Lấy dữ liệu 
+      setCategory(response.data.data.categories); // Lấy dữ liệu
       setAllCategory(response.data.data.categories);
-
     } catch (error) {
       console.error("Lỗi khi tải voucher:", error);
       toast.error("Không thể tải danh sách voucher.");
@@ -86,9 +85,9 @@ export default function ListCategory() {
     if (searchTerm === "") {
       setCategory(allCategory);
     } else {
-
-      const filteredCategory = allCategory.filter((category) =>
-        category.name.toLowerCase().includes(searchTerm.toLowerCase()) // Tìm kiếm theo tên
+      const filteredCategory = allCategory.filter(
+        (category) =>
+          category.name.toLowerCase().includes(searchTerm.toLowerCase()), // Tìm kiếm theo tên
       );
       setCategory(filteredCategory); // Cập nhật danh sách sản phẩm hiển thị
     }
@@ -99,7 +98,9 @@ export default function ListCategory() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -107,10 +108,11 @@ export default function ListCategory() {
     try {
       await deleteCategory(id).unwrap();
       toast.success("Xoá thể loại thành công");
-      window.location.reload()
+      window.location.reload();
     } catch (err) {
       const error = err as { status?: number; data?: { message?: string } };
-      const errorMessage = error.data?.message || "Failed to delete category. Please try again.";
+      const errorMessage =
+        error.data?.message || "Failed to delete category. Please try again.";
       toast.error(errorMessage);
       console.error("Failed to delete category:", error);
     }
@@ -120,12 +122,15 @@ export default function ListCategory() {
 
   return (
     <Paper sx={{ width: "100%", borderRadius: "10px" }}>
-      <TableContainer className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]" style={{ borderRadius: "10px" }}>
+      <TableContainer
+        className="max-h-[600px] max-xl:max-h-[430px] max-sm:max-h-[430px]"
+        style={{ borderRadius: "10px" }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={4}>
-                <form className="flex items-center" onSubmit={handleSearch} >
+                <form className="flex items-center" onSubmit={handleSearch}>
                   <label htmlFor="simple-search" className="sr-only">
                     Search
                   </label>
@@ -150,9 +155,8 @@ export default function ListCategory() {
                     <input
                       type="text"
                       id="simple-search"
-                      className="block shadow-xl  w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      className="block w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 shadow-xl focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                       placeholder="Search"
-
                       value={searchTerm} // Liên kết với state
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -165,7 +169,11 @@ export default function ListCategory() {
             </TableRow>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.id} align={column.align} style={{ top: 57, minWidth: column.minWidth }}>
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ top: 57, minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -173,75 +181,87 @@ export default function ListCategory() {
           </TableHead>
           <TableBody>
             {Array.isArray(categoriesList) && categoriesList.length > 0 ? (
-              categoriesList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category: ICategory) => (
-                <React.Fragment key={category.id}>
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                    {columns.map((column) => {
-                      let value;
-                      if (column.id === "name") {
-                        value = category.name;
-                      } else if (column.id === "id") {
-                        value = category.id;
-                      } else if (column.id === "slug") {
-                        value = category.slug;
-                        // } else if (column.id === "image") {
-                        //   value = (
-                        //     <img src={category.image} alt={category.name} style={{ width: '100px', height: 'auto' }} />
-                        //   );
-                      } else if (column.id === "children") {
-                        // Hiển thị ID và name của danh mục con
-                        value = category.children && category.children.length > 0
-                          ? category.children.map(child => (
-                            <div key={child.id} className="flex justify-center ">
-                              <span>{child.name}</span>
-                            </div>
-                          ))
-                          : "No children"; // Nếu không có danh mục con
-                      } else if (column.id === "action") {
-                        value = (
-                          <>
-                            {category.name !== "Danh mục lưu trữ" && ( // Ẩn cả nút xóa và chỉnh sửa nếu tên là "Danh mục lưu trữ"
-                              <>
-                                <Tooltip title="Delete category">
-                                  <IconButton
-                                    aria-label="delete"
-                                    onClick={() =>
-                                      openPopup(
-                                        <CFButton
-                                          title="Are you sure you want to delete this item?"
-                                          handleDelete={() => handleDelete(category.id)}
-                                        />
-                                      )
-                                    }
+              categoriesList
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((category: ICategory) => (
+                  <React.Fragment key={category.id}>
+                    <TableRow hover role="checkbox" tabIndex={-1}>
+                      {columns.map((column) => {
+                        let value;
+                        if (column.id === "name") {
+                          value = category.name;
+                        } else if (column.id === "id") {
+                          value = category.id;
+                        } else if (column.id === "slug") {
+                          value = category.slug;
+                          // } else if (column.id === "image") {
+                          //   value = (
+                          //     <img src={category.image} alt={category.name} style={{ width: '100px', height: 'auto' }} />
+                          //   );
+                        } else if (column.id === "children") {
+                          // Hiển thị ID và name của danh mục con
+                          value =
+                            category.children && category.children.length > 0
+                              ? category.children.map((child) => (
+                                  <div
+                                    key={child.id}
+                                    className="flex justify-center"
                                   >
-                                    <DeleteIcon color="error" />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Edit category">
-                                  <Link to={`/admin/genre/${category.id}`}>
-                                    <IconButton aria-label="edit">
-                                      <EditIcon color="primary" />
+                                    <span>{child.name}</span>
+                                  </div>
+                                ))
+                              : "Không có danh mục con";
+                        } else if (column.id === "action") {
+                          value = (
+                            <>
+                              {category.name !== "Danh mục lưu trữ" && ( // Ẩn cả nút xóa và chỉnh sửa nếu tên là "Danh mục lưu trữ"
+                                <>
+                                  <Tooltip title="Delete category">
+                                    <IconButton
+                                      aria-label="delete"
+                                      onClick={() =>
+                                        openPopup(
+                                          <CFButton
+                                            title="Are you sure you want to delete this item?"
+                                            handleDelete={() =>
+                                              handleDelete(category.id)
+                                            }
+                                          />,
+                                        )
+                                      }
+                                    >
+                                      <DeleteIcon color="error" />
                                     </IconButton>
-                                  </Link>
-                                </Tooltip>
-                              </>
-                            )}
-                          </>
+                                  </Tooltip>
+                                  <Tooltip title="Edit category">
+                                    <Link to={`/admin/genre/${category.id}`}>
+                                      <IconButton aria-label="edit">
+                                        <EditIcon color="primary" />
+                                      </IconButton>
+                                    </Link>
+                                  </Tooltip>
+                                </>
+                              )}
+                            </>
+                          );
+                        }
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {value}
+                          </TableCell>
                         );
-                      }
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </React.Fragment>
-              ))
+                      })}
+                    </TableRow>
+                  </React.Fragment>
+                ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center"> {/* Đảm bảo colSpan tương ứng với số cột mới */}
-                  <Typography color="error">Không có danh mục nào để hiển thị.</Typography>
+                <TableCell colSpan={6} align="center">
+                  {" "}
+                  {/* Đảm bảo colSpan tương ứng với số cột mới */}
+                  <Typography color="error">
+                    Không có danh mục nào để hiển thị.
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}

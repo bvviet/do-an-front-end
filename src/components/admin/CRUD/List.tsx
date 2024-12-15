@@ -6,7 +6,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { IconButton, LinearProgress, Tooltip, TablePagination, Typography } from "@mui/material";
+import {
+  IconButton,
+  LinearProgress,
+  Tooltip,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import LinkProducts from "./Components/Button";
@@ -28,7 +34,7 @@ interface Column {
 
 const columns: Column[] = [
   { id: "id", label: "Id", minWidth: 70 },
-  { id: "name", label: "Tên", minWidth: 100, },
+  { id: "name", label: "Tên", minWidth: 100 },
   { id: "img", label: "Ảnh", minWidth: 100, align: "center" },
   { id: "price", label: "Giá gốc", minWidth: 100 },
   { id: "price_sale", label: "Giá sale", minWidth: 70, align: "right" },
@@ -66,7 +72,9 @@ export default function ListProducts() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -75,10 +83,11 @@ export default function ListProducts() {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Ngăn reload trang
     if (searchTerm === "") {
-      setProducts(allProducts)
+      setProducts(allProducts);
     } else {
-      const filteredProducts = allProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) // Tìm kiếm theo tên
+      const filteredProducts = allProducts.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()), // Tìm kiếm theo tên
       );
       setProducts(filteredProducts); // Cập nhật danh sách sản phẩm hiển thị
     }
@@ -89,11 +98,11 @@ export default function ListProducts() {
     try {
       await deleteProduct(productId).unwrap();
       toast.success("Sản phẩm đã được xóa thành công.");
-      window.location.reload()
+      window.location.reload();
     } catch (err) {
-
       const error = err as { status?: number; data?: { message?: string } };
-      const errorMessage = error.data?.message || "Failed to delete category. Please try again.";
+      const errorMessage =
+        error.data?.message || "Failed to delete category. Please try again.";
       toast.error(errorMessage);
       console.error("Failed to delete category:", error); // Log lỗi
     }
@@ -102,12 +111,15 @@ export default function ListProducts() {
 
   return (
     <Paper sx={{ width: "100%", borderRadius: "10px" }}>
-      <TableContainer className="max-h-[600px]" style={{ borderRadius: "10px" }}>
+      <TableContainer
+        className="max-h-[600px]"
+        style={{ borderRadius: "10px" }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={5}>
-                <form className="flex items-center" onSubmit={handleSearch} >
+                <form className="flex items-center" onSubmit={handleSearch}>
                   <label htmlFor="simple-search" className="sr-only">
                     Search
                   </label>
@@ -132,9 +144,8 @@ export default function ListProducts() {
                     <input
                       type="text"
                       id="simple-search"
-                      className="block shadow-xl  w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      className="block w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 pl-14 text-xl text-gray-900 shadow-xl focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                       placeholder="Search"
-
                       value={searchTerm} // Liên kết với state
                       onChange={(e) => setSearchTerm(e.target.value)} // Cập nhật state
                     />
@@ -147,73 +158,96 @@ export default function ListProducts() {
             </TableRow>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.id} align={column.align} style={{ top: 57, minWidth: column.minWidth }}>
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ top: 57, minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
-          <TableBody >
+          <TableBody>
             {Array.isArray(products) && products.length > 0 ? (
-              products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product: ProductType) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={product.id}>
-                  {columns.map((column) => {
-                    let value;
-                    if (column.id === "id") {
-                      value = product.id;
-                    } if (column.id === "name") {
-                      value = product.name;
-                    } else if (column.id === "price") {
-                      value = formatCurrency(product.price_regular);
-                    } else if (column.id === "price_sale") {
-                      value = <span className="text-red-600">
-                        {formatCurrency(product.price_sale)}
-                      </span>
-                    } else if (column.id === "img") {
-                      value = (
-                        <img src={product.img_thumbnail} alt={product.name} style={{ width: '100px', height: 'auto' }} />
-                      );
-
-                    } else if (column.id === "") {
-                      value = (
-                        <>
-                          <Tooltip title="Delete product">
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() =>
-                                openPopup(
-                                  <CFButton
-                                    title="Are you sure you want to delete this item?"
-                                    handleDelete={() => handleDelete(product.id)}
-                                  />
-                                )
-                              }
-                            >
-                              <DeleteIcon color="error" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit product">
-                            <Link to={`/admin/product/${product.slug}`}>
-                              <IconButton aria-label="edit">
-                                <EditIcon color="primary" />
+              products
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((product: ProductType) => (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={product.id}
+                  >
+                    {columns.map((column) => {
+                      let value;
+                      if (column.id === "id") {
+                        value = product.id;
+                      }
+                      if (column.id === "name") {
+                        value = product.name;
+                      } else if (column.id === "price") {
+                        value = formatCurrency(product.price_regular);
+                      } else if (column.id === "price_sale") {
+                        value = (
+                          <span className="text-red-600">
+                            {formatCurrency(product.price_sale)}
+                          </span>
+                        );
+                      } else if (column.id === "img") {
+                        value = (
+                          <img
+                            src={product.img_thumbnail}
+                            alt={product.name}
+                            style={{ width: "100px", height: "auto" }}
+                          />
+                        );
+                      } else if (column.id === "category") {
+                        value = <p>{product?.category?.name}</p>;
+                      } else if (column.id === "") {
+                        value = (
+                          <>
+                            <Tooltip title="Delete product">
+                              <IconButton
+                                aria-label="delete"
+                                onClick={() =>
+                                  openPopup(
+                                    <CFButton
+                                      title="Are you sure you want to delete this item?"
+                                      handleDelete={() =>
+                                        handleDelete(product.id)
+                                      }
+                                    />,
+                                  )
+                                }
+                              >
+                                <DeleteIcon color="error" />
                               </IconButton>
-                            </Link>
-                          </Tooltip>
-                        </>
+                            </Tooltip>
+                            <Tooltip title="Edit product">
+                              <Link to={`/admin/product/${product.slug}`}>
+                                <IconButton aria-label="edit">
+                                  <EditIcon color="primary" />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
+                          </>
+                        );
+                      }
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {value}
+                        </TableCell>
                       );
-                    }
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))
+                    })}
+                  </TableRow>
+                ))
             ) : (
               <TableRow>
                 <TableCell colSpan={7} align="center">
-                  <Typography color="error">Không có sản phẩm nào để hiển thị.</Typography>
+                  <Typography color="error">
+                    Không có sản phẩm nào để hiển thị.
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}
