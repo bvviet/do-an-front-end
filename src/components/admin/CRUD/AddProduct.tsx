@@ -99,6 +99,12 @@ export default function AddProducts() {
 
   console.log("color", colors); // Chạy khi sizes hoặc colors thay đổi
   const onSubmit: SubmitHandler<AddProduct> = async (data) => {
+    const invalidVariants = productVariants.some(variant => variant.quantity <= 0);
+
+    if (invalidVariants) {
+      toast.error("Số lượng của mỗi biến thể phải lớn hơn 0.");
+      return;
+    }
     if (isDuplicateVariant(productVariants)) {
       toast.error("Không được phép có biến thể trùng lặp (size và color giống nhau)");
       return;
@@ -154,6 +160,11 @@ export default function AddProducts() {
 
   // Cập nhật thông tin biến thể
   const updateVariant = (index: number, field: string, value: string | number | File) => {
+    if (field === "quantity" && typeof value === "number" && value <= 0) {
+      toast.error("Số lượng phải lớn hơn 0.");
+      return;
+    }
+
     setProductVariants((prev) => {
       const newVariants = [...prev];
       newVariants[index] = { ...newVariants[index], [field]: value };
@@ -270,7 +281,7 @@ export default function AddProducts() {
                             categories.map((category) =>
                               category.children && category.children.length > 0 ? (
                                 category.children
-                                  .filter((child) => child.name !== "Sản phẩm đã bị xóa") // Lọc các danh mục con
+                                  .filter((child) => child.name !== "Sản phẩm đã xóa") // Lọc các danh mục con
                                   .map((child) => (
                                     <MenuItem key={child.id} value={child.id}>
                                       {child.name}
