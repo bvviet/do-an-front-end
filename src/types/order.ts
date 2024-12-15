@@ -78,7 +78,7 @@ export interface OrderDetailTypeResponse {
   created_at: string;
   updated_at: string;
   order_items: OrderItemDetailType[];
-  voucher_discount: number
+  voucher_discount: number;
 }
 
 export interface CanCelOrderUserResponse {
@@ -105,6 +105,10 @@ export interface GetOrdersByStatusShippingResponse {
   message: string;
   orders: {
     order_id: number;
+    order_code: string;
+    payment_method: number;
+    payment_status: string;
+    phone_number: string;
     customer_name: string;
     address: string;
     products: {

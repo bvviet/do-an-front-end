@@ -147,7 +147,7 @@ const OrderDetailAdmin = () => {
             </div>
             <div>
               <span className="font-semibold">Điện thoại:</span>{" "}
-              <span>{data?.address.phone_number}</span>
+              <span>(+84) {data?.address.phone_number}</span>
             </div>
             <div>
               <span className="font-semibold">Địa chỉ:</span>{" "}
@@ -263,11 +263,10 @@ const OrderDetailAdmin = () => {
       {/* Khối chi tiết đơn hàng */}
       <div className="mt-16 overflow-hidden">
         <h2 className="text-[2rem] font-bold">4. Chi tiết đơn hàng</h2>
-        <div>
-          <p className="font-semibold">Khách hàng ghi chú: {data?.note}</p>
-        </div>
+
+
         {/* Bọc bảng trong một container có overflow-x-auto */}
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 overflow-x-auto rounded-md ">
           <table className="min-w-full max-w-full table-auto border-collapse">
             <thead>
               <tr className="bg-gray-300">
@@ -287,9 +286,9 @@ const OrderDetailAdmin = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="">
               {data?.order_items.map((item, index) => (
-                <tr className={`bg-white`} key={item.order_id}>
+                <tr className={`bg-white` } key={item.order_id}>
                   <td className="border border-gray-400 p-2">{index + 1}</td>
                   <td className="border border-gray-400 p-2">
                     <img
@@ -298,7 +297,7 @@ const OrderDetailAdmin = () => {
                       className="h-16 w-16 object-cover"
                     />
                   </td>
-                  <td className="border border-gray-400 p-2">
+                  <td className="border border-gray-400 w-[740px] p-2">
                     <div className="flex flex-col">
                       {item.product.name}
                       {item.status_deleted !== 0 && (
@@ -320,8 +319,9 @@ const OrderDetailAdmin = () => {
                   <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
                     {item.size}
                   </td>
-                  <td className="border border-gray-400 p-2 text-center text-[#ee4d2d]">
+                  <td className="border border-gray-400 p-2 flex items-center justify-center">
                     <div
+                      className=""
                       style={{
                         backgroundColor: item.color,
                         height: "15px",
@@ -339,36 +339,38 @@ const OrderDetailAdmin = () => {
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr className="bg-gray-200">
-                <td
-                  colSpan={4}
-                  className="border border-gray-400 p-2 text-right font-bold"
-                >
-                  <div className="flex flex-col">
-                    <span>Phiếu giảm giá:</span>{" "}
-                    <span className="mt-2">Thành tiền:</span>
-                  </div>
-                </td>
-                <div className="flex flex-col">
-                  <td>
-                    <div className="flex justify-end">
-                      -
-                      <span className="ml-2 font-bold text-[#ee4d2d]">
-                        {formatCurrency(Number(data?.voucher_discount))}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="ml-auto border border-gray-400 py-2 text-center font-bold text-[#ee4d2d]">
-                    {formatCurrency(data?.total_amount ?? 0)}
-                  </td>
-                </div>
-              </tr>
-            </tfoot>
+
           </table>
         </div>
       </div>
-    </div>
+      <div className="flex justify-between  mt-6">
+        <div>
+          <label className="block mb-2 font-medium text-gray-900">Ghi chú:</label>
+          <textarea
+            id="message"
+            className="block p-2.5 w-[500px] text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+            placeholder="Không có ghi chú"
+            value={data?.note || ""} // Gắn giá trị từ props
+            readOnly // Chỉ cho phép đọc
+          />
+        </div>
+        <div className=" ">
+          <div className="flex justify-between items-center">
+            <span className="mr-12 block mb-2 font-medium text-gray-900 ">Phiếu giảm giá:</span>
+            <span className="font-bold text-[#ee4d2d] text-right mr-4 min-w-[100px]">
+              -{formatCurrency(Number(data?.voucher_discount))}
+            </span>
+          </div>
+          <div className="flex justify-between items-center mt-2">
+            <span className="block mb-2 font-medium text-gray-900">Thành tiền:</span>
+            <span className="font-bold text-[#ee4d2d] text-right border border-gray-400 py-2 px-4 min-w-[100px]">
+              {formatCurrency(data?.total_amount ?? 0)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div >
+
   );
 };
 

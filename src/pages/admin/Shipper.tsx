@@ -107,6 +107,7 @@ const Shipper: React.FC = () => {
   const ordersShippingFinal = isNoOrdersMessage
     ? []
     : ordersShipping?.orders || [];
+  console.log(ordersShippingFinal);
 
   return (
     <Container maxWidth="md">
@@ -119,8 +120,10 @@ const Shipper: React.FC = () => {
             <Card key={order.order_id} sx={{ mb: 3, boxShadow: 3 }}>
               <CardContent>
                 <Box sx={{ p: 2, backgroundColor: "#f0f4f8", borderRadius: 1 }}>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Mã đơn hàng: {order.order_id}
+                  <Typography variant="h6" className="font-semibold" gutterBottom>
+                    Mã đơn hàng: <span className="text-[18px]">
+                      {order.order_code}
+                    </span>
                   </Typography>
                   <Typography
                     variant="body2"
@@ -128,7 +131,12 @@ const Shipper: React.FC = () => {
                     gutterBottom
                   >
                     Khách hàng:{" "}
-                    <span style={{ color: "#333" }}>{order.customer_name}</span>
+                    <span style={{ color: "#333" }}>
+                      {order?.customer_name
+                        ?.split(" ")
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                        .join(" ")}
+                    </span>
                   </Typography>
                   <Typography
                     variant="body2"
@@ -136,7 +144,7 @@ const Shipper: React.FC = () => {
                     gutterBottom
                   >
                     Số điện thoại:{" "}
-                    <span style={{ color: "#333" }}>{order.customer_name}</span>
+                    <span style={{ color: "#333" }}> (+84) {order.phone_number}</span>
                   </Typography>
                   <Typography
                     variant="body2"
@@ -151,6 +159,15 @@ const Shipper: React.FC = () => {
                       {order?.payment_method === 1
                         ? "Thanh toán bằng VNPAY"
                         : ""}
+                    </span>
+                  </Typography >
+                  <Typography variant="body2"
+                    color="text.secondary"
+                    gutterBottom>
+                    Trạng thái : <span style={{ color: "#333" }}>
+                      {order?.payment_status === "paid" ? "Đã thanh toán" : ""}
+                      {order?.payment_status === "unpaid" ? "Chưa thanh toán" : ""}
+
                     </span>
                   </Typography>
                   <Typography
@@ -227,7 +244,7 @@ const Shipper: React.FC = () => {
 
                 <Typography variant="body2" sx={{ fontWeight: "bold", mt: 2 }}>
                   Số tiền phải thu:{" "}
-                  {order?.payment_method !== 0 ? (
+                  {order?.payment_status !== "unpaid" ? (
                     <span className="text-[#ee4d2d]">0đ</span>
                   ) : (
                     <span className="text-[#ee4d2d]">
@@ -322,7 +339,7 @@ const Shipper: React.FC = () => {
           </DialogActions>
         </Dialog>
       </Box>
-    </Container>
+    </Container >
   );
 };
 
