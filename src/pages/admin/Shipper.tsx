@@ -143,6 +143,21 @@ const Shipper: React.FC = () => {
                     color="text.secondary"
                     gutterBottom
                   >
+                    Phương thức thanh toán:
+                    <span style={{ color: "#333" }}>
+                      {order?.payment_method === 0
+                        ? "Thanh toán khi nhận hàng"
+                        : ""}
+                      {order?.payment_method === 1
+                        ? "Thanh toán bằng VNPAY"
+                        : ""}
+                    </span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
                     Địa chỉ:{" "}
                     <span style={{ color: "#333" }}>{order.address}</span>
                   </Typography>
@@ -211,10 +226,14 @@ const Shipper: React.FC = () => {
                 ))}
 
                 <Typography variant="body2" sx={{ fontWeight: "bold", mt: 2 }}>
-                  Tổng tiền:{" "}
-                  <span className="text-[#ee4d2d]">
-                    {formatCurrency(order.total_amount)}
-                  </span>
+                  Số tiền phải thu:{" "}
+                  {order?.payment_method !== 0 ? (
+                    <span className="text-[#ee4d2d]">0đ</span>
+                  ) : (
+                    <span className="text-[#ee4d2d]">
+                      {formatCurrency(order.total_amount)}
+                    </span>
+                  )}
                 </Typography>
 
                 <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
@@ -230,16 +249,22 @@ const Shipper: React.FC = () => {
                       ? "Đã giao"
                       : "Xác nhận đã giao"}
                   </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleOpenCancelDialog(order.order_id)}
-                    startIcon={<CancelIcon />}
-                    disabled={order.order_status === "delivered"}
-                    sx={{ width: "45%", fontSize: "1.3rem" }}
-                  >
-                    {order.order_status === "canceled" ? "Đã hủy" : "Hủy giao"}
-                  </Button>
+                  {order?.payment_method !== 0 ? (
+                    ""
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleOpenCancelDialog(order.order_id)}
+                      startIcon={<CancelIcon />}
+                      disabled={order.order_status === "delivered"}
+                      sx={{ width: "45%", fontSize: "1.3rem" }}
+                    >
+                      {order.order_status === "canceled"
+                        ? "Đã hủy"
+                        : "Hủy giao"}
+                    </Button>
+                  )}
                 </Box>
               </CardContent>
             </Card>

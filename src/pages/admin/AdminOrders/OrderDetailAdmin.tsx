@@ -346,21 +346,20 @@ const OrderDetailAdmin = () => {
                   className="border border-gray-400 p-2 text-right font-bold"
                 >
                   <div className="flex flex-col">
-                    <span>voucher</span> <span>Tổng tiền:</span>
+                    <span>Phiếu giảm giá:</span>{" "}
+                    <span className="mt-2">Thành tiền:</span>
                   </div>
                 </td>
                 <div className="flex flex-col">
                   <td>
-                    {Number(data?.voucher_discount) !== 0 && (
-                      <div className="flex justify-end">
-                        -
-                        <span className="ml-2 font-medium text-[#ee4d2d]">
-                          {formatCurrency(Number(data?.voucher_discount))}
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex justify-end">
+                      -
+                      <span className="ml-2 font-bold text-[#ee4d2d]">
+                        {formatCurrency(Number(data?.voucher_discount))}
+                      </span>
+                    </div>
                   </td>
-                  <td className="border border-gray-400 p-2 text-center font-bold text-[#ee4d2d]">
+                  <td className="ml-auto border border-gray-400 py-2 text-center font-bold text-[#ee4d2d]">
                     {formatCurrency(data?.total_amount ?? 0)}
                   </td>
                 </div>

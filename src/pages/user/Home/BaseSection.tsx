@@ -24,7 +24,7 @@ const BaseSection: FC<BaseSectionProps> = ({
   };
   return (
     <div className="py-[50px] sm:py-[75px]">
-      <h2 className="max-w-[470px] font-slab text-[3.2rem] font-bold lg:text-[4.2rem]">
+      <h2 className="max-w-[50%] font-slab text-[3.2rem] font-bold lg:text-[4.2rem]">
         {title}
       </h2>
       {description && (

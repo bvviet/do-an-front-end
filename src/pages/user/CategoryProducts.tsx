@@ -36,7 +36,7 @@ const CategoryProducts = () => {
       <BaseSection
         typeProduct={true}
         title={`Sản phẩm thuộc ${products?.message.split(":")[1]} `}
-        description="Browse our new products and make your day more beautiful and glorious."
+        description=""
         handleShowMore={handleShowMore}
         showHide={showHide}
       >

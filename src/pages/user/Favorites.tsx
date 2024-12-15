@@ -59,7 +59,6 @@ const Favorites = () => {
         <h1 className="text-[2rem] font-bold text-gray-800">
           Danh sách yêu thích
         </h1>
-        <p className="text-gray-500">3 items in your wishlist</p>
       </div>
 
       <div className="grid grid-cols-1 gap-[40px] sm:grid-cols-2 lg:grid-cols-3">

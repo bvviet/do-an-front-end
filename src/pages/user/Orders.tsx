@@ -141,14 +141,6 @@ const Orders = () => {
                 )}
                 <hr />
                 <div className="ml-auto mt-[24px] w-fit">
-                  {Number(order?.voucher_discount) !== 0 && (
-                    <div className="flex justify-end">
-                      -
-                      <span className="ml-2 text-[#ee4d2d]">
-                        {formatCurrency(Number(order?.voucher_discount))}
-                      </span>
-                    </div>
-                  )}
                   <p className="mb-[20px] ml-auto w-fit">
                     Thành tiền:{" "}
                     <span className="text-[#ee4d2d]">

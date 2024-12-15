@@ -22,7 +22,9 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
   const [color, setColor] = useState<string>("");
   const [size, setSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-
+  const [availableQuantity, setAvailableQuantity] = useState<number | null>(
+    null,
+  );
   const disPatch = useDispatch();
 
   const { data: carts, refetch } = useGetCartQuery();
@@ -44,7 +46,18 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
     }
   });
 
-  console.log({ uniqueVariants, color });
+  useEffect(() => {
+    if (color && size) {
+      const selectedVariant = productDetail?.productVariants?.find(
+        (variant) =>
+          variant.product_color.name === color &&
+          variant.product_size.name === size,
+      );
+      setAvailableQuantity(selectedVariant?.quantity ?? null);
+    } else {
+      setAvailableQuantity(null);
+    }
+  }, [color, size, productDetail?.productVariants]);
 
   const handleAddCart = async () => {
     try {
@@ -55,8 +68,6 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
         quantity,
         product_id: productDetail?.id ?? 0,
       });
-      console.log({ res });
-
       if (res?.error?.status === 404) {
         toast.error("Không tìm thấy sản phẩm có màu sắc và sze đã chọn.");
       } else if (res?.error?.status === 422) {
@@ -160,7 +171,6 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
               })}
           </div>
         </div>
-
         <div className="flex items-center gap-[14px]">
           <label
             className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]"
@@ -189,6 +199,23 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
               <div className="leading-[171.429%]">+</div>
             </div>
           </div>
+        </div>
+        <div className="flex items-center gap-[14px]">
+          {availableQuantity !== null && (
+            <div className="mt-2 text-[#757575]">
+              <div className="flex items-center gap-[5px]">
+                <span className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]">
+                  Còn
+                </span>
+                <span className="font-bold text-black">
+                  {availableQuantity}
+                </span>
+                <span className="text-[1.4rem] font-semibold leading-[166.667%] text-[#757575]">
+                  sản phẩm trong kho
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </form>
       <p className="leading-[ 166.667%] mb-[40px] mt-[25px] text-[1.6rem] text-[#757575]">
