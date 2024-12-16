@@ -228,13 +228,6 @@ const FormDetail: FC<FormDetailProps> = ({ productDetail }) => {
           onClick={() => handleAddCart()}
           loading={false}
         />
-        <ButtonComponent
-          title="Thanh toán"
-          width="100%"
-          bg="linear-gradient(to right, #edcf0d, #2e83c8)"
-          onClick={() => alert("Ok")}
-          loading={false}
-        />
       </div>
     </div>
   );

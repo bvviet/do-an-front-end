@@ -54,11 +54,11 @@ const Header = () => {
         <ul className="">
           <a href="#!" className="flex items-center gap-[20px]">
             <div>
-              <Avatar>N</Avatar>
+
               <span className="text-[1.6rem] font-semibold text-[#292929]">
                 {userInfor?.name}
               </span>
-              <div>#{userInfor?.id}</div>
+
             </div>
           </a>
           <div className="my-[8px] h-[1px] w-full" />
@@ -159,13 +159,14 @@ const Header = () => {
               </Tooltip>
               <Tooltip title="Trang cá nhân" arrow>
                 <IconButton>
-                  <Avatar
+                  {/* <Avatar
                     alt="Remy Sharp"
                     src=""
                     fontSize="large"
                     onClick={handleUserProfileClick}
                     component="svg"
-                  />
+                  /> */}
+                  <Avatar onClick={handleUserProfileClick}><img src={userInfor?.avatar} alt="" /></Avatar>
                 </IconButton>
               </Tooltip>
               {renderMenu}

@@ -64,7 +64,7 @@ function SliceShow() {
       <Slider {...settings}>
         {sliceArray.map((item) => (
           <div
-            className="relative h-[180px] cursor-pointer sm:h-[530px]"
+            className="relative h-[180px] cursor-pointer sm:h-[630px]"
             key={item.id}
           >
             <img className="h-full w-full" src={item.src} alt="" />

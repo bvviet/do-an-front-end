@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Carousel from "./Carousel";
-import start from "../../../assets/icons/start.png";
+import star from "../../../assets/icons/start.png";
 import React, { FC, useEffect, useState } from "react";
 import FormDetail from "./FormDetail";
 import Comment from "./Comment";
@@ -18,11 +18,14 @@ interface ProductDetailInfoProps {
 }
 
 const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
+
   const { data: productDetail, isLoading } = useGetDetailProductQuery(id);
+
   const [image, setImage] = useState<string>(
     productDetail?.img_thumbnail ?? "",
   );
   const dispatch = useDispatch();
+  console.log(productDetail);
 
   useEffect(() => {
     dispatch(setLoading(isLoading));
@@ -62,6 +65,16 @@ const ProductDetailInfo: FC<ProductDetailInfoProps> = ({ id }) => {
                   {productDetail?.name}
                 </h3>
                 <div className="flex items-center gap-6">
+                  {/* {productDetail?.average_rating && productDetail?.average_rating != 0 ? (
+                    <>
+                      <img src={star} alt="Star Icon" />
+                      <p className="leading-[171.429%] text-[#566363]">
+                        {productDetail?.average_rating}
+                      </p>
+                    </>
+                  ) : (
+                    ""
+                  )} */}
                 </div>
                 <div className="mb-5 flex items-center gap-[12px] rounded-lg bg-gray-200 p-4">
                   <span className="text-[2.8rem] font-semibold leading-[166.667%] text-red-600">

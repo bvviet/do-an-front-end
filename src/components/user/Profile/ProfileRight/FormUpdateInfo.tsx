@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { Avatar } from "@mui/material";
 
 const FormUpdateInfo = () => {
   const { closePopup } = useModalContext();
@@ -25,6 +26,13 @@ const FormUpdateInfo = () => {
     avatar: yup.mixed(),
     link_fb: yup.string().url("Đường dẫn Facebook không hợp lệ"),
     link_tt: yup.string().url("Đường dẫn TikTok  không hợp lệ"),
+    email: yup
+      .string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Email không đúng định dạng",
+      )
+      .required("Email không được bỏ trống"),
   });
 
   const {
@@ -50,6 +58,7 @@ const FormUpdateInfo = () => {
         name: user?.name,
         link_fb: user?.link_fb,
         link_tt: user?.link_tt,
+        email: user?.email
         // avatar: getUseUserInfor.avatar || null,
       });
     }
@@ -58,7 +67,7 @@ const FormUpdateInfo = () => {
   const onSubmit: SubmitHandler<ProfileType> = async (formData) => {
     const completeFormData = new FormData();
     completeFormData.append("name", formData.name || "");
-
+    completeFormData.append("email", formData.email || "")
     if (selectedFile) {
       completeFormData.append("avatar", selectedFile);
     }
@@ -68,8 +77,13 @@ const FormUpdateInfo = () => {
     completeFormData.append("_method", "put");
     try {
       await update([completeFormData, user?.id]).unwrap();
-      // Refetch dữ liệu ngay sau khi update thành công
-      await refetch();
+      const latestUser = await refetch({ force: true });
+
+      if (latestUser.data) {
+        // Lưu thông tin người dùng mới vào store
+        dispatch(saveUserInfo(latestUser.data));
+      }
+
     } catch (error) {
       const customError = error as ProfileResponseError;
       toast.error(customError?.data?.message);
@@ -109,11 +123,12 @@ const FormUpdateInfo = () => {
           Cập nhập thông tin
         </h2>
 
-        <div className="mt-[10px] w-full lg:w-auto">
-          <label className="mb-2 block text-sm font-medium text-gray-900">
-            Chọn ảnh đại diện
-          </label>
-          <input type="file" onChange={handleFileChange} accept="image/*" />
+        <div className="mt-[10px]  w-full lg:w-auto">
+
+          <label className="block mb-2  font-medium text-gray-900 dark:text-white " htmlFor="file_input">Cập nhập ảnh đại diện</label>
+          <input type="file"
+            className="w-full text-gray-500 font-medium bg-gray-100 file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded" onChange={handleFileChange} accept="image/*" />
+
         </div>
 
         <div className="mt-[10px] w-full lg:w-auto">
@@ -124,6 +139,16 @@ const FormUpdateInfo = () => {
             Component={TextInputs}
             control={control}
             error={errors.name}
+          />
+        </div>
+        <div className="mt-[10px] w-full lg:w-auto">
+          <FormField<ProfileType>
+            label="Email"
+            name="email"
+            placeholder="Email...."
+            Component={TextInputs}
+            control={control}
+            error={errors.email}
           />
         </div>
 
