@@ -3,6 +3,7 @@ export type ProfileType = {
   avatar?: File;
   link_fb?: string;
   link_tt?: string;
+  email: string;
 };
 
 export interface UpdateProfileResponse {

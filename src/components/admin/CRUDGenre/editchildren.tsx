@@ -13,18 +13,18 @@ import { ICategory } from '@/types/genre';
 interface FormData {
   id: string;
   name: string;
+
   parent_id: string;
   image: string;
 }
 
-export default function EditCategory() {
+export default function EditChildrenCategory() {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetCategoryDetailQuery(id!);
   const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation();
   const { data: categoriesData } = useGetCategoriesQuery();
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
   const [deleteCategory] = useDeleteCategoryMutation();
-
   // Đảm bảo categories là một mảng
   const categories = Array.isArray(categoriesData?.data.categories) ? categoriesData.data.categories : [];
   console.log("cáda", categories);
@@ -65,6 +65,7 @@ export default function EditCategory() {
       const jsonDataToSend: FormData = {
         id: formData.id,
         name: formData.name,
+
         parent_id: formData.parent_id || "",
         image: formData.image || "",
       };
@@ -83,21 +84,21 @@ export default function EditCategory() {
   };
 
   // Hàm để xoá thể loại con
-  const handleDeleteCategory = async (childId: string, e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent form submission when deleting category
+  // const handleDeleteCategory = async (childId: string, e: React.MouseEvent) => {
+  //   e.preventDefault(); // Prevent form submission when deleting category
 
-    try {
-      await deleteCategory(childId).unwrap();
-      toast.success("Xóa thể loại thành công");
-      setTimeout(() => {
-        window.location.href = "/admin/genre"
-      }, 2000)
-    } catch (err) {
-      console.error("Lỗi khi xóa thể loại:", err);
-      toast.error("Xóa thể loại thất bại");
-    }
-  };
-  const hasChildren = data?.categories?.children?.length > 0;
+  //   try {
+  //     await deleteCategory(childId).unwrap();
+  //     toast.success("Xóa thể loại thành công");
+  //     setTimeout(() => {
+  //       window.location.href = "/admin/genre"
+  //     }, 2000)
+  //   } catch (err) {
+  //     console.error("Lỗi khi xóa thể loại:", err);
+  //     toast.error("Xóa thể loại thất bại");
+  //   }
+  // };
+  const hasChildren = data?.categories?.[0]?.children?.length > 0;
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 bg-white rounded-lg">
@@ -162,56 +163,7 @@ export default function EditCategory() {
             </div>
           </div>
           <div></div>
-          <div className="overflow-x-auto ">
-            <label className='text-[20px] font-semibold text-black pb-5' htmlFor="">Danh mục con</label>
-            <table className="w-full text-left  divide-y-2 divide-gray-200  bg-white text-sm mt-6">
-              <thead className="ltr:text-left rtl:text-right ">
-                <tr>
-                  <th className="whitespace-nowrap px-4 py-2 text-[18px] font-medium text-gray-900">ID</th>
-                  <th className="whitespace-nowrap px-4 py-2 text-[18px] font-medium text-gray-900">Name</th>
 
-                  <th className="px-4 py-2"></th>
-                </tr>
-              </thead>
-
-
-
-              <tbody className="divide-y divide-gray-200 divide-solid">
-                {data?.categories?.children?.length ? (
-                  data.categories.children.map((child) => (
-                    <tr key={child.id}>
-                      <td className="whitespace-nowrap px-4 py-2 text-[18px]">{child.id}</td>
-                      <td className="whitespace-nowrap px-4 py-2 text-[18px]">{child.name}</td>
-                      <td className="whitespace-nowrap px-4 py-2 flex gap-5">
-                        <button
-                          onClick={(e) => handleDeleteCategory(child.id, e)}
-                          className="inline-block rounded bg-red-600 px-6 py-2 text-[14px] font-medium text-white hover:bg-red-700"
-                        >
-                          Xoá
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault(); // Ngăn form submit
-                          }}
-                          className="inline-block rounded bg-green-600 px-6 py-2 text-[14px] font-medium text-white hover:bg-green-700"
-                        >
-                          <Link to={`/admin/genrechildren/${child.id}`}>
-                            Sửa
-                          </Link>
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className="px-4 py-2 !text-[16px] text-red-500 ">
-                      Không có thể loại con nào.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
         </div>
         <div className="mt-12">
           <div className='flex items-center justify-end'>

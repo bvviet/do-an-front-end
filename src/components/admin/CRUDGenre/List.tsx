@@ -203,36 +203,46 @@ export default function ListCategory() {
                           value =
                             category.children && category.children.length > 0
                               ? category.children.map((child) => (
-                                  <div
-                                    key={child.id}
-                                    className="flex justify-center"
-                                  >
-                                    <span>{child.name}</span>
-                                  </div>
-                                ))
+                                <div
+                                  key={child.id}
+                                  className="flex justify-center"
+                                >
+                                  <span>{child.name}</span>
+                                </div>
+                              ))
                               : "Không có danh mục con";
                         } else if (column.id === "action") {
                           value = (
                             <>
                               {category.name !== "Danh mục lưu trữ" && ( // Ẩn cả nút xóa và chỉnh sửa nếu tên là "Danh mục lưu trữ"
                                 <>
-                                  <Tooltip title="Delete category">
-                                    <IconButton
-                                      aria-label="delete"
-                                      onClick={() =>
-                                        openPopup(
-                                          <CFButton
-                                            title="Are you sure you want to delete this item?"
-                                            handleDelete={() =>
-                                              handleDelete(category.id)
-                                            }
-                                          />,
-                                        )
-                                      }
-                                    >
-                                      <DeleteIcon color="error" />
-                                    </IconButton>
-                                  </Tooltip>
+                                  {(!category.children || category.children.length === 0) ? ( // Kiểm tra nếu không có danh mục con
+                                    <Tooltip title="Delete category">
+                                      <IconButton
+                                        aria-label="delete"
+                                        onClick={() =>
+                                          openPopup(
+                                            <CFButton
+                                              title="Are you sure you want to delete this item?"
+                                              handleDelete={() => handleDelete(category.id)}
+                                            />,
+                                          )
+                                        }
+                                      >
+                                        <DeleteIcon color="error" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  ) : null
+                                    //  (
+                                    //   <Tooltip title="Cannot delete category with children">
+                                    //     <span>
+                                    //       <IconButton disabled>
+                                    //         <DeleteIcon color="disabled" />
+                                    //       </IconButton>
+                                    //     </span>
+                                    //   </Tooltip>
+                                    // )
+                                  }
                                   <Tooltip title="Edit category">
                                     <Link to={`/admin/genre/${category.id}`}>
                                       <IconButton aria-label="edit">
@@ -244,6 +254,7 @@ export default function ListCategory() {
                               )}
                             </>
                           );
+
                         }
                         return (
                           <TableCell key={column.id} align={column.align}>

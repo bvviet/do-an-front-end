@@ -143,7 +143,7 @@ const ProductItem: FC<ProductItemProps> = ({
 
       {/* Title */}
       <Link to={`/detail/${product?.id}`}>
-        <h2 className="transform cursor-pointer text-[20px] font-bold text-[#131717] transition-all duration-200 ease-in-out hover:text-[#43766C]">
+        <h2 className="transform cursor-pointer text-[20px] min-h-[60px] font-bold text-[#131717] transition-all duration-200 ease-in-out hover:text-[#43766C]">
           {truncateString(product?.name || product?.product_name || "", 60)}
         </h2>
       </Link>

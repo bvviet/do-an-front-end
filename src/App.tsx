@@ -48,6 +48,7 @@ import Favorites from "./pages/user/Favorites";
 import BannerAdmin from "./pages/admin/Banner";
 import FormUpdateInfo from "./components/user/Profile/ProfileRight/FormUpdateInfo";
 import Dashboard from "./pages/admin/Dashboard";
+import EditChildrenCategory from "./components/admin/CRUDGenre/editchildren";
 
 function App() {
   const router = createBrowserRouter([
@@ -119,6 +120,7 @@ function App() {
         { path: "product/:slug", element: <EditProducts /> },
         { path: "genre", element: <GenreTabs /> },
         { path: "genre/:id", element: <EditCategory /> },
+        { path: "genrechildren/:id", element: <EditChildrenCategory /> },
         { path: "brand", element: <BrandTabs /> },
         { path: "brand/:id", element: <EditBrand /> },
         { path: "orders", element: <ListAdminOrders /> },

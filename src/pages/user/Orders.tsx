@@ -122,10 +122,10 @@ const Orders = () => {
                       </div>
                       <div className="ml-auto flex gap-[10px]">
                         <span className="text-slate-400 line-through">
-                          {formatCurrency(order_item.product.price_sale)}
+                          {formatCurrency(order_item.product.price_regular)}
                         </span>
                         <span className="text-[#ee4d2d]">
-                          {formatCurrency(order_item.product.price_regular)}
+                          {formatCurrency(order_item.price)}
                         </span>
                       </div>
                     </div>

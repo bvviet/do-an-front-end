@@ -14,7 +14,9 @@ import { useGetUsersQuery } from "@/services/authApi";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/slices/loadingSlice";
-
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 const ProfileLeft = () => {
   const { data, isLoading } = useGetUsersQuery();
   const dispatch = useDispatch();
@@ -39,26 +41,30 @@ const ProfileLeft = () => {
         {/* Menu 1 */}
         <div className="mt-[30px]">
           <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%]">
-            Manage Account
+            Quản lý tài khoản
           </h3>
           <ul>
             <li className="transition-bg flex items-center gap-[10px] py-[5px] leading-[146.667%] duration-500 ease-in-out hover:opacity-55">
-              <img src={profile} alt="" />
-              <Link to="/profile">Personal info</Link>
+              <PersonIcon className="text-[#4c4a5d]" />
+              <Link to="/profile">Thông tin cá nhân</Link>
             </li>
             <li className="transition-bg flex items-center gap-[10px] py-[5px] leading-[146.667%] duration-500 ease-in-out hover:opacity-55">
-              <img src={location} alt="" />
-              <Link to="/profile/addresses">Addresses</Link>
+              <ManageAccountsIcon className="text-[#4c4a5d]" />
+              <Link to="/profile/update">Chỉnh sửa thông tin cá nhân</Link>
             </li>
             <li className="transition-bg flex items-center gap-[10px] py-[5px] leading-[146.667%] duration-500 ease-in-out hover:opacity-55">
+              <LocationOnIcon className="text-[#4c4a5d]" />
+              <Link to="/profile/addresses">Địa chỉ</Link>
+            </li>
+            {/* <li className="transition-bg flex items-center gap-[10px] py-[5px] leading-[146.667%] duration-500 ease-in-out hover:opacity-55">
               <img src={message} alt="" />
               <a href="#!">Communications & privacy</a>
-            </li>
+            </li> */}
           </ul>
         </div>
         {/* Menu 2 */}
-        <div className="mt-[30px]">
-          <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%]">
+        <div className="mt-[30px] opacity-30 ">
+          <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%] ">
             My items
           </h3>
           <ul>
@@ -77,7 +83,7 @@ const ProfileLeft = () => {
           </ul>
         </div>
         {/* Menu 3 */}
-        <div className="mt-[30px]">
+        <div className="mt-[30px] opacity-30">
           <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%]">
             Subscriptions & plans
           </h3>
@@ -89,7 +95,7 @@ const ProfileLeft = () => {
           </ul>
         </div>
         {/* Menu 4 */}
-        <div className="mt-[30px]">
+        <div className="mt-[30px] opacity-30">
           <h3 className="mb-[11px] text-[1.8rem] font-medium leading-[144.444%]">
             Customer Service
           </h3>

@@ -43,7 +43,7 @@ const Favorites = () => {
       console.log("Dữ liệu sau khi refetch:", refetchedFavorites);
       disPatch(setFavorite(refetchedFavorites?.data?.data));
       // disPatch(removeFavorite());
-
+      window.location.reload();
       toast.success(response.message);
     } catch (error) {
       console.log({ error });
@@ -61,9 +61,10 @@ const Favorites = () => {
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 gap-[40px] sm:grid-cols-2 lg:grid-cols-3">
+      <div className={`grid grid-cols-1 gap-[40px] ${(favoritess?.data || []).length > 0 ? 'sm:grid-cols-2 lg:grid-cols-3' : ""} `}>
         {/* Item 1 */}
-        {(favoritess?.data || []).map((favorite) => (
+
+        {(favoritess?.data || []).length > 0 ? ((favoritess?.data || []).map((favorite) => (
           <div
             key={favorite.id}
             className="group relative rounded-lg border border-solid border-[#afaeae3a] p-5 shadow-sm shadow-indigo-500/20"
@@ -112,9 +113,13 @@ const Favorites = () => {
               </p>
             </div>
           </div>
-        ))}
+        ))) : (
+          <div className="w-full flex items-center justify-center">
+            <p className="text-center text-red-500"> Chưa có sản phẩm yêu thích </p>
+          </div>
+        )}
       </div>
-    </div>
+    </div >
   );
 };
 

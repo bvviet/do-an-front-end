@@ -79,7 +79,7 @@ const Search = () => {
             }}
             value={valueInput}
             type="text"
-            placeholder="Search for anything"
+            placeholder="Tìm kiếm ở đây"
             className="w-[200px] rounded-l-lg border border-[#fff] p-[9px] placeholder-white sm:w-[300px] lg:w-[799px]"
           />
           {isLoading && (

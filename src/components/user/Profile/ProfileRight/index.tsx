@@ -23,8 +23,8 @@ const ProfileRight = () => {
       {/* My wallet */}
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12">
-          <h2 className="text-[24px] font-bold leading-tight">My Wallet</h2>
-          <p className="text-[15px]">Payment methods</p>
+          <h2 className="text-[24px] font-bold leading-tight">Ví của tôi</h2>
+          <p className="text-[15px]">Phương thức thanh toán</p>
         </div>
         <div className="col-span-12 mt-[16px] grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {/* item 1 */}
@@ -98,10 +98,10 @@ const ProfileRight = () => {
       <div className="grid grid-cols-12 gap-5">
         <div className="col-span-12">
           <h2 className="text-[24px] font-bold leading-tight">
-            Basic information
+            Thông tin cơ bản
           </h2>
           <p className="text-[15px]">
-            Addresses, contact information and password
+            Địa chỉ, số điện thoại và email
           </p>
         </div>
         <div className="col-span-12 mt-[16px] grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -113,7 +113,7 @@ const ProfileRight = () => {
               </div>
               <div>
                 <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
-                  Email Address
+                  Địa chỉ email
                 </h3>
                 <p>{userInfor?.email}</p>
               </div>
@@ -127,7 +127,7 @@ const ProfileRight = () => {
               </div>
               <div>
                 <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
-                  Phone number
+                  Số điện thoại
                 </h3>
                 <p>
                   {uerInfoDefault?.phone_number
@@ -147,7 +147,7 @@ const ProfileRight = () => {
           </div>
           <div className="w-full">
             <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
-              Add an address
+              Địa chỉ
             </h3>
             <p className="">
               {uerInfoDefault?.is_default === true ? (
@@ -167,10 +167,10 @@ const ProfileRight = () => {
       <div className="grid grid-cols-12 gap-5">
         <div className="col-span-12">
           <h2 className="text-[24px] font-bold leading-tight">
-            Social network information
+            Thông tin thêm
           </h2>
           <p className="text-[15px]">
-            Manage links to your social media sites.
+            Quản lý liên kết đến các trang truyền thông xã hội của bạn.
           </p>
         </div>
         <div className="col-span-12 mt-[16px] grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -178,7 +178,7 @@ const ProfileRight = () => {
           <Link to="/profile/update">
             <article className="flex items-center gap-[10px] rounded-[10px] bg-[#f1f1f1] p-[10px]">
               <div className="flex flex-shrink-0 justify-center rounded-lg bg-white p-[15px]">
-                <img src={location} alt="" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png" className="size-10" alt="" />
               </div>
               <div>
                 <h3 className="text-[1.5rem] font-medium text-[#1A162E]">
@@ -196,7 +196,7 @@ const ProfileRight = () => {
           <Link to="/profile/update">
             <article className="flex items-center gap-[10px] rounded-[10px] bg-[#f1f1f1] p-[10px]">
               <div className="flex flex-shrink-0 justify-center rounded-lg bg-white p-[15px]">
-                <img src={location} alt="" />
+                <img src="https://w7.pngwing.com/pngs/814/840/png-transparent-tiktok-tiktok-logo-tiktok-icon-thumbnail.png" className="size-10" alt="" />
               </div>
               <div>
                 <h3 className="text-[1.5rem] font-medium text-[#1A162E]">

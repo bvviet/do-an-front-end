@@ -67,6 +67,7 @@ export interface ProductDetailType {
   slug: string;
   sku: string;
   img_thumbnail: string;
+  average_rating: number;
   price_regular: number;
   price_sale: number;
   description: string;

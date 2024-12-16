@@ -209,7 +209,7 @@ const OrderDetailAdmin = () => {
 
             {/* Hủy đơn hàng */}
             <>
-              <Button
+              {/* <Button
                 variant="outlined"
                 color="error"
                 onClick={handleOpenDialog}
@@ -222,7 +222,7 @@ const OrderDetailAdmin = () => {
                 }
               >
                 Hủy đơn hàng
-              </Button>
+              </Button> */}
               <Dialog open={open} onClose={handleCloseDialog} fullWidth>
                 <DialogTitle>Nhập lý do hủy đơn hàng</DialogTitle>
                 <DialogContent>
@@ -288,7 +288,7 @@ const OrderDetailAdmin = () => {
             </thead>
             <tbody className="">
               {data?.order_items.map((item, index) => (
-                <tr className={`bg-white` } key={item.order_id}>
+                <tr className={`bg-white`} key={item.order_id}>
                   <td className="border border-gray-400 p-2">{index + 1}</td>
                   <td className="border border-gray-400 p-2">
                     <img

@@ -175,7 +175,7 @@ const OrderDetail = () => {
                 </span>
               </div>
             </Typography>
-            <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+            <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
               Thông tin người mua
             </Typography>
             <Typography variant="body1">
@@ -188,7 +188,7 @@ const OrderDetail = () => {
               <strong>Số điện thoại:</strong>{" "}
               {orderDetail?.address.phone_number}
             </Typography>
-            <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+            <Typography variant="h5" gutterBottom sx={{ marginTop: 2 }}>
               Địa chỉ giao hàng
             </Typography>
             <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
@@ -227,22 +227,24 @@ const OrderDetail = () => {
                   />
                 </div>
                 <div className="ml-6 flex w-[75%] flex-col gap-2">
-                  <Link to={`${orderItem.slug}`} className="flex items-center">
-                    <h3 className="font-medium">{orderItem.product_name}</h3>
+                  <Link to={`/detail/${orderItem.slug}`} className="flex items-center gap-7">
+                    <h3 className="font-semibold">{orderItem.product_name}</h3>
+
                   </Link>
-                  <div className="flex items-center gap-5">
-                    Phân loại: {orderItem.size}
-                    <div className="flex items-center gap-2">
-                      Màu
-                      <div
-                        style={{
-                          backgroundColor: orderItem.color,
-                          height: "15px",
-                          width: "15px",
-                          borderRadius: "5px",
-                        }}
-                      ></div>
-                    </div>
+                  <div className="flex items-center  gap-5">
+                    <span className="text-gray-400">Phân loại:</span> {orderItem.size}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400">Màu</span>
+                    <div
+                      style={{
+                        backgroundColor: orderItem.color,
+                        height: "15px",
+                        width: "15px",
+                        borderRadius: "5px",
+                        border: "1px solid"
+                      }}
+                    ></div>
                   </div>
                   <div>X{orderItem.quantity}</div>
                 </div>
@@ -251,27 +253,30 @@ const OrderDetail = () => {
                     {formatCurrency(orderItem.price_regular)}
                   </span>
                   <span className="font-medium text-[#ee4d2d]">
-                    {formatCurrency(orderItem.price_sale)}
+                    {formatCurrency(orderItem.price)}
                   </span>
                 </div>
               </div>
               <div className="mt-3 flex gap-5">
-                <Button
+                {/* <Button
                   size="small"
                   color="error"
                   variant="outlined"
                   sx={{ fontSize: "1rem", padding: "4px 8px" }}
                 >
                   15 ngày trả hàng
-                </Button>
-                <Button
-                  size="small"
-                  color="success"
-                  variant="outlined"
-                  sx={{ fontSize: "1rem", padding: "4px 8px" }}
-                >
-                  Trả hàng miễn phí 15 ngày
-                </Button>
+                </Button> */}
+                {/* Hiển thị nút "Đánh giá" chỉ khi trạng thái là "completed" */}
+                {orderDetail?.order_status === "completed" && (
+                  <Button
+                    size="small"
+                    color="success"
+                    variant="outlined"
+                    sx={{ fontSize: "1rem", padding: "4px 8px" }}
+                  >
+                    <Link to={`/detail/${orderItem.slug}`}>Đánh giá</Link>
+                  </Button>
+                )}
                 {orderItem.status_deleted === 1 && (
                   <Chip label="Hết hàng" color="error" />
                 )}
@@ -444,7 +449,7 @@ const OrderDetail = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </div >
   );
 };
 export default OrderDetail;
